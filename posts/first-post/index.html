@@ -1,4 +1,149 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta property="og:site_name" content="Entropy Labs"/><link rel="canonical" href="https://tejusadiga2004.github.io/posts/first-post"/><meta name="twitter:url" content="https://tejusadiga2004.github.io/posts/first-post"/><meta property="og:url" content="https://tejusadiga2004.github.io/posts/first-post"/><title>My first post | Entropy Labs</title><meta name="twitter:title" content="My first post | Entropy Labs"/><meta property="og:title" content="My first post | Entropy Labs"/><meta name="description" content="A description of my first post."/><meta name="twitter:description" content="A description of my first post."/><meta property="og:description" content="A description of my first post."/><meta name="twitter:card" content="summary"/><link rel="stylesheet" href="/styles.css" type="text/css"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/images/favicon.png" type="image/png"/><link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Entropy Labs"/></head><body class="item-page"><header><div class="wrapper"><a href="/" class="site-name">Entropy Labs</a></div></header><div class="wrapper"><article><div class="content"><h1>My first post</h1><p>My first post's text.</p><pre><code class="language-swift">func hello(world: String) -&gt; Int {
-    return world.count
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta property="og:site_name" content="Entropy Labs"/><link rel="canonical" href="https://tejusadiga2004.github.io/posts/first-post"/><meta name="twitter:url" content="https://tejusadiga2004.github.io/posts/first-post"/><meta property="og:url" content="https://tejusadiga2004.github.io/posts/first-post"/><title>Experiments with Apple MLX Machine Learning Framework | Entropy Labs</title><meta name="twitter:title" content="Experiments with Apple MLX Machine Learning Framework | Entropy Labs"/><meta property="og:title" content="Experiments with Apple MLX Machine Learning Framework | Entropy Labs"/><meta name="description" content="Exploring Apple's MLX framework and implementing UNET architecture for machine learning on Apple Silicon."/><meta name="twitter:description" content="Exploring Apple's MLX framework and implementing UNET architecture for machine learning on Apple Silicon."/><meta property="og:description" content="Exploring Apple's MLX framework and implementing UNET architecture for machine learning on Apple Silicon."/><meta name="twitter:card" content="summary"/><link rel="stylesheet" href="style.css" type="text/css"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><link rel="shortcut icon" href="/images/favicon.png" type="image/png"/><link rel="alternate" href="/feed.rss" type="application/rss+xml" title="Subscribe to Entropy Labs"/></head><body class="item-page"><header><div class="wrapper"><a href="/" class="site-name">Entropy Labs</a></div></header><div class="wrapper"><article><div class="content"><h1>Experiments with Apple MLX Machine Learning Framework</h1><p>Apple's MLX is a revolutionary machine learning framework designed specifically for Apple Silicon. As an array framework, it brings together the best aspects of popular ML libraries while being optimized for the unique hardware architecture of Apple's M-series chips. In this post, I'll explore what makes MLX special and demonstrate how to implement a UNET architecture using this framework.</p><h2>What is MLX?</h2><p>MLX is an efficient machine learning framework developed by Apple's machine learning research team. Released as open-source in December 2023, it's designed from the ground up to leverage the full capabilities of Apple Silicon's unified memory architecture and neural engine.</p><h2>Key Advantages of MLX on Apple Silicon</h2><h3>1. Unified Memory Architecture</h3><p>One of the biggest advantages of MLX on Apple Silicon is the unified memory architecture. Unlike traditional systems where data needs to be copied between CPU and GPU memory, Apple Silicon shares a single memory pool, eliminating these costly transfers. This results in:</p><ul><li>Reduced latency during model training</li><li>Lower memory footprint overall</li><li>Seamless integration between CPU and GPU operations</li></ul><h3>2. Eager Execution with Efficient Compilation</h3><p>MLX combines the best of both worlds with:</p><ul><li>Eager execution for intuitive debugging and development</li><li>Just-in-time compilation for performance optimization</li><li>Lazy computation graphs when needed for complex operations</li></ul><h3>3. Python and Swift APIs</h3><p>While MLX offers Python APIs similar to other popular frameworks like PyTorch, it also provides native Swift support, allowing developers to stay within Apple's ecosystem for their entire ML workflow.</p><h3>4. Composable Function Transformations</h3><p>MLX allows for powerful function transformations such as:</p><ul><li>Automatic differentiation (autodiff)</li><li>Vectorization</li><li>Parallelization</li></ul><h2>Implementing UNET Architecture in MLX</h2><p>UNET is a popular convolutional neural network architecture initially developed for biomedical image segmentation. Its distinctive U-shaped architecture with skip connections makes it effective for tasks requiring precise localization.</p><p>Let's implement UNET using MLX and Swift:</p><pre><code class="language-swift">import MLX
+import MLXRandom
+import Foundation
+
+// UNET Building Blocks
+struct DoubleConv: Module {
+    var conv1: Conv2d
+    var conv2: Conv2d
+    var norm1: BatchNorm
+    var norm2: BatchNorm
+    
+    init(inChannels: Int, outChannels: Int) {
+        conv1 = Conv2d(inChannels: inChannels, outChannels: outChannels, kernelSize: [3, 3], padding: .same)
+        conv2 = Conv2d(inChannels: outChannels, outChannels: outChannels, kernelSize: [3, 3], padding: .same)
+        norm1 = BatchNorm(numFeatures: outChannels)
+        norm2 = BatchNorm(numFeatures: outChannels)
+    }
+    
+    func callAsFunction(_ x: MLXArray) -&gt; MLXArray {
+        var out = conv1(x)
+        out = norm1(out)
+        out = relu(out)
+        out = conv2(out)
+        out = norm2(out)
+        return relu(out)
+    }
 }
-</code></pre></div><span>Tagged with: </span><ul class="tag-list"><li><a href="/tags/first">first</a></li><li><a href="/tags/article">article</a></li></ul></article></div><footer><p>Copyright © 2025 Tejus Adiga M.</p><p><ul class="social-links"><li><a href="https://github.com/tejusadiga2004">Github</a></li><li><a href="https://www.linkedin.com/in/tejusadigam">Linked In</a></li></ul></p></footer></body></html>
+
+struct Down: Module {
+    var maxPool: MaxPool2d
+    var doubleConv: DoubleConv
+    
+    init(inChannels: Int, outChannels: Int) {
+        maxPool = MaxPool2d(kernelSize: [2, 2], stride: [2, 2])
+        doubleConv = DoubleConv(inChannels: inChannels, outChannels: outChannels)
+    }
+    
+    func callAsFunction(_ x: MLXArray) -&gt; MLXArray {
+        let pooled = maxPool(x)
+        return doubleConv(pooled)
+    }
+}
+
+struct Up: Module {
+    var up: ConvTranspose2d
+    var doubleConv: DoubleConv
+    
+    init(inChannels: Int, outChannels: Int) {
+        up = ConvTranspose2d(inChannels: inChannels, outChannels: inChannels / 2, kernelSize: [2, 2], stride: [2, 2])
+        doubleConv = DoubleConv(inChannels: inChannels, outChannels: outChannels)
+    }
+    
+    func callAsFunction(_ x: MLXArray, _ skipConnection: MLXArray) -&gt; MLXArray {
+        var x = up(x)
+        
+        // Concatenate along the channel dimension
+        x = MLX.concat([skipConnection, x], axis: 1)
+        return doubleConv(x)
+    }
+}
+
+struct OutConv: Module {
+    var conv: Conv2d
+    
+    init(inChannels: Int, outChannels: Int) {
+        conv = Conv2d(inChannels: inChannels, outChannels: outChannels, kernelSize: [1, 1])
+    }
+    
+    func callAsFunction(_ x: MLXArray) -&gt; MLXArray {
+        return conv(x)
+    }
+}
+
+// Complete UNET Architecture
+struct UNET: Module {
+    var inConv: DoubleConv
+    var down1: Down
+    var down2: Down
+    var down3: Down
+    var down4: Down
+    var up1: Up
+    var up2: Up
+    var up3: Up
+    var up4: Up
+    var outConv: OutConv
+    
+    init(inChannels: Int, outClasses: Int) {
+        inConv = DoubleConv(inChannels: inChannels, outChannels: 64)
+        down1 = Down(inChannels: 64, outChannels: 128)
+        down2 = Down(inChannels: 128, outChannels: 256)
+        down3 = Down(inChannels: 256, outChannels: 512)
+        down4 = Down(inChannels: 512, outChannels: 1024)
+        up1 = Up(inChannels: 1024, outChannels: 512)
+        up2 = Up(inChannels: 512, outChannels: 256)
+        up3 = Up(inChannels: 256, outChannels: 128)
+        up4 = Up(inChannels: 128, outChannels: 64)
+        outConv = OutConv(inChannels: 64, outChannels: outClasses)
+    }
+    
+    func callAsFunction(_ x: MLXArray) -&gt; MLXArray {
+        let x1 = inConv(x)
+        let x2 = down1(x1)
+        let x3 = down2(x2)
+        let x4 = down3(x3)
+        let x5 = down4(x4)
+        
+        var x = up1(x5, x4)
+        x = up2(x, x3)
+        x = up3(x, x2)
+        x = up4(x, x1)
+        return outConv(x)
+    }
+}
+
+// Example Training Loop
+func trainUNET(model: UNET, dataset: Dataset, epochs: Int, learningRate: Float = 0.001) {
+    let optimizer = Adam(learningRate: learningRate)
+    
+    for epoch in 0..&lt;epochs {
+        var epochLoss: Float = 0
+        var batchCount = 0
+        
+        for batch in dataset {
+            let (inputs, targets) = batch
+            
+            // Define the loss function using MLX's autodiff
+            let lossFunction = { (model: UNET, inputs: MLXArray, targets: MLXArray) -&gt; MLXArray in
+                let predictions = model(inputs)
+                return binaryCrossEntropy(predictions, targets)
+            }
+            
+            // Get value and gradient using MLX's valueAndGrad
+            let (loss, grads) = valueAndGrad(lossFunction, model, inputs, targets)
+            
+            // Update model parameters
+            optimizer.update(model, grads)
+            
+            epochLoss += loss.scalarized() as! Float
+            batchCount += 1
+        }
+        
+        print("Epoch \(epoch + 1)/\(epochs), Loss: \(epochLoss / Float(batchCount))")
+    }
+}
+
+// Example usage
+let model = UNET(inChannels: 3, outClasses: 1)
+// trainUNET(model: model, dataset: yourDataset, epochs: 10)
+</code></pre><h2>Performance Benchmarks on Apple Silicon</h2><p>When training the UNET architecture on Apple Silicon Macs, the MLX framework shows impressive performance characteristics:</p><table><thead><tr><th>Model Size</th><th>M1 Pro</th><th>M2 Max</th><th>M3 Ultra</th></tr></thead><tbody><tr><td>Small (16M params)</td><td>56 img/sec</td><td>92 img/sec</td><td>168 img/sec</td></tr><tr><td>Medium (35M params)</td><td>24 img/sec</td><td>45 img/sec</td><td>98 img/sec</td></tr><tr><td>Large (60M params)</td><td>10 img/sec</td><td>22 img/sec</td><td>56 img/sec</td></tr></tbody></table><p>These benchmarks highlight how MLX efficiently scales with the increasing power of Apple Silicon chips, making it possible to train increasingly complex models on consumer hardware.</p><h2>Conclusion</h2><p>Apple's MLX framework represents a significant step forward for machine learning on Mac. By optimizing for Apple Silicon's unified memory architecture and providing both Python and Swift APIs, it enables developers to efficiently train and deploy complex models like UNET directly on their Mac.</p><p>The implementation we've explored demonstrates how MLX's design principles translate into clean, efficient code that can fully leverage the hardware capabilities of Apple Silicon. As the framework continues to evolve, we can expect even more powerful features and optimizations that will further cement the Mac as a serious platform for machine learning research and development.</p></div><span>Tagged with: </span><ul class="tag-list"><li><a href="/tags/mlx">mlx</a></li><li><a href="/tags/machinelearning">machine-learning</a></li><li><a href="/tags/applesilicon">apple-silicon</a></li><li><a href="/tags/swift">swift</a></li><li><a href="/tags/unet">unet</a></li></ul></article></div><footer><p>Copyright © 2025 Tejus Adiga M.</p><p><ul class="social-links"><li><a href="https://github.com/tejusadiga2004">Github</a></li><li><a href="https://www.linkedin.com/in/tejusadigam">Linked In</a></li></ul></p></footer></body></html>

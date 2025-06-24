@@ -45,11 +45,11 @@ body {
 
 /* High-level */
 .wrapper {
-    max-width: 900px;
-    margin-left: auto;
+    max-width: max-content;
+    margin-left: 40px;
     margin-right: auto;
     padding: 30px 40px 0 40px;
-    text-align: center;
+    text-align: justify;
 }
 
 .page {
