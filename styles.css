@@ -1608,6 +1608,26 @@ article .video-player iframe {
 }
 
 /* Footer */
+ul.social-links {
+    list-style: none;
+}
+
+ul.social-links li {
+    display: inline-block;
+    text-align: center;
+    padding: 0 1rem;
+    text-decoration: none;
+}
+
+ul.social-links li:hover {
+    text-decoration:underline;
+    font-size:larger;
+}
+
+ul.social-links li:not(:last-child) {
+  border-right: 1px solid #cdc5c5;
+}
+
 footer {
     margin-top: 20px;
     padding: 20px;
