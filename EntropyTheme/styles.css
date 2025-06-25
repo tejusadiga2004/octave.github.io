@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Crete+Round:ital@0;1&family=Hanuman:wght@100..900&family=Martian+Mono&family=Quintessential&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Hanuman:wght@100..900&family=Martian+Mono&family=Sixtyfour&display=swap');
 
 * {
     margin: 0;
@@ -22,10 +22,14 @@ html {
 
 .site-name {
     color: #ffffff;
-    font-family: "Quintessential", serif;
-    font-size: 40px;
+    font-family: "Sixtyfour", sans-serif;
+    font-size: 50px;
     font-style: bold;
     -webkit-text-size-adjust: 100%;
+}
+
+.item-page {
+    text-align: justify;
 }
 
 .social-links {
@@ -43,13 +47,21 @@ body {
     -webkit-text-size-adjust: 100%;
 }
 
+.main-index-page {
+    text-align: center;
+}
+
+.item-article {
+    text-align: justify;
+}
+
 /* High-level */
 .wrapper {
     max-width: max-content;
     margin-left: 40px;
     margin-right: auto;
     padding: 30px 40px 0 40px;
-    text-align: justify;
+    text-align: center;
 }
 
 .page {
@@ -453,6 +465,27 @@ a.browse-all:hover, .browse-all a:hover {
 }
 
 /* Tag lists */
+
+ul.tag-list {
+    list-style: none;
+}
+
+ul.tag-list li {
+    display: inline-block;
+    text-align: center;
+    padding: 0 1rem;
+    text-decoration: none;
+}
+
+ul.tag-list li:hover {
+    text-decoration:underline;
+    font-size:larger;
+}
+
+ul.tag-list li:not(:last-child) {
+  border-right: 1px solid #cdc5c5;
+}
+
 .all-tags .description {
     margin: 20px 0;
 }
