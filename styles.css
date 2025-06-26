@@ -1,10 +1,10 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Hanuman:wght@100..900&family=Martian+Mono&family=Sixtyfour&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&family=Hanuman:wght@100..900&family=Martian+Mono&family=Sixtyfour&display=swap');
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+    box-sizing: content-box;
 }
 
 .martian-mono-regular {
@@ -24,8 +24,9 @@ html {
     color: #ffffff;
     font-family: "Sixtyfour", sans-serif;
     font-size: 50px;
-    font-style: bold;
+    font-style: normal;
     -webkit-text-size-adjust: 100%;
+    text-align: center;
 }
 
 .item-page {
@@ -34,7 +35,7 @@ html {
 
 .social-links {
     color: #656565;
-    font-family: "Hanuman", serif;
+    font-family: "Commissioner", sans-serif;
     font-size: 14px;
     font-style: bold;
     -webkit-text-size-adjust: 100%;
@@ -42,12 +43,13 @@ html {
 
 body {
     color: #000;
-    font-family: "Hanuman", serif;
+    font-family: "Commissioner", sans-serif;
     font-size: 14px;
     -webkit-text-size-adjust: 100%;
 }
 
 .main-index-page {
+    display: block;
     text-align: center;
 }
 
@@ -57,8 +59,8 @@ body {
 
 /* High-level */
 .wrapper {
-    max-width: max-content;
-    margin-left: 40px;
+    max-width: 900px;
+    margin-left: auto;
     margin-right: auto;
     padding: 30px 40px 0 40px;
     text-align: center;
@@ -91,8 +93,8 @@ body {
 header {
     position: relative;
     background: linear-gradient(to bottom, #003db6, #0256fc);
-    color: #fff;
-    line-height: 4em;
+    color: #de1313;
+    line-height: 2em;
     padding: 0 20px;
 }
 
@@ -101,7 +103,7 @@ header .wrapper {
 }
 
 header a {
-    display: inline-block;
+    display: block;
 }
 
 header p a {
@@ -118,8 +120,10 @@ header nav {
     display: inline-block;
     background-color: #fff;
     border-radius: 10px;
-    margin-top: 18px;
-    overflow: hidden;
+    margin-top: 40px;
+    overflow: auto;
+    width: fit-content;
+    height: fit-content;
 }
 
 header nav li {
@@ -128,14 +132,14 @@ header nav li {
 
 header nav a {
     display: block;
-    color: #cb3018;
+    color: #cb1818;
     padding: 0 10px;
     line-height: 30px;
 }
 
 header nav a:hover, header nav li.selected a {
     color: #fff;
-    background-color: #1840ae;
+    background-color: #43b6f0;
 }
 
 header nav .search a {
@@ -937,11 +941,11 @@ pre code .highlight.shifted {
     margin-right: 5px;
 }
 
-.tags li, .all-tags .featured .tag {
+.tags li, .all-tags .featured .tag, .tags li div  {
     display: inline-block;
     margin-right: 5px;
     padding: 3px 6px;
-    font-size: 0.85em;
+    font-size: 0.95em;
     border-radius: 8px;
     color: #fff;
     margin-bottom: 7px;
