@@ -241,7 +241,7 @@ li.tag-2 {
 /* ... add li.tag-3 etc, as much as needed */
 
 /* style to add line number into codeblock */
-/*
+
 pre .line-number {
     display: block;
     float: left;
@@ -253,11 +253,10 @@ pre .line-number {
 pre .line-number span {
     display: block;
     padding: 0 .5em 0 1em;
-    color: #ccc;
+    color: #001f85;
 }
 
 pre .cl {
     display: block;
     clear: both;
 }
-*/
