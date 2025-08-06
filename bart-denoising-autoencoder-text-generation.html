@@ -1,0 +1,1397 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="A deep dive into BART (Bidirectional and Auto-Regressive Transformers), exploring how it combines the best of BERT and GPT, its advantages over BERT, variants, and real-world applications in text generation and understanding." />
+    <meta name="keywords" content="BART, transformer, text generation, denoising, sequence-to-sequence, NLP">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="BART: The Denoising Autoencoder That Revolutionized Text Generation" />
+<meta property="og:description" content="A deep dive into BART (Bidirectional and Auto-Regressive Transformers), exploring how it combines the best of BERT and GPT, its advantages over BERT, variants, and real-world applications in text generation and understanding." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/bart-denoising-autoencoder-text-generation.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-08 00:00:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Machine Learning" />
+	<meta property="article:tag" content="BART" />
+	<meta property="article:tag" content="transformer" />
+	<meta property="article:tag" content="text generation" />
+	<meta property="article:tag" content="denoising" />
+	<meta property="article:tag" content="sequence-to-sequence" />
+	<meta property="article:tag" content="NLP" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    BART: The Denoising Autoencoder That Revolutionized Text Generation &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/machine-learning.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="bart-denoising-autoencoder-text-generation">BART: The Denoising Autoencoder That Revolutionized Text Generation</h3>
+		<p style="font-size:larger;"><p>A deep dive into BART (Bidirectional and Auto-Regressive Transformers), exploring how it combines the best of BERT and GPT, its advantages over BERT, variants, and real-world applications in text generation and understanding.</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Tue 08 July 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/machine-learning.html">machine learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/bart.html">bart</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/transformer.html">transformer</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/text-generation.html">text generation</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/denoising.html">denoising</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/sequence-to-sequence.html">sequence-to-sequence</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/nlp.html">nlp</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>BART (Bidirectional and Auto-Regressive Transformers) represents a significant breakthrough in natural language processing, combining the bidirectional understanding of BERT with the autoregressive generation capabilities of GPT. Developed by Facebook AI Research, BART has proven to be exceptionally effective for a wide range of text generation and understanding tasks.</p>
+<h2 id="what-is-bart">What is BART?</h2>
+<p>BART is a <strong>denoising autoencoder</strong> that uses a sequence-to-sequence transformer architecture. Unlike BERT, which is purely an encoder model, or GPT, which is purely a decoder model, BART combines both:</p>
+<ul>
+<li><strong>Encoder</strong>: Processes corrupted input text bidirectionally (like BERT)</li>
+<li><strong>Decoder</strong>: Generates clean output text autoregressively (like GPT)</li>
+</ul>
+<h3 id="the-core-innovation-denoising-pretraining">The Core Innovation: Denoising Pretraining</h3>
+<p>BART's key innovation lies in its pretraining approach. Instead of predicting masked tokens like BERT, BART learns to reconstruct original text from corrupted versions through a sophisticated denoising autoencoder framework.</p>
+<h4 id="understanding-denoising-autoencoders">Understanding Denoising Autoencoders</h4>
+<p>A denoising autoencoder learns to map corrupted inputs back to clean outputs. In BART's case:</p>
+<ol>
+<li><strong>Input</strong>: Corrupted/noisy text document</li>
+<li><strong>Encoder</strong>: Processes the corrupted text bidirectionally</li>
+<li><strong>Decoder</strong>: Generates the original, clean text autoregressively</li>
+<li><strong>Objective</strong>: Minimize reconstruction loss between generated and original text</li>
+</ol>
+<p>This approach teaches BART to understand text structure, semantics, and coherence while simultaneously learning to generate fluent text.</p>
+<h4 id="comprehensive-corruption-strategies">Comprehensive Corruption Strategies</h4>
+<p>BART employs multiple corruption strategies during pretraining, each targeting different aspects of language understanding:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - BART Denoising Concept</span>
+<span class="kd">import</span> <span class="nc">MLX</span>
+
+<span class="kd">struct</span> <span class="nc">BARTDenoising</span> <span class="p">{</span>
+
+    <span class="kd">enum</span> <span class="nc">CorruptionType</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">tokenMasking</span>        <span class="c1">// Replace tokens with [MASK]</span>
+        <span class="k">case</span> <span class="n">tokenDeletion</span>       <span class="c1">// Remove random tokens</span>
+        <span class="k">case</span> <span class="n">textInfilling</span>       <span class="c1">// Replace spans with single [MASK]</span>
+        <span class="k">case</span> <span class="n">sentencePermutation</span> <span class="c1">// Shuffle sentence order</span>
+        <span class="k">case</span> <span class="n">documentRotation</span>    <span class="c1">// Rotate document to start at random token</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">applyCorruption</span><span class="p">(</span><span class="kc">_</span> <span class="n">text</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span> <span class="n">type</span><span class="p">:</span> <span class="n">CorruptionType</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">type</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">tokenMasking</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">maskRandomTokens</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">maskRatio</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">tokenDeletion</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">deleteRandomTokens</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">deleteRatio</span><span class="p">:</span> <span class="mf">0.10</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">textInfilling</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">maskSpans</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">spanLength</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">maskRatio</span><span class="p">:</span> <span class="mf">0.30</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">sentencePermutation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">shuffleSentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">documentRotation</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">rotateDocument</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">maskRandomTokens</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span> <span class="n">maskRatio</span><span class="p">:</span> <span class="nb">Float</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">corrupted</span> <span class="p">=</span> <span class="n">tokens</span>
+        <span class="kd">let</span> <span class="nv">numToMask</span> <span class="p">=</span> <span class="nb">Int</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">tokens</span><span class="p">.</span><span class="bp">count</span><span class="p">)</span> <span class="o">*</span> <span class="n">maskRatio</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">indicesToMask</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">tokens</span><span class="p">.</span><span class="bp">count</span><span class="p">).</span><span class="n">shuffled</span><span class="p">().</span><span class="kr">prefix</span><span class="p">(</span><span class="n">numToMask</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">index</span> <span class="k">in</span> <span class="n">indicesToMask</span> <span class="p">{</span>
+            <span class="n">corrupted</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="s">&quot;[MASK]&quot;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">corrupted</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">textInfilling</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">])</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="c1">// Replace contiguous spans with single [MASK] token</span>
+        <span class="kd">var</span> <span class="nv">result</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span>
+        <span class="kd">var</span> <span class="nv">i</span> <span class="p">=</span> <span class="mi">0</span>
+
+        <span class="k">while</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">tokens</span><span class="p">.</span><span class="bp">count</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">shouldStartSpan</span><span class="p">()</span> <span class="p">{</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">&quot;[MASK]&quot;</span><span class="p">)</span>
+                <span class="c1">// Skip the span</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="n">spanLength</span><span class="p">()</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">result</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">result</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Advanced corruption implementations</span>
+    <span class="kd">func</span> <span class="nf">deleteRandomTokens</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span> <span class="n">deleteRatio</span><span class="p">:</span> <span class="nb">Float</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">numToDelete</span> <span class="p">=</span> <span class="nb">Int</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">tokens</span><span class="p">.</span><span class="bp">count</span><span class="p">)</span> <span class="o">*</span> <span class="n">deleteRatio</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">indicesToDelete</span> <span class="p">=</span> <span class="n">Set</span><span class="p">(</span><span class="nb">Array</span><span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">tokens</span><span class="p">.</span><span class="bp">count</span><span class="p">).</span><span class="n">shuffled</span><span class="p">().</span><span class="kr">prefix</span><span class="p">(</span><span class="n">numToDelete</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">tokens</span><span class="p">.</span><span class="n">enumerated</span><span class="p">().</span><span class="n">compactMap</span> <span class="p">{</span> <span class="n">index</span><span class="p">,</span> <span class="n">token</span> <span class="k">in</span>
+            <span class="n">indicesToDelete</span><span class="p">.</span><span class="bp">contains</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="p">?</span> <span class="kc">nil</span> <span class="p">:</span> <span class="n">token</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">shuffleSentences</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">])</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="c1">// Split into sentences and shuffle their order</span>
+        <span class="kd">let</span> <span class="nv">sentences</span> <span class="p">=</span> <span class="n">splitIntoSentences</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">shuffledSentences</span> <span class="p">=</span> <span class="n">sentences</span><span class="p">.</span><span class="n">shuffled</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">shuffledSentences</span><span class="p">.</span><span class="n">flatMap</span> <span class="p">{</span> <span class="nv">$0</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">rotateDocument</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">])</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="c1">// Start document from a random position</span>
+        <span class="k">guard</span> <span class="n">tokens</span><span class="p">.</span><span class="bp">count</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tokens</span> <span class="p">}</span>
+        <span class="kd">let</span> <span class="nv">rotationPoint</span> <span class="p">=</span> <span class="nb">Int</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="mf">1.</span><span class="p">.&lt;</span><span class="n">tokens</span><span class="p">.</span><span class="bp">count</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">Array</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">rotationPoint</span><span class="p">...])</span> <span class="o">+</span> <span class="nb">Array</span><span class="p">(</span><span class="n">tokens</span><span class="p">[..&lt;</span><span class="n">rotationPoint</span><span class="p">])</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="detailed-analysis-of-each-corruption-strategy">Detailed Analysis of Each Corruption Strategy</h4>
+<p><strong>1. Token Masking (15% of tokens)</strong>
+- <strong>Purpose</strong>: Teaches the model to predict individual words from context
+- <strong>Similarity to BERT</strong>: Direct parallel to BERT's masking strategy
+- <strong>Learning</strong>: Local context understanding and vocabulary prediction</p>
+<p><strong>2. Token Deletion (10% of tokens)</strong>
+- <strong>Purpose</strong>: Forces model to handle missing information
+- <strong>Challenge</strong>: Must infer what was removed and where
+- <strong>Learning</strong>: Robust text understanding despite incomplete input</p>
+<p><strong>3. Text Infilling (30% of text span)</strong>
+- <strong>Purpose</strong>: Most challenging corruption, requires understanding longer dependencies
+- <strong>Implementation</strong>: Replace spans of varying lengths with single [MASK]
+- <strong>Learning</strong>: Long-range dependencies and coherent text generation</p>
+<p><strong>4. Sentence Permutation</strong>
+- <strong>Purpose</strong>: Teaches document-level structure and coherence
+- <strong>Challenge</strong>: Understanding logical flow and discourse structure
+- <strong>Learning</strong>: Global text organization and inter-sentence relationships</p>
+<p><strong>5. Document Rotation</strong>
+- <strong>Purpose</strong>: Handles arbitrary starting points in text
+- <strong>Benefit</strong>: Robust to different text presentations
+- <strong>Learning</strong>: Context independence and flexible processing</p>
+<h4 id="pretraining-objective-and-loss-function">Pretraining Objective and Loss Function</h4>
+<p>BART's pretraining uses a sequence-to-sequence loss that optimizes the entire reconstruction process. Unlike BERT's masked language modeling (MLM) which predicts individual tokens, BART optimizes for complete sequence reconstruction using cross-entropy loss across the entire target sequence.</p>
+<h5 id="mathematical-foundation">Mathematical Foundation</h5>
+<p>The core objective function for BART pretraining can be expressed as:</p>
+<div class="highlight"><pre><span></span><code>L(θ) = -∑∑ log P(y_t | y_&lt;t, x; θ)
+</code></pre></div>
+
+<p>Where:</p>
+<ul>
+<li><code>θ</code> represents the model parameters</li>
+<li><code>x</code> is the corrupted input sequence</li>
+<li><code>y</code> is the original (clean) target sequence</li>
+<li><code>y_&lt;t</code> represents all previous tokens up to position t</li>
+<li><code>P(y_t | y_&lt;t, x; θ)</code> is the conditional probability of token y_t</li>
+</ul>
+<h5 id="detailed-loss-function-implementation">Detailed Loss Function Implementation</h5>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - BART Pretraining Objective</span>
+<span class="kd">class</span> <span class="nc">BARTPretrainingObjective</span> <span class="p">{</span>
+
+    <span class="kd">func</span> <span class="nf">computeLoss</span><span class="p">(</span>
+        <span class="n">originalText</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+        <span class="n">corruptedText</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">BARTModel</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">loss</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">TrainingMetrics</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Convert to token IDs</span>
+        <span class="kd">let</span> <span class="nv">sourceIds</span> <span class="p">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">corruptedText</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">targetIds</span> <span class="p">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="n">originalText</span><span class="p">)</span>
+
+        <span class="c1">// Forward pass through BART</span>
+        <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">:</span> <span class="n">sourceIds</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">)</span>
+
+        <span class="c1">// Compute cross-entropy loss</span>
+        <span class="kd">let</span> <span class="nv">loss</span> <span class="p">=</span> <span class="n">crossEntropyLoss</span><span class="p">(</span>
+            <span class="n">predictions</span><span class="p">:</span> <span class="n">logits</span><span class="p">,</span>
+            <span class="n">targets</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">,</span>
+            <span class="n">ignoreIndex</span><span class="p">:</span> <span class="n">padTokenId</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Additional metrics for monitoring</span>
+        <span class="kd">let</span> <span class="nv">metrics</span> <span class="p">=</span> <span class="n">TrainingMetrics</span><span class="p">(</span>
+            <span class="n">reconstructionLoss</span><span class="p">:</span> <span class="n">loss</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">),</span>
+            <span class="n">perplexity</span><span class="p">:</span> <span class="n">exp</span><span class="p">(</span><span class="n">loss</span><span class="p">).</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">),</span>
+            <span class="n">accuracy</span><span class="p">:</span> <span class="n">calculateTokenAccuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">),</span>
+            <span class="n">bleuScore</span><span class="p">:</span> <span class="n">calculateBLEU</span><span class="p">(</span>
+                <span class="n">predictions</span><span class="p">:</span> <span class="n">logits</span><span class="p">.</span><span class="n">argMax</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">targets</span><span class="p">:</span> <span class="n">targetIds</span>
+            <span class="p">),</span>
+            <span class="n">editDistance</span><span class="p">:</span> <span class="n">calculateEditDistance</span><span class="p">(</span>
+                <span class="n">predictions</span><span class="p">:</span> <span class="n">logits</span><span class="p">.</span><span class="n">argMax</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+                <span class="n">targets</span><span class="p">:</span> <span class="n">targetIds</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">crossEntropyLoss</span><span class="p">(</span>
+        <span class="n">predictions</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">targets</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">ignoreIndex</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Reshape for loss computation</span>
+        <span class="kd">let</span> <span class="nv">vocabSize</span> <span class="p">=</span> <span class="n">predictions</span><span class="p">.</span><span class="n">shape</span><span class="p">.</span><span class="bp">last</span><span class="p">!</span>
+        <span class="kd">let</span> <span class="nv">flatPredictions</span> <span class="p">=</span> <span class="n">predictions</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vocabSize</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">flatTargets</span> <span class="p">=</span> <span class="n">targets</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="c1">// Create mask for valid tokens (ignore padding)</span>
+        <span class="kd">let</span> <span class="nv">validMask</span> <span class="p">=</span> <span class="n">flatTargets</span><span class="p">.</span><span class="n">notEqual</span><span class="p">(</span><span class="n">ignoreIndex</span><span class="p">)</span>
+
+        <span class="c1">// Compute cross-entropy loss</span>
+        <span class="kd">let</span> <span class="nv">loss</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">crossEntropy</span><span class="p">(</span>
+            <span class="n">logits</span><span class="p">:</span> <span class="n">flatPredictions</span><span class="p">,</span>
+            <span class="n">targets</span><span class="p">:</span> <span class="n">flatTargets</span><span class="p">,</span>
+            <span class="n">reduction</span><span class="p">:</span> <span class="p">.</span><span class="kr">none</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Apply mask and compute mean</span>
+        <span class="kd">let</span> <span class="nv">maskedLoss</span> <span class="p">=</span> <span class="n">loss</span> <span class="o">*</span> <span class="n">validMask</span><span class="p">.</span><span class="n">asType</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">maskedLoss</span><span class="p">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">validMask</span><span class="p">.</span><span class="n">sum</span><span class="p">().</span><span class="n">asType</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Token-level accuracy calculation</span>
+    <span class="kd">func</span> <span class="nf">calculateTokenAccuracy</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Float</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">predictions</span> <span class="p">=</span> <span class="n">logits</span><span class="p">.</span><span class="n">argMax</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">correct</span> <span class="p">=</span> <span class="n">predictions</span><span class="p">.</span><span class="bp">equal</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">validMask</span> <span class="p">=</span> <span class="n">targets</span><span class="p">.</span><span class="n">notEqual</span><span class="p">(</span><span class="n">padTokenId</span><span class="p">)</span>
+
+        <span class="kd">let</span> <span class="nv">correctValid</span> <span class="p">=</span> <span class="n">correct</span> <span class="o">*</span> <span class="n">validMask</span>
+        <span class="k">return</span> <span class="n">correctValid</span><span class="p">.</span><span class="n">sum</span><span class="p">().</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span> <span class="o">/</span> <span class="n">validMask</span><span class="p">.</span><span class="n">sum</span><span class="p">().</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// BLEU score for sequence-level evaluation</span>
+    <span class="kd">func</span> <span class="nf">calculateBLEU</span><span class="p">(</span><span class="n">predictions</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Float</span> <span class="p">{</span>
+        <span class="c1">// Convert to text sequences</span>
+        <span class="kd">let</span> <span class="nv">predTexts</span> <span class="p">=</span> <span class="n">detokenize</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">targetTexts</span> <span class="p">=</span> <span class="n">detokenize</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">computeBLEUScore</span><span class="p">(</span><span class="n">predictions</span><span class="p">:</span> <span class="n">predTexts</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">targetTexts</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">TrainingMetrics</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">reconstructionLoss</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">perplexity</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">accuracy</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">bleuScore</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">editDistance</span><span class="p">:</span> <span class="nb">Float</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="multi-level-loss-components">Multi-Level Loss Components</h5>
+<p>BART's loss function incorporates multiple components to ensure comprehensive learning:</p>
+<p><strong>1. Primary Reconstruction Loss</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nf">primaryReconstructionLoss</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+    <span class="c1">// Standard cross-entropy loss for token prediction</span>
+    <span class="k">return</span> <span class="n">crossEntropyLoss</span><span class="p">(</span><span class="n">predictions</span><span class="p">:</span> <span class="n">logits</span><span class="p">,</span> <span class="n">targets</span><span class="p">:</span> <span class="n">targets</span><span class="p">,</span> <span class="n">ignoreIndex</span><span class="p">:</span> <span class="n">padTokenId</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>2. Length Penalty (for Generation Tasks)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nf">lengthPenalty</span><span class="p">(</span><span class="n">generatedLength</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">targetLength</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.6</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">Float</span> <span class="p">{</span>
+    <span class="c1">// Encourage appropriate sequence lengths</span>
+    <span class="kd">let</span> <span class="nv">lengthRatio</span> <span class="p">=</span> <span class="nb">Float</span><span class="p">(</span><span class="n">generatedLength</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Float</span><span class="p">(</span><span class="n">targetLength</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pow</span><span class="p">(</span><span class="n">lengthRatio</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p><strong>3. Coverage Loss (for Attention Mechanisms)</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">func</span> <span class="nf">coverageLoss</span><span class="p">(</span><span class="n">attentionWeights</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+    <span class="c1">// Encourage comprehensive attention coverage</span>
+    <span class="kd">let</span> <span class="nv">coverage</span> <span class="p">=</span> <span class="n">attentionWeights</span><span class="p">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span> <span class="c1">// Sum over decoder steps</span>
+    <span class="kd">let</span> <span class="nv">penalty</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="bp">max</span><span class="p">(</span><span class="n">coverage</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="c1">// Penalize over-attention</span>
+    <span class="k">return</span> <span class="n">penalty</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="advanced-loss-function-with-regularization">Advanced Loss Function with Regularization</h5>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Advanced BART Loss Function</span>
+<span class="kd">class</span> <span class="nc">AdvancedBARTLoss</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">primaryWeight</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">1.0</span>
+    <span class="kd">let</span> <span class="nv">lengthPenaltyWeight</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span>
+    <span class="kd">let</span> <span class="nv">coverageWeight</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.05</span>
+    <span class="kd">let</span> <span class="nv">consistencyWeight</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.02</span>
+
+    <span class="kd">func</span> <span class="nf">computeComprehensiveLoss</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">BARTModel</span><span class="p">,</span>
+        <span class="n">sourceIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">attentionWeights</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">totalLoss</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">lossComponents</span><span class="p">:</span> <span class="n">LossComponents</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="c1">// Forward pass</span>
+        <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">:</span> <span class="n">sourceIds</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">)</span>
+
+        <span class="c1">// 1. Primary reconstruction loss</span>
+        <span class="kd">let</span> <span class="nv">reconstructionLoss</span> <span class="p">=</span> <span class="n">crossEntropyLoss</span><span class="p">(</span>
+            <span class="n">predictions</span><span class="p">:</span> <span class="n">logits</span><span class="p">,</span>
+            <span class="n">targets</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">,</span>
+            <span class="n">ignoreIndex</span><span class="p">:</span> <span class="n">padTokenId</span>
+        <span class="p">)</span>
+
+        <span class="c1">// 2. Length penalty</span>
+        <span class="kd">let</span> <span class="nv">generatedLength</span> <span class="p">=</span> <span class="n">logits</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">targetLength</span> <span class="p">=</span> <span class="n">targetIds</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">lengthPenalty</span> <span class="p">=</span> <span class="kc">self</span><span class="p">.</span><span class="n">lengthPenalty</span><span class="p">(</span>
+            <span class="n">generatedLength</span><span class="p">:</span> <span class="n">generatedLength</span><span class="p">,</span>
+            <span class="n">targetLength</span><span class="p">:</span> <span class="n">targetLength</span>
+        <span class="p">)</span>
+
+        <span class="c1">// 3. Coverage loss (if attention weights available)</span>
+        <span class="kd">var</span> <span class="nv">coverageLoss</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="kd">let</span> <span class="nv">attentionWeights</span> <span class="p">=</span> <span class="n">attentionWeights</span> <span class="p">{</span>
+            <span class="n">coverageLoss</span> <span class="p">=</span> <span class="kc">self</span><span class="p">.</span><span class="n">coverageLoss</span><span class="p">(</span><span class="n">attentionWeights</span><span class="p">:</span> <span class="n">attentionWeights</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 4. Consistency loss (encourages stable representations)</span>
+        <span class="kd">let</span> <span class="nv">consistencyLoss</span> <span class="p">=</span> <span class="n">computeConsistencyLoss</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">logits</span><span class="p">)</span>
+
+        <span class="c1">// Combine all loss components</span>
+        <span class="kd">let</span> <span class="nv">totalLoss</span> <span class="p">=</span> <span class="n">primaryWeight</span> <span class="o">*</span> <span class="n">reconstructionLoss</span> <span class="o">+</span>
+                       <span class="n">lengthPenaltyWeight</span> <span class="o">*</span> <span class="n">lengthPenalty</span> <span class="o">+</span>
+                       <span class="n">coverageWeight</span> <span class="o">*</span> <span class="n">coverageLoss</span> <span class="o">+</span>
+                       <span class="n">consistencyWeight</span> <span class="o">*</span> <span class="n">consistencyLoss</span>
+
+        <span class="kd">let</span> <span class="nv">components</span> <span class="p">=</span> <span class="n">LossComponents</span><span class="p">(</span>
+            <span class="n">reconstruction</span><span class="p">:</span> <span class="n">reconstructionLoss</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">),</span>
+            <span class="n">lengthPenalty</span><span class="p">:</span> <span class="n">lengthPenalty</span><span class="p">,</span>
+            <span class="n">coverage</span><span class="p">:</span> <span class="n">coverageLoss</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">),</span>
+            <span class="n">consistency</span><span class="p">:</span> <span class="n">consistencyLoss</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">),</span>
+            <span class="n">total</span><span class="p">:</span> <span class="n">totalLoss</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">totalLoss</span><span class="p">,</span> <span class="n">components</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">computeConsistencyLoss</span><span class="p">(</span><span class="n">logits</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Encourage consistent probability distributions across similar contexts</span>
+        <span class="kd">let</span> <span class="nv">probabilities</span> <span class="p">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">variance</span> <span class="p">=</span> <span class="n">probabilities</span><span class="p">.</span><span class="n">variance</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">variance</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">LossComponents</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">reconstruction</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">lengthPenalty</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">coverage</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">consistency</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="kd">let</span> <span class="nv">total</span><span class="p">:</span> <span class="nb">Float</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="gradient-flow-and-optimization">Gradient Flow and Optimization</h5>
+<p>BART's encoder-decoder architecture requires careful gradient flow management:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Gradient Flow Management</span>
+<span class="kd">class</span> <span class="nc">BARTGradientManager</span> <span class="p">{</span>
+
+    <span class="kd">func</span> <span class="nf">computeGradients</span><span class="p">(</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">BARTModel</span><span class="p">,</span>
+        <span class="n">loss</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">clipNorm</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">1.0</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">]</span> <span class="p">{</span>
+
+        <span class="c1">// Compute gradients</span>
+        <span class="kd">let</span> <span class="nv">gradients</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">grad</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+
+        <span class="c1">// Apply gradient clipping</span>
+        <span class="kd">let</span> <span class="nv">clippedGradients</span> <span class="p">=</span> <span class="n">clipGradients</span><span class="p">(</span>
+            <span class="n">gradients</span><span class="p">:</span> <span class="n">gradients</span><span class="p">,</span>
+            <span class="n">maxNorm</span><span class="p">:</span> <span class="n">clipNorm</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Apply different learning rates for encoder vs decoder</span>
+        <span class="kd">let</span> <span class="nv">scaledGradients</span> <span class="p">=</span> <span class="n">scaleGradientsByComponent</span><span class="p">(</span>
+            <span class="n">gradients</span><span class="p">:</span> <span class="n">clippedGradients</span><span class="p">,</span>
+            <span class="n">encoderScale</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">decoderScale</span><span class="p">:</span> <span class="mf">1.2</span>  <span class="c1">// Slightly higher for decoder</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">scaledGradients</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">clipGradients</span><span class="p">(</span>
+        <span class="n">gradients</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">],</span>
+        <span class="n">maxNorm</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">]</span> <span class="p">{</span>
+
+        <span class="c1">// Calculate total gradient norm</span>
+        <span class="kd">let</span> <span class="nv">totalNorm</span> <span class="p">=</span> <span class="n">sqrt</span><span class="p">(</span>
+            <span class="n">gradients</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="p">.</span><span class="n">square</span><span class="p">().</span><span class="n">sum</span><span class="p">()</span> <span class="p">}.</span><span class="bp">reduce</span><span class="p">(</span><span class="n">MLXArray</span><span class="p">(</span><span class="mf">0.0</span><span class="p">),</span> <span class="o">+</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Apply clipping if necessary</span>
+        <span class="k">if</span> <span class="n">totalNorm</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">maxNorm</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="nv">clipRatio</span> <span class="p">=</span> <span class="n">maxNorm</span> <span class="o">/</span> <span class="n">totalNorm</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Float</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">gradients</span><span class="p">.</span><span class="n">mapValues</span> <span class="p">{</span> <span class="nv">$0</span> <span class="o">*</span> <span class="n">clipRatio</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">gradients</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">scaleGradientsByComponent</span><span class="p">(</span>
+        <span class="n">gradients</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">],</span>
+        <span class="n">encoderScale</span><span class="p">:</span> <span class="nb">Float</span><span class="p">,</span>
+        <span class="n">decoderScale</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">]</span> <span class="p">{</span>
+
+        <span class="kd">var</span> <span class="nv">scaledGradients</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">]</span> <span class="p">=</span> <span class="p">[:]</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">gradient</span><span class="p">)</span> <span class="k">in</span> <span class="n">gradients</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="bp">contains</span><span class="p">(</span><span class="s">&quot;encoder&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">scaledGradients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="p">=</span> <span class="n">gradient</span> <span class="o">*</span> <span class="n">encoderScale</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">name</span><span class="p">.</span><span class="bp">contains</span><span class="p">(</span><span class="s">&quot;decoder&quot;</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">scaledGradients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="p">=</span> <span class="n">gradient</span> <span class="o">*</span> <span class="n">decoderScale</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="n">scaledGradients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="p">=</span> <span class="n">gradient</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">scaledGradients</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h5 id="comparison-with-other-pretraining-objectives">Comparison with Other Pretraining Objectives</h5>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>BART Reconstruction</th>
+<th>BERT MLM</th>
+<th>GPT Autoregressive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Loss Type</strong></td>
+<td>Sequence-to-sequence CE</td>
+<td>Token-level CE</td>
+<td>Autoregressive CE</td>
+</tr>
+<tr>
+<td><strong>Prediction Scope</strong></td>
+<td>Entire sequence</td>
+<td>Masked tokens only</td>
+<td>Next token</td>
+</tr>
+<tr>
+<td><strong>Context Usage</strong></td>
+<td>Bidirectional input → Autoregressive output</td>
+<td>Bidirectional</td>
+<td>Unidirectional</td>
+</tr>
+<tr>
+<td><strong>Training Complexity</strong></td>
+<td>High (two-stage)</td>
+<td>Medium</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Gradient Flow</strong></td>
+<td>Encoder → Decoder</td>
+<td>Single direction</td>
+<td>Single direction</td>
+</tr>
+<tr>
+<td><strong>Optimization Challenge</strong></td>
+<td>Balancing encoder/decoder</td>
+<td>Masked token selection</td>
+<td>Exposure bias</td>
+</tr>
+</tbody>
+</table>
+<p>The sophisticated loss function design ensures that BART learns both robust understanding through its encoder and fluent generation through its decoder, making it exceptionally effective for sequence-to-sequence tasks that require both comprehension and production of natural language.</p>
+<h4 id="progressive-training-strategy">Progressive Training Strategy</h4>
+<p>BART employs a sophisticated training curriculum that gradually increases complexity:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Progressive BART Training</span>
+<span class="kd">class</span> <span class="nc">ProgressiveBARTTrainer</span> <span class="p">{</span>
+
+    <span class="kd">enum</span> <span class="nc">TrainingPhase</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">warmup</span><span class="p">(</span><span class="n">steps</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">easy</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">medium</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">hard</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">mixed</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">executeTrainingCurriculum</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">phases</span><span class="p">:</span> <span class="p">[</span><span class="n">TrainingPhase</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span>
+            <span class="p">.</span><span class="n">warmup</span><span class="p">(</span><span class="n">steps</span><span class="p">:</span> <span class="mi">10000</span><span class="p">),</span>
+            <span class="p">.</span><span class="n">easy</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="mi">20</span><span class="p">),</span>
+            <span class="p">.</span><span class="n">medium</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="mi">30</span><span class="p">),</span>
+            <span class="p">.</span><span class="n">hard</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="mi">40</span><span class="p">),</span>
+            <span class="p">.</span><span class="n">mixed</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">phase</span> <span class="k">in</span> <span class="n">phases</span> <span class="p">{</span>
+            <span class="n">trainPhase</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">trainPhase</span><span class="p">(</span><span class="kc">_</span> <span class="n">phase</span><span class="p">:</span> <span class="n">TrainingPhase</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="n">phase</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">warmup</span><span class="p">(</span><span class="kd">let</span> <span class="nv">steps</span><span class="p">):</span>
+            <span class="c1">// Start with simple token masking only</span>
+            <span class="n">trainWithCorruptions</span><span class="p">(</span>
+                <span class="n">types</span><span class="p">:</span> <span class="p">[.</span><span class="n">tokenMasking</span><span class="p">],</span>
+                <span class="n">steps</span><span class="p">:</span> <span class="n">steps</span><span class="p">,</span>
+                <span class="n">learningRate</span><span class="p">:</span> <span class="mf">1e-5</span>
+            <span class="p">)</span>
+
+        <span class="k">case</span> <span class="p">.</span><span class="n">easy</span><span class="p">(</span><span class="kd">let</span> <span class="nv">epochs</span><span class="p">):</span>
+            <span class="c1">// Add token deletion</span>
+            <span class="n">trainWithCorruptions</span><span class="p">(</span>
+                <span class="n">types</span><span class="p">:</span> <span class="p">[.</span><span class="n">tokenMasking</span><span class="p">,</span> <span class="p">.</span><span class="n">tokenDeletion</span><span class="p">],</span>
+                <span class="n">epochs</span><span class="p">:</span> <span class="n">epochs</span><span class="p">,</span>
+                <span class="n">learningRate</span><span class="p">:</span> <span class="mf">3e-5</span>
+            <span class="p">)</span>
+
+        <span class="k">case</span> <span class="p">.</span><span class="n">medium</span><span class="p">(</span><span class="kd">let</span> <span class="nv">epochs</span><span class="p">):</span>
+            <span class="c1">// Introduce text infilling</span>
+            <span class="n">trainWithCorruptions</span><span class="p">(</span>
+                <span class="n">types</span><span class="p">:</span> <span class="p">[.</span><span class="n">tokenMasking</span><span class="p">,</span> <span class="p">.</span><span class="n">tokenDeletion</span><span class="p">,</span> <span class="p">.</span><span class="n">textInfilling</span><span class="p">],</span>
+                <span class="n">epochs</span><span class="p">:</span> <span class="n">epochs</span><span class="p">,</span>
+                <span class="n">learningRate</span><span class="p">:</span> <span class="mf">3e-5</span>
+            <span class="p">)</span>
+
+        <span class="k">case</span> <span class="p">.</span><span class="n">hard</span><span class="p">(</span><span class="kd">let</span> <span class="nv">epochs</span><span class="p">):</span>
+            <span class="c1">// Add sentence-level corruptions</span>
+            <span class="n">trainWithCorruptions</span><span class="p">(</span>
+                <span class="n">types</span><span class="p">:</span> <span class="p">[.</span><span class="n">tokenMasking</span><span class="p">,</span> <span class="p">.</span><span class="n">tokenDeletion</span><span class="p">,</span> <span class="p">.</span><span class="n">textInfilling</span><span class="p">,</span> <span class="p">.</span><span class="n">sentencePermutation</span><span class="p">],</span>
+                <span class="n">epochs</span><span class="p">:</span> <span class="n">epochs</span><span class="p">,</span>
+                <span class="n">learningRate</span><span class="p">:</span> <span class="mf">1e-5</span>
+            <span class="p">)</span>
+
+        <span class="k">case</span> <span class="p">.</span><span class="n">mixed</span><span class="p">(</span><span class="kd">let</span> <span class="nv">epochs</span><span class="p">):</span>
+            <span class="c1">// Use all corruption types with adaptive sampling</span>
+            <span class="n">trainWithAdaptiveCorruption</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">learningRate</span><span class="p">:</span> <span class="mf">5e-6</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">trainWithAdaptiveCorruption</span><span class="p">(</span><span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">learningRate</span><span class="p">:</span> <span class="nb">Float</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Dynamically adjust corruption probabilities based on performance</span>
+        <span class="kd">var</span> <span class="nv">corruptionWeights</span><span class="p">:</span> <span class="p">[</span><span class="n">BARTDenoising</span><span class="p">.</span><span class="n">CorruptionType</span><span class="p">:</span> <span class="nb">Float</span><span class="p">]</span> <span class="p">=</span> <span class="p">[</span>
+            <span class="p">.</span><span class="n">tokenMasking</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+            <span class="p">.</span><span class="n">tokenDeletion</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+            <span class="p">.</span><span class="n">textInfilling</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">,</span>
+            <span class="p">.</span><span class="n">sentencePermutation</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+            <span class="p">.</span><span class="n">documentRotation</span><span class="p">:</span> <span class="mf">0.05</span>
+        <span class="p">]</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">epochs</span> <span class="p">{</span>
+            <span class="c1">// Adjust weights based on recent performance</span>
+            <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">5</span> <span class="p">==</span> <span class="mi">0</span> <span class="p">{</span>
+                <span class="n">corruptionWeights</span> <span class="p">=</span> <span class="n">updateCorruptionWeights</span><span class="p">(</span>
+                    <span class="n">currentWeights</span><span class="p">:</span> <span class="n">corruptionWeights</span><span class="p">,</span>
+                    <span class="n">performanceMetrics</span><span class="p">:</span> <span class="n">getRecentMetrics</span><span class="p">()</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="n">trainEpochWithWeights</span><span class="p">(</span><span class="n">corruptionWeights</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h4 id="why-denoising-pretraining-works-so-well">Why Denoising Pretraining Works So Well</h4>
+<p><strong>1. Comprehensive Language Understanding</strong>
+- <strong>Bidirectional Context</strong>: Encoder sees full corrupted context
+- <strong>Autoregressive Generation</strong>: Decoder learns fluent text production
+- <strong>Multi-level Reasoning</strong>: From token-level to document-level understanding</p>
+<p><strong>2. Robust Representation Learning</strong>
+- <strong>Noise Resistance</strong>: Model learns to handle imperfect inputs
+- <strong>Generalization</strong>: Multiple corruption types prevent overfitting
+- <strong>Transfer Learning</strong>: Rich representations transfer well to downstream tasks</p>
+<p><strong>3. Unified Architecture Benefits</strong>
+- <strong>End-to-End Training</strong>: Single model for understanding and generation
+- <strong>Flexible Application</strong>: Same architecture for various tasks
+- <strong>Efficient Fine-tuning</strong>: Strong pretraining foundation reduces task-specific training</p>
+<h4 id="comparison-with-other-pretraining-approaches">Comparison with Other Pretraining Approaches</h4>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>BART Denoising</th>
+<th>BERT Masking</th>
+<th>GPT Autoregressive</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input Processing</strong></td>
+<td>Bidirectional</td>
+<td>Bidirectional</td>
+<td>Unidirectional</td>
+</tr>
+<tr>
+<td><strong>Output Generation</strong></td>
+<td>Autoregressive</td>
+<td>Token prediction</td>
+<td>Autoregressive</td>
+</tr>
+<tr>
+<td><strong>Corruption Types</strong></td>
+<td>Multiple strategies</td>
+<td>Token masking only</td>
+<td>None (clean text)</td>
+</tr>
+<tr>
+<td><strong>Task Flexibility</strong></td>
+<td>High (understand + generate)</td>
+<td>Medium (understand)</td>
+<td>Medium (generate)</td>
+</tr>
+<tr>
+<td><strong>Training Complexity</strong></td>
+<td>High</td>
+<td>Medium</td>
+<td>Low</td>
+</tr>
+<tr>
+<td><strong>Downstream Performance</strong></td>
+<td>Excellent for seq2seq</td>
+<td>Excellent for understanding</td>
+<td>Excellent for generation</td>
+</tr>
+</tbody>
+</table>
+<p>The denoising pretraining approach makes BART uniquely powerful because it combines the best aspects of bidirectional understanding with autoregressive generation, while the diverse corruption strategies ensure robust and generalizable representations that excel across a wide range of natural language processing tasks.</p>
+<h2 id="bart-architecture-the-best-of-both-worlds">BART Architecture: The Best of Both Worlds</h2>
+<h3 id="encoder-decoder-structure">Encoder-Decoder Structure</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - BART Architecture</span>
+<span class="kd">import</span> <span class="nc">MLX</span>
+<span class="kd">import</span> <span class="nc">MLXNN</span>
+
+<span class="kd">class</span> <span class="nc">BARTModel</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">encoder</span><span class="p">:</span> <span class="n">TransformerEncoder</span>
+    <span class="kd">let</span> <span class="nv">decoder</span><span class="p">:</span> <span class="n">TransformerDecoder</span>
+    <span class="kd">let</span> <span class="nv">embeddings</span><span class="p">:</span> <span class="n">Embedding</span>
+    <span class="kd">let</span> <span class="nv">outputProjection</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dModel</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numLayers</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">embeddings</span> <span class="p">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">embeddingCount</span><span class="p">:</span> <span class="n">vocabSize</span><span class="p">,</span> <span class="n">dimensionality</span><span class="p">:</span> <span class="n">dModel</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">encoder</span> <span class="p">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span>
+            <span class="n">dModel</span><span class="p">:</span> <span class="n">dModel</span><span class="p">,</span>
+            <span class="n">numLayers</span><span class="p">:</span> <span class="n">numLayers</span><span class="p">,</span>
+            <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">,</span>
+            <span class="n">dff</span><span class="p">:</span> <span class="n">dModel</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">decoder</span> <span class="p">=</span> <span class="n">TransformerDecoder</span><span class="p">(</span>
+            <span class="n">dModel</span><span class="p">:</span> <span class="n">dModel</span><span class="p">,</span>
+            <span class="n">numLayers</span><span class="p">:</span> <span class="n">numLayers</span><span class="p">,</span>
+            <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">,</span>
+            <span class="n">dff</span><span class="p">:</span> <span class="n">dModel</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">outputProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">dModel</span><span class="p">,</span> <span class="n">vocabSize</span><span class="p">)</span>
+        <span class="kc">super</span><span class="p">.</span><span class="kd">init</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="n">sourceIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">,</span>
+        <span class="n">sourceMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">,</span>
+        <span class="n">targetMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Encode corrupted input</span>
+        <span class="kd">let</span> <span class="nv">sourceEmbeddings</span> <span class="p">=</span> <span class="n">embeddings</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">encoderOutput</span> <span class="p">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">sourceEmbeddings</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">sourceMask</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="kd">let</span> <span class="nv">targetIds</span> <span class="p">=</span> <span class="n">targetIds</span> <span class="p">{</span>
+            <span class="c1">// Training mode: use target sequence</span>
+            <span class="kd">let</span> <span class="nv">targetEmbeddings</span> <span class="p">=</span> <span class="n">embeddings</span><span class="p">(</span><span class="n">targetIds</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">decoderOutput</span> <span class="p">=</span> <span class="n">decoder</span><span class="p">(</span>
+                <span class="n">targetEmbeddings</span><span class="p">,</span>
+                <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">encoderOutput</span><span class="p">,</span>
+                <span class="n">targetMask</span><span class="p">:</span> <span class="n">targetMask</span><span class="p">,</span>
+                <span class="n">crossMask</span><span class="p">:</span> <span class="n">sourceMask</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">outputProjection</span><span class="p">(</span><span class="n">decoderOutput</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="c1">// Inference mode: generate autoregressively</span>
+            <span class="k">return</span> <span class="n">generateAutoregressive</span><span class="p">(</span><span class="n">encoderOutput</span><span class="p">:</span> <span class="n">encoderOutput</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">generateAutoregressive</span><span class="p">(</span><span class="n">encoderOutput</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">maxLength</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">512</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">generatedIds</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">([</span><span class="n">startTokenId</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="kc">_</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">maxLength</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="nv">targetEmbeddings</span> <span class="p">=</span> <span class="n">embeddings</span><span class="p">(</span><span class="n">generatedIds</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">decoderOutput</span> <span class="p">=</span> <span class="n">decoder</span><span class="p">(</span>
+                <span class="n">targetEmbeddings</span><span class="p">,</span>
+                <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">encoderOutput</span>
+            <span class="p">)</span>
+
+            <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">outputProjection</span><span class="p">(</span><span class="n">decoderOutput</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">nextToken</span> <span class="p">=</span> <span class="n">logits</span><span class="p">.</span><span class="n">argMax</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">generatedIds</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">generatedIds</span><span class="p">,</span> <span class="n">nextToken</span><span class="p">.</span><span class="n">expandedDimensions</span><span class="p">(</span><span class="n">axes</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+
+            <span class="k">if</span> <span class="n">nextToken</span><span class="p">.</span><span class="n">item</span><span class="p">(</span><span class="nb">Int</span><span class="p">.</span><span class="kc">self</span><span class="p">)</span> <span class="p">==</span> <span class="n">endTokenId</span> <span class="p">{</span>
+                <span class="k">break</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">generatedIds</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="bart-vs-bert-key-advantages">BART vs BERT: Key Advantages</h2>
+<h3 id="1-text-generation-capabilities">1. Text Generation Capabilities</h3>
+<p><strong>BERT Limitation:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// BERT can only encode, not generate</span>
+<span class="kd">let</span> <span class="nv">bertOutput</span> <span class="p">=</span> <span class="n">bert</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&quot;The weather is [MASK] today&quot;</span><span class="p">)</span>
+<span class="c1">// Output: Hidden representations, can predict masked token</span>
+<span class="c1">// Cannot generate: &quot;The weather is beautiful today and perfect for outdoor activities&quot;</span>
+</code></pre></div>
+
+<p><strong>BART Advantage:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// BART can both understand and generate</span>
+<span class="kd">let</span> <span class="nv">bartInput</span> <span class="p">=</span> <span class="s">&quot;The weather is [MASK] today&quot;</span>
+<span class="kd">let</span> <span class="nv">bartOutput</span> <span class="p">=</span> <span class="n">bart</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">bartInput</span><span class="p">)</span>
+<span class="c1">// Output: &quot;The weather is beautiful today and perfect for outdoor activities&quot;</span>
+</code></pre></div>
+
+<h3 id="2-flexible-input-corruption">2. Flexible Input Corruption</h3>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>BERT</th>
+<th>BART</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Corruption Type</strong></td>
+<td>Only token masking</td>
+<td>Multiple corruption strategies</td>
+</tr>
+<tr>
+<td><strong>Training Objective</strong></td>
+<td>Predict masked tokens</td>
+<td>Reconstruct entire sequence</td>
+</tr>
+<tr>
+<td><strong>Flexibility</strong></td>
+<td>Fixed mask pattern</td>
+<td>Diverse corruption patterns</td>
+</tr>
+<tr>
+<td><strong>Generalization</strong></td>
+<td>Limited to understanding</td>
+<td>Understanding + generation</td>
+</tr>
+</tbody>
+</table>
+<h3 id="3-sequence-to-sequence-tasks">3. Sequence-to-Sequence Tasks</h3>
+<p>BART naturally handles tasks that require generating output sequences different from input:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - BART Sequence-to-Sequence Applications</span>
+<span class="kd">struct</span> <span class="nc">BARTApplications</span> <span class="p">{</span>
+
+    <span class="kd">func</span> <span class="nf">summarization</span><span class="p">(</span><span class="n">article</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+        <span class="c1">// Input: Long article</span>
+        <span class="c1">// Output: Concise summary</span>
+        <span class="kd">let</span> <span class="nv">summary</span> <span class="p">=</span> <span class="n">bart</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">article</span><span class="p">,</span>
+            <span class="n">task</span><span class="p">:</span> <span class="p">.</span><span class="n">summarization</span><span class="p">,</span>
+            <span class="n">maxLength</span><span class="p">:</span> <span class="mi">142</span><span class="p">,</span>
+            <span class="n">minLength</span><span class="p">:</span> <span class="mi">56</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">summary</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">translation</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">targetLanguage</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+        <span class="c1">// Input: Text in source language</span>
+        <span class="c1">// Output: Text in target language</span>
+        <span class="kd">let</span> <span class="nv">translated</span> <span class="p">=</span> <span class="n">bart</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+            <span class="n">task</span><span class="p">:</span> <span class="p">.</span><span class="n">translation</span><span class="p">(</span><span class="n">to</span><span class="p">:</span> <span class="n">targetLanguage</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">translated</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">paraphrasing</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+        <span class="c1">// Input: Original text</span>
+        <span class="c1">// Output: Paraphrased version</span>
+        <span class="kd">let</span> <span class="nv">paraphrased</span> <span class="p">=</span> <span class="n">bart</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+            <span class="n">task</span><span class="p">:</span> <span class="p">.</span><span class="n">paraphrasing</span><span class="p">,</span>
+            <span class="n">diversityPenalty</span><span class="p">:</span> <span class="mf">0.5</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">paraphrased</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">questionGeneration</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="nb">String</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="c1">// Input: Context paragraph</span>
+        <span class="c1">// Output: Relevant questions</span>
+        <span class="kd">let</span> <span class="nv">questions</span> <span class="p">=</span> <span class="n">bart</span><span class="p">.</span><span class="n">generateMultiple</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">context</span><span class="p">,</span>
+            <span class="n">task</span><span class="p">:</span> <span class="p">.</span><span class="n">questionGeneration</span><span class="p">,</span>
+            <span class="n">numOutputs</span><span class="p">:</span> <span class="mi">5</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">questions</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="bart-variants-and-evolution">BART Variants and Evolution</h2>
+<h3 id="1-distilbart">1. DistilBART</h3>
+<p>A smaller, faster version of BART with comparable performance:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - DistilBART Implementation</span>
+<span class="kd">class</span> <span class="nc">DistilBART</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">bart</span><span class="p">:</span> <span class="n">BARTModel</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">originalBART</span><span class="p">:</span> <span class="n">BARTModel</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Knowledge distillation from larger BART</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">bart</span> <span class="p">=</span> <span class="n">createDistilledModel</span><span class="p">(</span>
+            <span class="n">teacher</span><span class="p">:</span> <span class="n">originalBART</span><span class="p">,</span>
+            <span class="n">compressionRatio</span><span class="p">:</span> <span class="mf">0.4</span><span class="p">,</span>
+            <span class="n">preservePerformance</span><span class="p">:</span> <span class="mf">0.95</span>
+        <span class="p">)</span>
+        <span class="kc">super</span><span class="p">.</span><span class="kd">init</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="c1">// 40% smaller, 60% faster, 95% of original performance</span>
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">bart</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">:</span> <span class="n">sourceIds</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">targetIds</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="2-bart-large">2. BART-Large</h3>
+<p>Enhanced version with increased capacity:</p>
+<ul>
+<li><strong>Parameters</strong>: 400M (vs 140M for BART-Base)</li>
+<li><strong>Layers</strong>: 12 encoder + 12 decoder layers</li>
+<li><strong>Hidden Size</strong>: 1024</li>
+<li><strong>Attention Heads</strong>: 16</li>
+</ul>
+<h3 id="3-mbart-multilingual-bart">3. mBART (Multilingual BART)</h3>
+<p>Extended BART for multilingual applications:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - mBART Multilingual Processing</span>
+<span class="kd">class</span> <span class="nc">MultilingualBART</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">bart</span><span class="p">:</span> <span class="n">BARTModel</span>
+    <span class="kd">let</span> <span class="nv">languageEmbeddings</span><span class="p">:</span> <span class="n">Embedding</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span>
+        <span class="n">sourceIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+        <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?,</span>
+        <span class="n">sourceLang</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+        <span class="n">targetLang</span><span class="p">:</span> <span class="nb">String</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Add language-specific embeddings</span>
+        <span class="kd">let</span> <span class="nv">sourceLangId</span> <span class="p">=</span> <span class="n">languageToId</span><span class="p">[</span><span class="n">sourceLang</span><span class="p">]</span><span class="o">!</span>
+        <span class="kd">let</span> <span class="nv">targetLangId</span> <span class="p">=</span> <span class="n">languageToId</span><span class="p">[</span><span class="n">targetLang</span><span class="p">]</span><span class="o">!</span>
+
+        <span class="kd">let</span> <span class="nv">sourceWithLang</span> <span class="p">=</span> <span class="n">addLanguageToken</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">,</span> <span class="n">langId</span><span class="p">:</span> <span class="n">sourceLangId</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">targetWithLang</span> <span class="p">=</span> <span class="n">targetIds</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">addLanguageToken</span><span class="p">(</span><span class="nv">$0</span><span class="p">,</span> <span class="n">langId</span><span class="p">:</span> <span class="n">targetLangId</span><span class="p">)</span> <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">bart</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">sourceIds</span><span class="p">:</span> <span class="n">sourceWithLang</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">targetWithLang</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="4-pegasus">4. PEGASUS</h3>
+<p>Google's BART variant optimized for summarization:</p>
+<ul>
+<li><strong>Pretraining</strong>: Gap Sentence Generation (GSG)</li>
+<li><strong>Objective</strong>: Mask and regenerate entire sentences</li>
+<li><strong>Specialization</strong>: Optimized for abstractive summarization</li>
+</ul>
+<h2 id="real-world-applications-and-usefulness">Real-World Applications and Usefulness</h2>
+<h3 id="1-text-summarization">1. Text Summarization</h3>
+<p>BART excels at both extractive and abstractive summarization:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Advanced Summarization with BART</span>
+<span class="kd">class</span> <span class="nc">BARTSummarizer</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">model</span><span class="p">:</span> <span class="n">BARTModel</span>
+
+    <span class="kd">func</span> <span class="nf">summarize</span><span class="p">(</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+        <span class="n">summaryType</span><span class="p">:</span> <span class="n">SummaryType</span><span class="p">,</span>
+        <span class="n">length</span><span class="p">:</span> <span class="n">SummaryLength</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Summary</span> <span class="p">{</span>
+
+        <span class="k">switch</span> <span class="n">summaryType</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">abstractive</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">generateAbstractiveSummary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="n">length</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">extractive</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">generateExtractiveSummary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="n">length</span><span class="p">)</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">hybrid</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">generateHybridSummary</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="n">length</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">generateAbstractiveSummary</span><span class="p">(</span><span class="kc">_</span> <span class="n">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="n">SummaryLength</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">Summary</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">summary</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span>
+            <span class="n">maxLength</span><span class="p">:</span> <span class="n">length</span><span class="p">.</span><span class="n">maxTokens</span><span class="p">,</span>
+            <span class="n">minLength</span><span class="p">:</span> <span class="n">length</span><span class="p">.</span><span class="n">minTokens</span><span class="p">,</span>
+            <span class="n">beamSize</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">lengthPenalty</span><span class="p">:</span> <span class="mf">0.6</span><span class="p">,</span>
+            <span class="n">repetitionPenalty</span><span class="p">:</span> <span class="mf">1.2</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Summary</span><span class="p">(</span>
+            <span class="n">content</span><span class="p">:</span> <span class="n">summary</span><span class="p">,</span>
+            <span class="n">type</span><span class="p">:</span> <span class="p">.</span><span class="n">abstractive</span><span class="p">,</span>
+            <span class="n">compressionRatio</span><span class="p">:</span> <span class="n">calculateCompressionRatio</span><span class="p">(</span><span class="n">original</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="n">summary</span><span class="p">:</span> <span class="n">summary</span><span class="p">),</span>
+            <span class="n">coherenceScore</span><span class="p">:</span> <span class="n">evaluateCoherence</span><span class="p">(</span><span class="n">summary</span><span class="p">),</span>
+            <span class="n">factualAccuracy</span><span class="p">:</span> <span class="n">checkFactualAccuracy</span><span class="p">(</span><span class="n">original</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="n">summary</span><span class="p">:</span> <span class="n">summary</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span> <span class="nc">SummaryType</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">abstractive</span>  <span class="c1">// Generate new sentences</span>
+    <span class="k">case</span> <span class="n">extractive</span>   <span class="c1">// Select important sentences</span>
+    <span class="k">case</span> <span class="n">hybrid</span>       <span class="c1">// Combine both approaches</span>
+<span class="p">}</span>
+
+<span class="kd">enum</span> <span class="nc">SummaryLength</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">short</span>        <span class="c1">// 1-2 sentences</span>
+    <span class="k">case</span> <span class="n">medium</span>       <span class="c1">// 3-5 sentences</span>
+    <span class="k">case</span> <span class="n">long</span>         <span class="c1">// 6-10 sentences</span>
+
+    <span class="kd">var</span> <span class="nv">maxTokens</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="kc">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">short</span><span class="p">:</span> <span class="k">return</span> <span class="mi">50</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">medium</span><span class="p">:</span> <span class="k">return</span> <span class="mi">142</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">long</span><span class="p">:</span> <span class="k">return</span> <span class="mi">256</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nv">minTokens</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="kc">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">short</span><span class="p">:</span> <span class="k">return</span> <span class="mi">10</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">medium</span><span class="p">:</span> <span class="k">return</span> <span class="mi">56</span>
+        <span class="k">case</span> <span class="p">.</span><span class="n">long</span><span class="p">:</span> <span class="k">return</span> <span class="mi">100</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="2-dialogue-generation">2. Dialogue Generation</h3>
+<p>BART's autoregressive decoder makes it excellent for conversational AI:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Conversational AI with BART</span>
+<span class="kd">class</span> <span class="nc">BARTChatbot</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">model</span><span class="p">:</span> <span class="n">BARTModel</span>
+    <span class="kd">var</span> <span class="nv">conversationHistory</span><span class="p">:</span> <span class="p">[</span><span class="n">Message</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span>
+
+    <span class="kd">func</span> <span class="nf">generateResponse</span><span class="p">(</span><span class="n">userInput</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">ConversationContext</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">conversationContext</span> <span class="p">=</span> <span class="n">buildContext</span><span class="p">()</span>
+        <span class="kd">let</span> <span class="nv">prompt</span> <span class="p">=</span> <span class="n">formatPrompt</span><span class="p">(</span><span class="n">userInput</span><span class="p">:</span> <span class="n">userInput</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">conversationContext</span><span class="p">)</span>
+
+        <span class="kd">let</span> <span class="nv">response</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+            <span class="n">input</span><span class="p">:</span> <span class="n">prompt</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">,</span>
+            <span class="n">topP</span><span class="p">:</span> <span class="mf">0.9</span><span class="p">,</span>
+            <span class="n">maxLength</span><span class="p">:</span> <span class="mi">256</span><span class="p">,</span>
+            <span class="n">stopTokens</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;User:&quot;</span><span class="p">,</span> <span class="s">&quot;Assistant:&quot;</span><span class="p">,</span> <span class="s">&quot;</span><span class="se">\n\n</span><span class="s">&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Update conversation history</span>
+        <span class="n">conversationHistory</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">role</span><span class="p">:</span> <span class="p">.</span><span class="n">user</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">userInput</span><span class="p">))</span>
+        <span class="n">conversationHistory</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">role</span><span class="p">:</span> <span class="p">.</span><span class="n">assistant</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">response</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">response</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">buildContext</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="nb">String</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">recentMessages</span> <span class="p">=</span> <span class="n">conversationHistory</span><span class="p">.</span><span class="bp">suffix</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1">// Keep recent context</span>
+        <span class="k">return</span> <span class="n">recentMessages</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="s">&quot;</span><span class="si">\(</span><span class="nv">$0</span><span class="p">.</span><span class="n">role</span><span class="si">)</span><span class="s">: </span><span class="si">\(</span><span class="nv">$0</span><span class="p">.</span><span class="n">content</span><span class="si">)</span><span class="s">&quot;</span> <span class="p">}.</span><span class="n">joined</span><span class="p">(</span><span class="n">separator</span><span class="p">:</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">Message</span> <span class="p">{</span>
+    <span class="kd">enum</span> <span class="nc">Role</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">user</span><span class="p">,</span> <span class="n">assistant</span><span class="p">,</span> <span class="n">system</span>
+    <span class="p">}</span>
+    <span class="kd">let</span> <span class="nv">role</span><span class="p">:</span> <span class="n">Role</span>
+    <span class="kd">let</span> <span class="nv">content</span><span class="p">:</span> <span class="nb">String</span>
+    <span class="kd">let</span> <span class="nv">timestamp</span><span class="p">:</span> <span class="n">Date</span> <span class="p">=</span> <span class="n">Date</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="3-data-augmentation">3. Data Augmentation</h3>
+<p>BART can generate diverse paraphrases for training data augmentation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// Swift MLX - Data Augmentation with BART</span>
+<span class="kd">class</span> <span class="nc">BARTDataAugmenter</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">model</span><span class="p">:</span> <span class="n">BARTModel</span>
+
+    <span class="kd">func</span> <span class="nf">augmentDataset</span><span class="p">(</span><span class="kc">_</span> <span class="n">examples</span><span class="p">:</span> <span class="p">[</span><span class="n">TrainingExample</span><span class="p">])</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="n">TrainingExample</span><span class="p">]</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">augmentedExamples</span><span class="p">:</span> <span class="p">[</span><span class="n">TrainingExample</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">example</span> <span class="k">in</span> <span class="n">examples</span> <span class="p">{</span>
+            <span class="c1">// Original example</span>
+            <span class="n">augmentedExamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">example</span><span class="p">)</span>
+
+            <span class="c1">// Generate paraphrases</span>
+            <span class="kd">let</span> <span class="nv">paraphrases</span> <span class="p">=</span> <span class="n">generateParaphrases</span><span class="p">(</span>
+                <span class="n">text</span><span class="p">:</span> <span class="n">example</span><span class="p">.</span><span class="n">text</span><span class="p">,</span>
+                <span class="n">numVariations</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+                <span class="n">diversityThreshold</span><span class="p">:</span> <span class="mf">0.7</span>
+            <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">paraphrase</span> <span class="k">in</span> <span class="n">paraphrases</span> <span class="p">{</span>
+                <span class="n">augmentedExamples</span><span class="p">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">TrainingExample</span><span class="p">(</span>
+                        <span class="n">text</span><span class="p">:</span> <span class="n">paraphrase</span><span class="p">,</span>
+                        <span class="n">label</span><span class="p">:</span> <span class="n">example</span><span class="p">.</span><span class="n">label</span><span class="p">,</span>
+                        <span class="n">isAugmented</span><span class="p">:</span> <span class="kc">true</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">augmentedExamples</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">generateParaphrases</span><span class="p">(</span>
+        <span class="n">text</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+        <span class="n">numVariations</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span>
+        <span class="n">diversityThreshold</span><span class="p">:</span> <span class="nb">Float</span>
+    <span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">paraphrases</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">]</span> <span class="p">=</span> <span class="p">[]</span>
+        <span class="kd">var</span> <span class="nv">attempts</span> <span class="p">=</span> <span class="mi">0</span>
+        <span class="kd">let</span> <span class="nv">maxAttempts</span> <span class="p">=</span> <span class="n">numVariations</span> <span class="o">*</span> <span class="mi">3</span>
+
+        <span class="k">while</span> <span class="n">paraphrases</span><span class="p">.</span><span class="bp">count</span> <span class="o">&lt;</span> <span class="n">numVariations</span> <span class="o">&amp;&amp;</span> <span class="n">attempts</span> <span class="o">&lt;</span> <span class="n">maxAttempts</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="nv">paraphrase</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span>
+                <span class="n">input</span><span class="p">:</span> <span class="s">&quot;Paraphrase: </span><span class="si">\(</span><span class="n">text</span><span class="si">)</span><span class="s">&quot;</span><span class="p">,</span>
+                <span class="n">temperature</span><span class="p">:</span> <span class="mf">0.8</span> <span class="o">+</span> <span class="nb">Float</span><span class="p">(</span><span class="n">attempts</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.1</span><span class="p">,</span> <span class="c1">// Increase diversity</span>
+                <span class="n">topP</span><span class="p">:</span> <span class="mf">0.95</span><span class="p">,</span>
+                <span class="n">repetitionPenalty</span><span class="p">:</span> <span class="mf">1.3</span>
+            <span class="p">)</span>
+
+            <span class="c1">// Check diversity</span>
+            <span class="k">if</span> <span class="n">isDiverseEnough</span><span class="p">(</span><span class="n">paraphrase</span><span class="p">,</span> <span class="n">compared</span><span class="p">:</span> <span class="n">paraphrases</span> <span class="o">+</span> <span class="p">[</span><span class="n">text</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="n">diversityThreshold</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">paraphrases</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">paraphrase</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="n">attempts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">paraphrases</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h2 id="future-directions-and-research">Future Directions and Research</h2>
+<h3 id="1-efficiency-improvements">1. Efficiency Improvements</h3>
+<ul>
+<li><strong>Sparse Attention</strong>: Reducing computational complexity</li>
+<li><strong>Knowledge Distillation</strong>: Creating smaller, faster models</li>
+<li><strong>Hardware Optimization</strong>: Leveraging specialized accelerators</li>
+</ul>
+<h3 id="2-enhanced-capabilities">2. Enhanced Capabilities</h3>
+<ul>
+<li><strong>Multimodal BART</strong>: Incorporating vision and speech</li>
+<li><strong>Long-form Generation</strong>: Handling longer sequences</li>
+<li><strong>Controllable Generation</strong>: Fine-grained control over output</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>BART represents a significant advancement in natural language processing by successfully combining the strengths of bidirectional encoders and autoregressive decoders. Its key advantages over BERT include:</p>
+<ol>
+<li><strong>Versatility</strong>: Handles both understanding and generation tasks</li>
+<li><strong>Flexibility</strong>: Multiple corruption strategies during pretraining</li>
+<li><strong>Performance</strong>: Superior results on sequence-to-sequence tasks</li>
+<li><strong>Adaptability</strong>: Easy fine-tuning for specific applications</li>
+</ol>
+<p>The model's variants (DistilBART, mBART, PEGASUS) demonstrate its adaptability to different requirements and constraints. From text summarization and machine translation to dialogue generation and data augmentation, BART has proven its usefulness across a wide range of applications.</p>
+<p>As the field continues to evolve, BART's architecture and training methodology continue to influence new developments in language modeling, making it a foundational model in the transformer era. Its balance of capability and efficiency makes it an excellent choice for practitioners looking to implement state-of-the-art text generation systems.</p>
+<p>Whether you're building a summarization system, creating conversational AI, or developing content generation tools, BART provides a robust foundation that combines the best aspects of modern transformer architectures in a single, powerful model.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "BART: The Denoising Autoencoder That Revolutionized Text Generation",
+    "headline": "BART: The Denoising Autoencoder That Revolutionized Text Generation",
+    "datePublished": "2025-07-08 00:00:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/bart-denoising-autoencoder-text-generation.html",
+    "description": "A deep dive into BART (Bidirectional and Auto-Regressive Transformers), exploring how it combines the best of BERT and GPT, its advantages over BERT, variants, and real-world applications in text generation and understanding."
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

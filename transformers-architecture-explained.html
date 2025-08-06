@@ -1,0 +1,823 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="A comprehensive guide to understanding the Transformer architecture, including detailed explanations of encoders, decoders, attention mechanisms, and their revolutionary impact on modern AI." />
+    <meta name="keywords" content="transformers, attention, deep learning, NLP, neural networks, encoder-decoder">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="Understanding Transformers: The Architecture That Revolutionized AI" />
+<meta property="og:description" content="A comprehensive guide to understanding the Transformer architecture, including detailed explanations of encoders, decoders, attention mechanisms, and their revolutionary impact on modern AI." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/transformers-architecture-explained.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-01 00:00:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Machine Learning" />
+	<meta property="article:tag" content="transformers" />
+	<meta property="article:tag" content="attention" />
+	<meta property="article:tag" content="deep learning" />
+	<meta property="article:tag" content="NLP" />
+	<meta property="article:tag" content="neural networks" />
+	<meta property="article:tag" content="encoder-decoder" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    Understanding Transformers: The Architecture That Revolutionized AI &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/machine-learning.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="transformers-architecture-explained">Understanding Transformers: The Architecture That Revolutionized AI</h3>
+		<p style="font-size:larger;"><p>A comprehensive guide to understanding the Transformer architecture, including detailed explanations of encoders, decoders, attention mechanisms, and their revolutionary impact on modern AI.</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Tue 01 July 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/machine-learning.html">machine learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/transformers.html">transformers</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/attention.html">attention</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/deep-learning.html">deep learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/nlp.html">nlp</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/neural-networks.html">neural networks</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/encoder-decoder.html">encoder-decoder</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>The Transformer architecture, introduced in the groundbreaking paper "Attention Is All You Need" by Vaswani et al. in 2017, has fundamentally transformed the landscape of machine learning and natural language processing. This revolutionary model has become the foundation for modern AI systems like GPT, BERT, and countless other state-of-the-art applications.</p>
+<h2 id="what-are-transformers">What Are Transformers?</h2>
+<p>Transformers are a type of neural network architecture designed to handle sequential data, particularly excelling at tasks involving language understanding and generation. Unlike previous approaches that processed sequences step-by-step, Transformers can process entire sequences simultaneously, making them both more efficient and more effective at capturing long-range dependencies.</p>
+<h3 id="key-innovations">Key Innovations</h3>
+<p>The Transformer introduced several groundbreaking concepts:</p>
+<ol>
+<li><strong>Self-Attention Mechanism</strong>: Allows the model to focus on relevant parts of the input sequence</li>
+<li><strong>Parallelization</strong>: Processes entire sequences simultaneously rather than sequentially</li>
+<li><strong>Positional Encoding</strong>: Provides sequence order information without recurrence</li>
+<li><strong>Multi-Head Attention</strong>: Enables the model to attend to different types of relationships</li>
+<li><strong>Layer Normalization</strong>: Stabilizes training and improves convergence</li>
+</ol>
+<h2 id="the-overall-architecture">The Overall Architecture</h2>
+<p>The encoder-decoder paradigm represents a fundamental design principle that enables the Transformer to excel at sequence-to-sequence tasks.
+The original Transformer follows an encoder-decoder architecture, where:</p>
+<ul>
+<li>
+<p><strong>Encoder</strong>: Processes the input sequence and creates rich representations. It serves as a sophisticated feature extractor that transforms the input sequence into a rich, contextual representation space. Through its stack of self-attention layers, the encoder allows each position in the input to gather information from all other positions, creating representations that capture both local patterns and long-range dependencies. This bidirectional processing enables the encoder to build a comprehensive understanding of the entire input context, making it particularly powerful for tasks requiring deep semantic understanding.</p>
+</li>
+<li>
+<p><strong>Decoder</strong>: Generates the output sequence using encoder representations and previous outputs. In contrast with encoders, it operates in an autoregressive manner, generating the output sequence one token at a time. It employs a unique combination of masked self-attention (preventing it from "seeing" future tokens during training) and cross-attention to the encoder's output. This cross-attention mechanism is where the magic happens—it allows the decoder to selectively focus on relevant parts of the input sequence when generating each output token. The decoder's architecture ensures that the generation process respects the sequential nature of language while leveraging the full contextual understanding provided by the encoder. This asymmetric design—bidirectional encoding followed by unidirectional decoding—strikes an optimal balance between computational efficiency and modeling capability, making it suitable for a wide range of applications from machine translation to text summarization.</p>
+</li>
+</ul>
+<p><img src="https://blogs.entropypages.in/images/transformer-architecture.png" alt="Transformer Encoder-Decoder Architecture" style="width: 50%; display: block; margin: 0 auto;"></p>
+<h2 id="the-encoder-architecture">The Encoder Architecture</h2>
+<p>The encoder consists of a stack of identical layers, each containing two main sub-layers:</p>
+<h3 id="1-multi-head-self-attention">1. Multi-Head Self-Attention</h3>
+<p>The attention mechanism allows each position in the sequence to attend to all positions in the input sequence. The mathematical formulation is:</p>
+<div class="arithmatex">\[\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V\]</div>
+<p>Where:
+- <span class="arithmatex">\(Q\)</span> (Query): What information we're looking for
+- <span class="arithmatex">\(K\)</span> (Key): What information is available
+- <span class="arithmatex">\(V\)</span> (Value): The actual information content
+- <span class="arithmatex">\(d_k\)</span>: Dimension of the key vectors (for scaling)</p>
+<h4 id="multi-head-attention">Multi-Head Attention</h4>
+<p>Instead of using a single attention function, the model uses multiple "attention heads":</p>
+<div class="arithmatex">\[\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, ..., \text{head}_h)W^O\]</div>
+<p>Where each head is:
+<span class="arithmatex">\(<span class="arithmatex">\(\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)\)</span>\)</span></p>
+<p>This allows the model to attend to different types of relationships simultaneously.</p>
+<h3 id="2-position-wise-feed-forward-networks">2. Position-wise Feed-Forward Networks</h3>
+<p>Each encoder layer also contains a fully connected feed-forward network:</p>
+<div class="arithmatex">\[\text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2\]</div>
+<p>This is applied to each position separately and identically.</p>
+<h3 id="layer-normalization-and-residual-connections">Layer Normalization and Residual Connections</h3>
+<p>Each sub-layer is wrapped with:
+<span class="arithmatex">\(<span class="arithmatex">\(\text{LayerNorm}(x + \text{Sublayer}(x))\)</span>\)</span></p>
+<p>This combination of residual connections and layer normalization helps with training stability and gradient flow.</p>
+<h2 id="the-decoder-architecture">The Decoder Architecture</h2>
+<p>The decoder is similar to the encoder but with three key differences:</p>
+<h3 id="1-masked-self-attention">1. Masked Self-Attention</h3>
+<p>The decoder uses "masked" self-attention to prevent positions from attending to future positions:</p>
+<div class="arithmatex">\[\text{mask}_{i,j} = \begin{cases} 
+0 &amp; \text{if } j \leq i \\
+-\infty &amp; \text{if } j &gt; i
+\end{cases}\]</div>
+<p>This ensures that predictions for position <span class="arithmatex">\(i\)</span> can only depend on known outputs at positions less than <span class="arithmatex">\(i\)</span>.</p>
+<h3 id="2-encoder-decoder-attention">2. Encoder-Decoder Attention</h3>
+<p>The decoder includes an additional attention layer that attends to the encoder output:
+- <strong>Queries</strong>: Come from the previous decoder layer
+- <strong>Keys and Values</strong>: Come from the encoder output</p>
+<p>This allows the decoder to focus on relevant parts of the input sequence when generating each output token.</p>
+<p>The encoder-decoder attention mechanism represents the critical bridge between the input understanding and output generation phases of the Transformer. Unlike self-attention, which connects positions within the same sequence, this cross-attention layer enables the decoder to dynamically query the encoder's rich representations at each generation step. The queries originate from the decoder's current state (representing "what information do I need?"), while the keys and values come from the encoder's final layer (representing "what information is available from the input?"). This asymmetric attention allows the model to perform sophisticated reasoning: for instance, in machine translation, when generating the word "house" in French ("maison"), the decoder can attend strongly to the corresponding English word "house" in the encoder's representation, while also considering broader contextual information. The attention weights in this layer often reveal intuitive alignment patterns, making this component particularly valuable for interpretability. The mathematical elegance lies in how this mechanism seamlessly integrates bidirectional input understanding with unidirectional output generation, enabling the model to maintain global coherence while generating sequences token by token.</p>
+<h3 id="3-output-generation">3. Output Generation</h3>
+<p>The final decoder output goes through:
+1. <strong>Linear transformation</strong>: Projects to vocabulary size
+2. <strong>Softmax</strong>: Converts to probability distribution over vocabulary</p>
+<div class="arithmatex">\[P(\text{token}) = \text{softmax}(\text{Linear}(\text{decoder\_output}))\]</div>
+<p>While the softmax layer produces a probability distribution over the entire vocabulary, the actual token selection process during inference involves sophisticated sampling strategies rather than simply choosing the highest probability token. <strong>Random sampling</strong> also known as stochastic sampling is crucial for generating diverse, creative, and human-like text. Instead of always selecting the most probable token (greedy decoding), random sampling introduces controlled randomness by sampling from the probability distribution according to the computed probabilities. This approach prevents the model from falling into repetitive patterns and deterministic outputs that often characterize greedy decoding.</p>
+<p>Temperature scaling is frequently applied before sampling, where a temperature parameter τ modifies the probability distribution:</p>
+<p><span class="arithmatex">\(P'(\text{token}) = \text{softmax}(\text{Linear}(\text{decoder\_output}) / τ)\)</span></p>
+<p>Lower temperatures (τ &lt; 1) make the distribution more peaked, favoring high-probability tokens, while higher temperatures (τ &gt; 1) flatten the distribution, increasing randomness. Advanced techniques like top-k sampling and nucleus (top-p) sampling further refine this process by constraining the sampling space to the most promising tokens, balancing creativity with coherence. This stochastic nature is essential for applications like creative writing, dialogue generation, and any task where diversity and naturalness are more valuable than deterministic precision.</p>
+<h2 id="positional-encoding">Positional Encoding</h2>
+<p>Since Transformers don't have inherent sequence order (unlike RNNs), positional encoding is added to input embeddings:</p>
+<div class="arithmatex">\[PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)\]</div>
+<div class="arithmatex">\[PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)\]</div>
+<p>Where:
+- <span class="arithmatex">\(pos\)</span>: Position in the sequence
+- <span class="arithmatex">\(i\)</span>: Dimension index
+- <span class="arithmatex">\(d_{model}\)</span>: Model dimension</p>
+<p>The positional encoding design is one of the most elegant solutions in the Transformer architecture, addressing a fundamental challenge: how to inject sequence order information into a model that processes all positions simultaneously. Unlike recurrent neural networks that inherently encode position through their sequential processing, Transformers need an explicit mechanism to distinguish between tokens at different positions. The sinusoidal positional encoding serves this purpose through a mathematically sophisticated approach that provides several crucial properties.</p>
+<p>The choice of sine and cosine functions with varying frequencies creates a unique "fingerprint" for each position that the model can learn to interpret. The wavelengths of these sinusoidal functions range from 2π to 10000·2π, ensuring that each position receives a distinct encoding pattern. This design allows the model to easily learn to attend to relative positions, as the encoding for position <span class="arithmatex">\(pos + k\)</span> can be represented as a linear function of the encoding for position <span class="arithmatex">\(pos\)</span>. The interleaving of sine and cosine functions across different dimensions creates a rich representational space where positions that are close together have similar encodings, while distant positions remain distinguishable.</p>
+<p>Importantly, this approach enables the model to generalize to sequence lengths not seen during training—a property known as <strong>extrapolation</strong>. The deterministic nature of the sinusoidal functions means that positional encodings for longer sequences can be computed without additional parameters or training. Modern variants have explored learnable positional embeddings, relative positional encoding (as in Transformer-XL), and rotary positional embedding (RoPE), each offering different trade-offs between flexibility, interpretability, and computational efficiency. The original sinusoidal approach remains popular due to its parameter-free nature and strong theoretical foundations.</p>
+<h2 id="attention-visualization">Attention Visualization</h2>
+<p>Here's how attention works in practice with a translation example:</p>
+<p><img src="https://blogs.entropypages.in/images/attention_heatmap.png" alt="Attention Heatmap Example" style="width: 50%; display: block; margin: 0 auto;"></p>
+<p>The heatmap shows how each English word (rows) attends to French words (columns) during translation. In this visualization, darker colors represent stronger attention weights, indicating which source words the model focuses on when generating each target word. The diagonal pattern often visible in translation tasks reveals the model's ability to learn intuitive word alignments—for example, "the" aligning with "le," "cat" with "chat," and "sleeps" with "dort." This interpretability makes attention mechanisms particularly valuable for understanding how Transformers process and relate information across sequences.</p>
+<h2 id="key-advantages-of-transformers">Key Advantages of Transformers</h2>
+<h3 id="1-parallelization">1. Parallelization</h3>
+<p>Unlike RNNs, Transformers can process entire sequences in parallel, dramatically reducing training time.</p>
+<h3 id="2-long-range-dependencies">2. Long-Range Dependencies</h3>
+<p>The attention mechanism can directly connect distant positions in a sequence, solving the vanishing gradient problem of RNNs.</p>
+<h3 id="3-interpretability">3. Interpretability</h3>
+<p>Attention weights provide insights into what the model is focusing on, making it more interpretable than many other architectures.</p>
+<h3 id="4-transfer-learning">4. Transfer Learning</h3>
+<p>Transformer models can be pre-trained on large datasets and fine-tuned for specific tasks, leading to excellent performance across various domains.</p>
+<h2 id="transformer-variants">Transformer Variants</h2>
+<p>The original Transformer has inspired many variants:</p>
+<h3 id="encoder-only-models">Encoder-Only Models</h3>
+<ul>
+<li><strong>BERT</strong>: Bidirectional Encoder Representations from Transformers</li>
+<li><strong>RoBERTa</strong>: Robustly Optimized BERT Pretraining Approach</li>
+<li><strong>DeBERTa</strong>: Decoding-enhanced BERT with Disentangled Attention</li>
+</ul>
+<h3 id="decoder-only-models">Decoder-Only Models</h3>
+<ul>
+<li><strong>GPT Series</strong>: Generative Pre-trained Transformers</li>
+<li><strong>PaLM</strong>: Pathways Language Model</li>
+<li><strong>LLaMA</strong>: Large Language Model Meta AI</li>
+</ul>
+<h3 id="encoder-decoder-models">Encoder-Decoder Models</h3>
+<ul>
+<li><strong>T5</strong>: Text-to-Text Transfer Transformer</li>
+<li><strong>BART</strong>: Bidirectional and Auto-Regressive Transformers</li>
+<li><strong>Pegasus</strong>: Pre-training with Extracted Gap-sentences</li>
+</ul>
+<h2 id="applications-and-impact">Applications and Impact</h2>
+<p>Transformers have revolutionized numerous fields:</p>
+<h3 id="natural-language-processing">Natural Language Processing</h3>
+<ul>
+<li><strong>Machine Translation</strong>: High-quality translation between languages</li>
+<li><strong>Text Summarization</strong>: Automatic generation of concise summaries</li>
+<li><strong>Question Answering</strong>: Understanding and answering questions about text</li>
+<li><strong>Sentiment Analysis</strong>: Determining emotional tone of text</li>
+</ul>
+<h3 id="computer-vision">Computer Vision</h3>
+<ul>
+<li><strong>Vision Transformer (ViT)</strong>: Applying Transformers to image classification</li>
+<li><strong>DETR</strong>: Object detection using Transformers</li>
+<li><strong>Swin Transformer</strong>: Hierarchical vision Transformer</li>
+</ul>
+<h3 id="code-generation">Code Generation</h3>
+<ul>
+<li><strong>GitHub Copilot</strong>: AI-powered code completion</li>
+<li><strong>CodeT5</strong>: Code understanding and generation</li>
+<li><strong>AlphaCode</strong>: Competitive programming solutions</li>
+</ul>
+<h3 id="multimodal-applications">Multimodal Applications</h3>
+<ul>
+<li><strong>CLIP</strong>: Connecting text and images</li>
+<li><strong>DALL-E</strong>: Text-to-image generation</li>
+<li><strong>GPT-4V</strong>: Vision-enhanced language model</li>
+</ul>
+<h2 id="training-considerations">Training Considerations</h2>
+<h3 id="computational-requirements">Computational Requirements</h3>
+<p>Transformers are computationally intensive:
+- <strong>Memory</strong>: Attention mechanism has quadratic memory complexity
+- <strong>Compute</strong>: Large matrix multiplications require significant processing power
+- <strong>Data</strong>: Best performance requires large training datasets</p>
+<h2 id="implementation-example">Implementation Example</h2>
+<p>Here's a detailed Swift implementation of a complete Transformer with configurable encoder and decoder layers using MLX:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">import</span> <span class="nc">MLX</span>
+<span class="kd">import</span> <span class="nc">MLXRandom</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Core Components</span>
+
+<span class="kd">struct</span> <span class="nc">MultiHeadAttention</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">numHeads</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">headDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">modelDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">queryProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">keyProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">valueProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">outputProjection</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">modelDim</span> <span class="p">=</span> <span class="n">modelDim</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">numHeads</span> <span class="p">=</span> <span class="n">numHeads</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">headDim</span> <span class="p">=</span> <span class="n">modelDim</span> <span class="o">/</span> <span class="n">numHeads</span>
+
+        <span class="kc">self</span><span class="p">.</span><span class="n">queryProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">keyProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">valueProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">outputProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">query</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">key</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">value</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">query</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">seqLen</span> <span class="p">=</span> <span class="n">query</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">// Project inputs to Q, K, V</span>
+        <span class="kd">let</span> <span class="nv">Q</span> <span class="p">=</span> <span class="n">queryProjection</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">K</span> <span class="p">=</span> <span class="n">keyProjection</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">V</span> <span class="p">=</span> <span class="n">valueProjection</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="c1">// Reshape for multi-head attention: [batch, seq, heads, head_dim]</span>
+        <span class="kd">let</span> <span class="nv">reshapedQ</span> <span class="p">=</span> <span class="n">Q</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+                        <span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span> <span class="c1">// [batch, heads, seq, head_dim]</span>
+        <span class="kd">let</span> <span class="nv">reshapedK</span> <span class="p">=</span> <span class="n">K</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">key</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+                        <span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">reshapedV</span> <span class="p">=</span> <span class="n">V</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">value</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+                        <span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1">// Compute scaled dot-product attention</span>
+        <span class="kd">let</span> <span class="nv">attention</span> <span class="p">=</span> <span class="n">scaledDotProductAttention</span><span class="p">(</span><span class="n">reshapedQ</span><span class="p">,</span> <span class="n">reshapedK</span><span class="p">,</span> <span class="n">reshapedV</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">mask</span><span class="p">)</span>
+
+        <span class="c1">// Concatenate heads: [batch, seq, model_dim]</span>
+        <span class="kd">let</span> <span class="nv">concatenated</span> <span class="p">=</span> <span class="n">attention</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+                                   <span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">outputProjection</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">concatenated</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">scaledDotProductAttention</span><span class="p">(</span><span class="kc">_</span> <span class="n">Q</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">K</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">V</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">scale</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">Q</span><span class="p">.</span><span class="n">shape</span><span class="p">.</span><span class="bp">last</span><span class="p">!))</span>
+    <span class="kd">var</span> <span class="nv">scores</span> <span class="p">=</span> <span class="n">matmul</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span> <span class="n">K</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span> <span class="o">*</span> <span class="n">scale</span>
+
+    <span class="c1">// Apply mask if provided</span>
+    <span class="k">if</span> <span class="kd">let</span> <span class="nv">mask</span> <span class="p">=</span> <span class="n">mask</span> <span class="p">{</span>
+        <span class="n">scores</span> <span class="p">=</span> <span class="n">scores</span> <span class="o">+</span> <span class="n">mask</span> <span class="o">*</span> <span class="o">-</span><span class="mf">1e9</span>
+    <span class="p">}</span>
+
+    <span class="kd">let</span> <span class="nv">attentionWeights</span> <span class="p">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">matmul</span><span class="p">(</span><span class="n">attentionWeights</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">FeedForward</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">linear1</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">linear2</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="nb">Float</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">linear1</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">linear2</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">ffnDim</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">dropout</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">hidden</span> <span class="p">=</span> <span class="n">relu</span><span class="p">(</span><span class="n">linear1</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">linear2</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">hidden</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="nc">LayerNorm</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">weight</span><span class="p">:</span> <span class="n">MLXArray</span>
+    <span class="kd">let</span> <span class="nv">bias</span><span class="p">:</span> <span class="n">MLXArray</span>
+    <span class="kd">let</span> <span class="nv">eps</span><span class="p">:</span> <span class="nb">Float</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">eps</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">weight</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">ones</span><span class="p">([</span><span class="n">dim</span><span class="p">])</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">bias</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">dim</span><span class="p">])</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">eps</span> <span class="p">=</span> <span class="n">eps</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">mean</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepDims</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">variance</span> <span class="p">=</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">).</span><span class="n">square</span><span class="p">()).</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepDims</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">normalized</span> <span class="p">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">weight</span> <span class="o">*</span> <span class="n">normalized</span> <span class="o">+</span> <span class="n">bias</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Positional Encoding</span>
+
+<span class="kd">struct</span> <span class="nc">PositionalEncoding</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">encodings</span><span class="p">:</span> <span class="n">MLXArray</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">maxLen</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">5000</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">pe</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">maxLen</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">pos</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">maxLen</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="bp">stride</span><span class="p">(</span><span class="n">from</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">by</span><span class="p">:</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">let</span> <span class="nv">angle</span> <span class="p">=</span> <span class="nb">Float</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">/</span> <span class="n">pow</span><span class="p">(</span><span class="mf">10000.0</span><span class="p">,</span> <span class="nb">Float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Float</span><span class="p">(</span><span class="n">modelDim</span><span class="p">))</span>
+                <span class="n">pe</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">modelDim</span> <span class="p">{</span>
+                    <span class="n">pe</span><span class="p">[</span><span class="n">pos</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">(</span><span class="n">cos</span><span class="p">(</span><span class="n">angle</span><span class="p">))</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="kc">self</span><span class="p">.</span><span class="n">encodings</span> <span class="p">=</span> <span class="n">pe</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">seqLen</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">encodings</span><span class="p">[</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">seqLen</span><span class="p">].</span><span class="n">expandedDimensions</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Encoder Layer</span>
+
+<span class="kd">struct</span> <span class="nc">TransformerEncoderLayer</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">selfAttention</span><span class="p">:</span> <span class="n">MultiHeadAttention</span>
+    <span class="kd">let</span> <span class="nv">feedForward</span><span class="p">:</span> <span class="n">FeedForward</span>
+    <span class="kd">let</span> <span class="nv">layerNorm1</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">layerNorm2</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="nb">Float</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">selfAttention</span> <span class="p">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">feedForward</span> <span class="p">=</span> <span class="n">FeedForward</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="n">ffnDim</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="n">dropout</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm1</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm2</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">dropout</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Self-attention with residual connection and layer norm</span>
+        <span class="kd">let</span> <span class="nv">attnOutput</span> <span class="p">=</span> <span class="n">selfAttention</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">norm1Output</span> <span class="p">=</span> <span class="n">layerNorm1</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">attnOutput</span><span class="p">)</span>
+
+        <span class="c1">// Feed-forward with residual connection and layer norm</span>
+        <span class="kd">let</span> <span class="nv">ffnOutput</span> <span class="p">=</span> <span class="n">feedForward</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm1Output</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">norm2Output</span> <span class="p">=</span> <span class="n">layerNorm2</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm1Output</span> <span class="o">+</span> <span class="n">ffnOutput</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">norm2Output</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Decoder Layer</span>
+
+<span class="kd">struct</span> <span class="nc">TransformerDecoderLayer</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">selfAttention</span><span class="p">:</span> <span class="n">MultiHeadAttention</span>
+    <span class="kd">let</span> <span class="nv">crossAttention</span><span class="p">:</span> <span class="n">MultiHeadAttention</span>
+    <span class="kd">let</span> <span class="nv">feedForward</span><span class="p">:</span> <span class="n">FeedForward</span>
+    <span class="kd">let</span> <span class="nv">layerNorm1</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">layerNorm2</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">layerNorm3</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="nb">Float</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">selfAttention</span> <span class="p">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">crossAttention</span> <span class="p">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">feedForward</span> <span class="p">=</span> <span class="n">FeedForward</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="n">ffnDim</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="n">dropout</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm1</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm2</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm3</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">dim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">dropout</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> 
+                <span class="n">selfAttentionMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">,</span> 
+                <span class="n">crossAttentionMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Masked self-attention with residual connection and layer norm</span>
+        <span class="kd">let</span> <span class="nv">selfAttnOutput</span> <span class="p">=</span> <span class="n">selfAttention</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">selfAttentionMask</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">norm1Output</span> <span class="p">=</span> <span class="n">layerNorm1</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">selfAttnOutput</span><span class="p">)</span>
+
+        <span class="c1">// Cross-attention with encoder output</span>
+        <span class="kd">let</span> <span class="nv">crossAttnOutput</span> <span class="p">=</span> <span class="n">crossAttention</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm1Output</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">,</span> 
+                                                   <span class="n">mask</span><span class="p">:</span> <span class="n">crossAttentionMask</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">norm2Output</span> <span class="p">=</span> <span class="n">layerNorm2</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm1Output</span> <span class="o">+</span> <span class="n">crossAttnOutput</span><span class="p">)</span>
+
+        <span class="c1">// Feed-forward with residual connection and layer norm</span>
+        <span class="kd">let</span> <span class="nv">ffnOutput</span> <span class="p">=</span> <span class="n">feedForward</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm2Output</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">norm3Output</span> <span class="p">=</span> <span class="n">layerNorm3</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">norm2Output</span> <span class="o">+</span> <span class="n">ffnOutput</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">norm3Output</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Complete Transformer</span>
+
+<span class="kd">struct</span> <span class="nc">Transformer</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">encoderLayers</span><span class="p">:</span> <span class="p">[</span><span class="n">TransformerEncoderLayer</span><span class="p">]</span>
+    <span class="kd">let</span> <span class="nv">decoderLayers</span><span class="p">:</span> <span class="p">[</span><span class="n">TransformerDecoderLayer</span><span class="p">]</span>
+    <span class="kd">let</span> <span class="nv">inputEmbedding</span><span class="p">:</span> <span class="n">Embedding</span>
+    <span class="kd">let</span> <span class="nv">outputEmbedding</span><span class="p">:</span> <span class="n">Embedding</span>
+    <span class="kd">let</span> <span class="nv">positionalEncoding</span><span class="p">:</span> <span class="n">PositionalEncoding</span>
+    <span class="kd">let</span> <span class="nv">outputProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">modelDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">numEncoderLayers</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">numDecoderLayers</span><span class="p">:</span> <span class="nb">Int</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">ffnDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span>
+         <span class="n">numEncoderLayers</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numDecoderLayers</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> 
+         <span class="n">maxSeqLen</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">5000</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="p">{</span>
+
+        <span class="kc">self</span><span class="p">.</span><span class="n">modelDim</span> <span class="p">=</span> <span class="n">modelDim</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">numEncoderLayers</span> <span class="p">=</span> <span class="n">numEncoderLayers</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">numDecoderLayers</span> <span class="p">=</span> <span class="n">numDecoderLayers</span>
+
+        <span class="c1">// Embeddings and positional encoding</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">inputEmbedding</span> <span class="p">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">outputEmbedding</span> <span class="p">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">,</span> <span class="n">modelDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">positionalEncoding</span> <span class="p">=</span> <span class="n">PositionalEncoding</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">maxLen</span><span class="p">:</span> <span class="n">maxSeqLen</span><span class="p">)</span>
+
+        <span class="c1">// Create N encoder layers</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">encoderLayers</span> <span class="p">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">numEncoderLayers</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="kc">_</span> <span class="k">in</span>
+            <span class="n">TransformerEncoderLayer</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">,</span> 
+                                  <span class="n">ffnDim</span><span class="p">:</span> <span class="n">ffnDim</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="n">dropout</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Create M decoder layers</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">decoderLayers</span> <span class="p">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">numDecoderLayers</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="kc">_</span> <span class="k">in</span>
+            <span class="n">TransformerDecoderLayer</span><span class="p">(</span><span class="n">modelDim</span><span class="p">:</span> <span class="n">modelDim</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">,</span> 
+                                  <span class="n">ffnDim</span><span class="p">:</span> <span class="n">ffnDim</span><span class="p">,</span> <span class="n">dropout</span><span class="p">:</span> <span class="n">dropout</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Output projection to vocabulary</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">outputProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">modelDim</span><span class="p">,</span> <span class="n">vocabSize</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">encode</span><span class="p">(</span><span class="kc">_</span> <span class="n">inputIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Input embedding + positional encoding</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">inputEmbedding</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inputIds</span><span class="p">)</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">modelDim</span><span class="p">))</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">positionalEncoding</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Pass through N encoder layers</span>
+        <span class="k">for</span> <span class="n">encoderLayer</span> <span class="k">in</span> <span class="n">encoderLayers</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">encoderLayer</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">decode</span><span class="p">(</span><span class="kc">_</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+               <span class="n">targetMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">sourceMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Target embedding + positional encoding</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">outputEmbedding</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">targetIds</span><span class="p">)</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">modelDim</span><span class="p">))</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">positionalEncoding</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Pass through M decoder layers</span>
+        <span class="k">for</span> <span class="n">decoderLayer</span> <span class="k">in</span> <span class="n">decoderLayers</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">decoderLayer</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">encoderOutput</span><span class="p">,</span>
+                                   <span class="n">selfAttentionMask</span><span class="p">:</span> <span class="n">targetMask</span><span class="p">,</span>
+                                   <span class="n">crossAttentionMask</span><span class="p">:</span> <span class="n">sourceMask</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">forward</span><span class="p">(</span><span class="kc">_</span> <span class="n">inputIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">targetIds</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span>
+                <span class="n">sourceMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">,</span> <span class="n">targetMask</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">?</span> <span class="p">=</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Encode input sequence</span>
+        <span class="kd">let</span> <span class="nv">encoderOutput</span> <span class="p">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">inputIds</span><span class="p">,</span> <span class="n">mask</span><span class="p">:</span> <span class="n">sourceMask</span><span class="p">)</span>
+
+        <span class="c1">// Decode target sequence</span>
+        <span class="kd">let</span> <span class="nv">decoderOutput</span> <span class="p">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">targetIds</span><span class="p">,</span> <span class="n">encoderOutput</span><span class="p">:</span> <span class="n">encoderOutput</span><span class="p">,</span>
+                                 <span class="n">targetMask</span><span class="p">:</span> <span class="n">targetMask</span><span class="p">,</span> <span class="n">sourceMask</span><span class="p">:</span> <span class="n">sourceMask</span><span class="p">)</span>
+
+        <span class="c1">// Project to vocabulary space</span>
+        <span class="k">return</span> <span class="n">outputProjection</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">decoderOutput</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Helper function to create causal mask for decoder</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">createCausalMask</span><span class="p">(</span><span class="n">seqLen</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">mask</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">seqLen</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">seqLen</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="k">in</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)..&lt;</span><span class="n">seqLen</span> <span class="p">{</span>
+                <span class="n">mask</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">(</span><span class="o">-</span><span class="nb">Float</span><span class="p">.</span><span class="n">infinity</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">mask</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Usage Example</span>
+
+<span class="kd">func</span> <span class="nf">createTransformerModel</span><span class="p">()</span> <span class="p">-&gt;</span> <span class="n">Transformer</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">Transformer</span><span class="p">(</span>
+        <span class="n">vocabSize</span><span class="p">:</span> <span class="mi">30000</span><span class="p">,</span>      <span class="c1">// Vocabulary size</span>
+        <span class="n">modelDim</span><span class="p">:</span> <span class="mi">512</span><span class="p">,</span>         <span class="c1">// Model dimension (d_model)</span>
+        <span class="n">numHeads</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span>           <span class="c1">// Number of attention heads</span>
+        <span class="n">ffnDim</span><span class="p">:</span> <span class="mi">2048</span><span class="p">,</span>          <span class="c1">// Feed-forward network dimension</span>
+        <span class="n">numEncoderLayers</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>   <span class="c1">// N encoder layers</span>
+        <span class="n">numDecoderLayers</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span>   <span class="c1">// M decoder layers</span>
+        <span class="n">maxSeqLen</span><span class="p">:</span> <span class="mi">5000</span><span class="p">,</span>       <span class="c1">// Maximum sequence length</span>
+        <span class="n">dropout</span><span class="p">:</span> <span class="mf">0.1</span>           <span class="c1">// Dropout rate</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// Example forward pass</span>
+<span class="kd">let</span> <span class="nv">model</span> <span class="p">=</span> <span class="n">createTransformerModel</span><span class="p">()</span>
+<span class="kd">let</span> <span class="nv">inputIds</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>     <span class="c1">// Batch size 2, sequence length 50</span>
+<span class="kd">let</span> <span class="nv">targetIds</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>    <span class="c1">// Target sequence</span>
+<span class="kd">let</span> <span class="nv">targetMask</span> <span class="p">=</span> <span class="n">Transformer</span><span class="p">.</span><span class="n">createCausalMask</span><span class="p">(</span><span class="n">seqLen</span><span class="p">:</span> <span class="mi">50</span><span class="p">)</span>
+
+<span class="kd">let</span> <span class="nv">output</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">forward</span><span class="p">(</span><span class="n">inputIds</span><span class="p">,</span> <span class="n">targetIds</span><span class="p">,</span> <span class="n">targetMask</span><span class="p">:</span> <span class="n">targetMask</span><span class="p">)</span>
+<span class="c1">// Output shape: [2, 50, 30000] - logits for each token in vocabulary</span>
+</code></pre></div>
+
+<p>This implementation provides:</p>
+<ul>
+<li><strong>Configurable Architecture</strong>: Easy to specify N encoder layers and M decoder layers</li>
+<li><strong>Complete Attention Mechanism</strong>: Multi-head self-attention and cross-attention with masking</li>
+<li><strong>Positional Encoding</strong>: Sinusoidal positional embeddings</li>
+<li><strong>Layer Components</strong>: Feed-forward networks, layer normalization, residual connections</li>
+<li><strong>Full Transformer</strong>: End-to-end encoder-decoder architecture</li>
+<li><strong>Masking Support</strong>: Causal masking for decoder and padding masks</li>
+<li><strong>MLX Integration</strong>: Optimized for Apple Silicon using MLX framework</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>The Transformer architecture represents a paradigm shift in how we approach sequence modeling and has become the foundation of modern AI. Its key innovations—self-attention, parallelization, and the encoder-decoder structure—have enabled unprecedented capabilities in natural language processing and beyond.</p>
+<p>Understanding Transformers is crucial for anyone working in modern AI, as they continue to be the backbone of the most advanced language models, computer vision systems, and multimodal AI applications. As the field continues to evolve, the core principles established by the Transformer will likely remain influential for years to come.</p>
+<p>The journey from the original "Attention Is All You Need" paper to today's large language models demonstrates the power of foundational architectural innovations. As we continue to scale and refine these models, we're likely to see even more remarkable capabilities emerge from this elegant and powerful architecture.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "Understanding Transformers: The Architecture That Revolutionized AI",
+    "headline": "Understanding Transformers: The Architecture That Revolutionized AI",
+    "datePublished": "2025-07-01 00:00:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/transformers-architecture-explained.html",
+    "description": "A comprehensive guide to understanding the Transformer architecture, including detailed explanations of encoders, decoders, attention mechanisms, and their revolutionary impact on modern AI."
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

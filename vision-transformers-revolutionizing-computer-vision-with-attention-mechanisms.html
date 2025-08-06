@@ -1,0 +1,926 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="Breakdown analysis of Vision Transformers in depth" />
+    <meta name="keywords" content="MLX, Machine Learning, VLM, Vision Transformers">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="Vision Transformers Revolutionizing Computer Vision with Attention Mechanisms" />
+<meta property="og:description" content="Breakdown analysis of Vision Transformers in depth" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/vision-transformers-revolutionizing-computer-vision-with-attention-mechanisms.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-28 02:30:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Vision Language Models" />
+	<meta property="article:tag" content="MLX" />
+	<meta property="article:tag" content="Machine Learning" />
+	<meta property="article:tag" content="VLM" />
+	<meta property="article:tag" content="Vision Transformers" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    Vision Transformers Revolutionizing Computer Vision with Attention Mechanisms &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/vision-language-models.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="vision-transformers-revolutionizing-computer-vision-with-attention-mechanisms">Vision Transformers Revolutionizing Computer Vision with Attention Mechanisms</h3>
+		<p style="font-size:larger;"><p>Breakdown analysis of Vision Transformers in depth</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Sat 28 June 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/vision-language-models.html">vision language models</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/mlx.html">mlx</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/machine-learning.html">machine learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/vlm.html">vlm</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/vision-transformers.html">vision transformers</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>The field of computer vision has undergone a dramatic transformation with the introduction of Vision Transformers (ViTs). Originally designed for natural language processing, the Transformer architecture has proven remarkably effective when adapted for image understanding tasks. This blog post delves deep into how Vision Transformers work, particularly focusing on how attention mechanisms are applied to images and the intricacies of multi-headed vision attention.</p>
+<h2 id="introduction-from-convolutions-to-attention">Introduction: From Convolutions to Attention</h2>
+<p>For decades, Convolutional Neural Networks (CNNs) dominated computer vision, leveraging their inductive biases like translation invariance and locality to process images effectively. However, the groundbreaking paper "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale" by Dosovitskiy et al. (2020) challenged this paradigm by demonstrating that a pure transformer architecture could achieve state-of-the-art results on image classification tasks.</p>
+<p>The key insight behind Vision Transformers is treating images not as spatial grids of pixels, but as sequences of patches – similar to how text is treated as sequences of words in NLP transformers.</p>
+<h2 id="the-core-architecture-of-vision-transformers">The Core Architecture of Vision Transformers</h2>
+<h3 id="image-patch-embedding">Image Patch Embedding</h3>
+<p>The first crucial step in Vision Transformers is converting an image into a sequence of embeddings that can be processed by the transformer architecture:</p>
+<ol>
+<li>
+<p><strong>Patch Extraction</strong>: An input image of size H×W×C is divided into fixed-size patches of size P×P. This results in N = HW/P² patches.</p>
+</li>
+<li>
+<p><strong>Linear Projection</strong>: Each patch is flattened into a vector of size P²×C and then linearly projected to a D-dimensional embedding space.</p>
+</li>
+<li>
+<p><strong>Position Encoding</strong>: Since transformers don't inherently understand spatial relationships, learnable position embeddings are added to each patch embedding to retain spatial information.</p>
+</li>
+<li>
+<p><strong>Classification Token</strong>: A special [CLS] token is prepended to the sequence, similar to BERT, which will be used for classification tasks.</p>
+</li>
+</ol>
+<p>The mathematical representation can be expressed as:</p>
+<div class="highlight"><pre><span></span><code>z₀ = [x_class; x₁ᵖE; x₂ᵖE; ...; xₙᵖE] + E_pos
+</code></pre></div>
+
+<p>Where:</p>
+<ul>
+<li><code>x_class</code> is the classification token</li>
+<li><code>xᵢᵖ</code> represents the i-th patch</li>
+<li><code>E</code> is the linear projection matrix</li>
+<li><code>E_pos</code> are the position embeddings</li>
+</ul>
+<h2 id="attention-mechanism-applied-to-images">Attention Mechanism Applied to Images</h2>
+<h3 id="self-attention-in-vision-context">Self-Attention in Vision Context</h3>
+<p>The self-attention mechanism in Vision Transformers allows each patch to attend to all other patches in the image, creating a global receptive field from the very first layer. This is fundamentally different from CNNs, which build up their receptive field gradually through multiple layers.</p>
+<p>The self-attention mechanism computes attention weights between all pairs of patches, enabling the model to:</p>
+<ol>
+<li><strong>Capture Long-Range Dependencies</strong>: Unlike CNNs that are limited by kernel size, ViTs can relate distant image regions directly</li>
+<li><strong>Learn Spatial Relationships</strong>: The model learns which patches are relevant to each other for the given task</li>
+<li><strong>Achieve Translation Equivariance</strong>: Through position embeddings and attention, the model can handle spatial transformations</li>
+</ol>
+<h3 id="mathematical-formulation-of-vision-attention">Mathematical Formulation of Vision Attention</h3>
+<p>For a sequence of patch embeddings Z ∈ ℝᴺˣᴰ, the self-attention mechanism computes:</p>
+<div class="highlight"><pre><span></span><code>Attention(Q, K, V) = softmax(QKᵀ/√D)V
+</code></pre></div>
+
+<p>Where:</p>
+<ul>
+<li>Q = ZWᵩ (Query matrix)</li>
+<li>K = ZWₖ (Key matrix)</li>
+<li>V = ZWᵥ (Value matrix)</li>
+<li>Wᵩ, Wₖ, Wᵥ ∈ ℝᴰˣᴰ are learned projection matrices</li>
+</ul>
+<p>The attention weights A = softmax(QKᵀ/√D) ∈ ℝᴺˣᴺ represent how much each patch (row) attends to every other patch (column).</p>
+<h3 id="interpreting-attention-maps-in-vision">Interpreting Attention Maps in Vision</h3>
+<p>Attention maps in Vision Transformers provide fascinating insights into what the model is "looking at":</p>
+<ul>
+<li><strong>Early Layers</strong>: Often show local patterns and textures, similar to early CNN layers</li>
+<li><strong>Middle Layers</strong>: Begin to capture object parts and meaningful spatial relationships</li>
+<li><strong>Later Layers</strong>: Focus on high-level semantic regions relevant to the classification task</li>
+</ul>
+<h2 id="multi-headed-vision-attention-a-deep-dive">Multi-Headed Vision Attention: A Deep Dive</h2>
+<h3 id="the-concept-of-multiple-attention-heads">The Concept of Multiple Attention Heads</h3>
+<p>Multi-headed attention is one of the most powerful aspects of the transformer architecture. Instead of computing a single attention function, the model runs multiple attention functions in parallel, each potentially learning different types of relationships.</p>
+<h3 id="architecture-of-multi-headed-attention">Architecture of Multi-Headed Attention</h3>
+<p>In multi-headed attention with h heads, the input is split into h different subspaces:</p>
+<div class="highlight"><pre><span></span><code>MultiHead(Q, K, V) = Concat(head₁, head₂, ..., headₕ)W^O
+</code></pre></div>
+
+<p>Where each head is computed as:</p>
+<div class="highlight"><pre><span></span><code>headᵢ = Attention(QWᵢᵩ, KWᵢₖ, VWᵢᵥ)
+</code></pre></div>
+
+<p>And the projection matrices have dimensions:</p>
+<ul>
+<li>Wᵢᵩ, Wᵢₖ, Wᵢᵥ ∈ ℝᴰˣ⁽ᴰ/ʰ⁾</li>
+<li>W^O ∈ ℝᴰˣᴰ</li>
+</ul>
+<h3 id="what-different-heads-learn-in-vision">What Different Heads Learn in Vision</h3>
+<p>Research has shown that different attention heads in Vision Transformers specialize in different aspects:</p>
+<ol>
+<li><strong>Spatial Heads</strong>: Some heads focus on spatial proximity, attending primarily to neighboring patches</li>
+<li><strong>Semantic Heads</strong>: Others attend to semantically similar regions regardless of spatial distance</li>
+<li><strong>Global Heads</strong>: Some heads maintain broad attention patterns across the entire image</li>
+<li><strong>Object-Specific Heads</strong>: Certain heads specialize in specific object types or features</li>
+</ol>
+<h3 id="benefits-of-multi-headed-attention-in-vision">Benefits of Multi-Headed Attention in Vision</h3>
+<ol>
+<li><strong>Diverse Representations</strong>: Each head can capture different types of visual relationships</li>
+<li><strong>Robustness</strong>: Multiple heads provide redundancy and improve model robustness</li>
+<li><strong>Interpretability</strong>: Different heads can be analyzed to understand what visual patterns the model has learned</li>
+<li><strong>Flexibility</strong>: The model can dynamically adjust which heads to emphasize for different images</li>
+</ol>
+<h2 id="comparing-vision-attention-to-cnn-feature-maps">Comparing Vision Attention to CNN Feature Maps</h2>
+<h3 id="receptive-field-differences">Receptive Field Differences</h3>
+<ul>
+<li><strong>CNNs</strong>: Build receptive field gradually, limited by kernel size and network depth</li>
+<li><strong>ViTs</strong>: Global receptive field from the first layer through self-attention</li>
+</ul>
+<h3 id="feature-learning-patterns">Feature Learning Patterns</h3>
+<ul>
+<li><strong>CNNs</strong>: Learn hierarchical features from local edges to global objects</li>
+<li><strong>ViTs</strong>: Can learn both local and global patterns simultaneously across all layers</li>
+</ul>
+<h3 id="computational-complexity">Computational Complexity</h3>
+<ul>
+<li><strong>CNNs</strong>: O(H×W) complexity for convolution operations</li>
+<li><strong>ViTs</strong>: O(N²) complexity for attention computation, where N is the number of patches</li>
+</ul>
+<h2 id="advanced-vision-transformer-variants">Advanced Vision Transformer Variants</h2>
+<h3 id="hierarchical-vision-transformers">Hierarchical Vision Transformers</h3>
+<p>Models like Swin Transformer introduce hierarchical processing and shifted windowing to reduce computational complexity while maintaining the benefits of attention.</p>
+<h3 id="efficient-vision-transformers">Efficient Vision Transformers</h3>
+<p>Variants like DeiT (Data-efficient image Transformers) focus on training ViTs with less data through distillation techniques.</p>
+<h3 id="hybrid-architectures">Hybrid Architectures</h3>
+<p>Some models combine the best of both worlds, using CNNs for early feature extraction and transformers for high-level reasoning.</p>
+<h2 id="practical-applications-and-performance">Practical Applications and Performance</h2>
+<h3 id="image-classification">Image Classification</h3>
+<p>Vision Transformers have achieved state-of-the-art results on ImageNet and other classification benchmarks, particularly when pre-trained on large datasets.</p>
+<h3 id="object-detection-and-segmentation">Object Detection and Segmentation</h3>
+<p>DETR (Detection Transformer) and subsequent works have shown how attention mechanisms can be applied to object detection and instance segmentation tasks.</p>
+<h3 id="medical-imaging">Medical Imaging</h3>
+<p>ViTs have shown promising results in medical image analysis, where the ability to capture long-range dependencies is particularly valuable.</p>
+<h2 id="training-considerations-for-vision-transformers">Training Considerations for Vision Transformers</h2>
+<h3 id="data-requirements">Data Requirements</h3>
+<p>ViTs typically require more training data than CNNs due to their lack of built-in inductive biases for vision tasks.</p>
+<h3 id="pre-training-strategies">Pre-training Strategies</h3>
+<p>Most successful ViT implementations use pre-training on large datasets (like JFT-300M) followed by fine-tuning on target tasks.</p>
+<h3 id="optimization-challenges">Optimization Challenges</h3>
+<p>Training ViTs requires careful optimization strategies, including proper learning rate scheduling and regularization techniques.</p>
+<h2 id="future-directions-and-research">Future Directions and Research</h2>
+<h3 id="efficiency-improvements">Efficiency Improvements</h3>
+<p>Ongoing research focuses on making Vision Transformers more computationally efficient through techniques like:</p>
+<ul>
+<li>Linear attention mechanisms</li>
+<li>Sparse attention patterns</li>
+<li>Knowledge distillation</li>
+</ul>
+<h3 id="architectural-innovations">Architectural Innovations</h3>
+<p>New architectures continue to emerge, combining the strengths of transformers with other techniques:</p>
+<ul>
+<li>Mixing CNNs and transformers</li>
+<li>Graph-based attention mechanisms</li>
+<li>Multi-scale processing</li>
+</ul>
+<h3 id="applications-beyond-classification">Applications Beyond Classification</h3>
+<p>Expanding ViT applications to:</p>
+<ul>
+<li>Video understanding</li>
+<li>3D vision tasks</li>
+<li>Multi-modal learning</li>
+</ul>
+<h2 id="conclusion">Conclusion</h2>
+<p>Vision Transformers represent a paradigm shift in computer vision, demonstrating that attention mechanisms can effectively process visual information. The ability to capture global dependencies through self-attention, combined with the flexibility of multi-headed attention, has opened new possibilities for understanding and processing images.</p>
+<p>Key takeaways include:</p>
+<ol>
+<li><strong>Global Context</strong>: ViTs can capture long-range dependencies from the first layer</li>
+<li><strong>Multi-Head Specialization</strong>: Different attention heads learn complementary visual patterns</li>
+<li><strong>Interpretability</strong>: Attention maps provide insights into model decision-making</li>
+<li><strong>Scalability</strong>: Performance improves with scale in both model size and training data</li>
+<li><strong>Versatility</strong>: The architecture adapts well to various vision tasks</li>
+</ol>
+<p>As the field continues to evolve, we can expect to see further innovations that combine the strengths of attention mechanisms with other architectural components, leading to even more powerful and efficient vision models.</p>
+<p>The journey from treating images as spatial grids to sequences of patches has fundamentally changed how we approach computer vision, and Vision Transformers continue to push the boundaries of what's possible in visual understanding tasks.</p>
+<hr>
+<p><em>This exploration of Vision Transformers demonstrates the power of adapting successful architectures across domains and highlights the importance of attention mechanisms in modern deep learning.</em></p>
+<h2 id="implementing-vision-transformer-with-mlx-in-swift">Implementing Vision Transformer with MLX in Swift</h2>
+<p>To demonstrate the practical implementation of Vision Transformers, let's build a complete ViT model using Apple's MLX framework in Swift. This implementation will be capable of classifying ImageNet images and showcases how the theoretical concepts translate into working code.</p>
+<h3 id="setting-up-the-project">Setting Up the Project</h3>
+<p>First, let's set up the necessary imports and basic structure:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">import</span> <span class="nc">MLX</span>
+<span class="kd">import</span> <span class="nc">MLXRandom</span>
+<span class="kd">import</span> <span class="nc">Foundation</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Vision Transformer Configuration</span>
+<span class="kd">struct</span> <span class="nc">ViTConfig</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">imageSize</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">224</span>
+    <span class="kd">let</span> <span class="nv">patchSize</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">16</span>
+    <span class="kd">let</span> <span class="nv">numClasses</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">1000</span>  <span class="c1">// ImageNet classes</span>
+    <span class="kd">let</span> <span class="nv">embedDim</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">768</span>
+    <span class="kd">let</span> <span class="nv">numHeads</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">12</span>
+    <span class="kd">let</span> <span class="nv">numLayers</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">12</span>
+    <span class="kd">let</span> <span class="nv">mlpDim</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">3072</span>
+    <span class="kd">let</span> <span class="nv">dropoutRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.1</span>
+
+    <span class="kd">var</span> <span class="nv">numPatches</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">imageSize</span> <span class="o">/</span> <span class="n">patchSize</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">imageSize</span> <span class="o">/</span> <span class="n">patchSize</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="patch-embedding-layer">Patch Embedding Layer</h3>
+<p>The first component converts image patches into embeddings:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Patch Embedding</span>
+<span class="kd">class</span> <span class="nc">PatchEmbedding</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">patchSize</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">embedDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">projection</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">patchSize</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">channels</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">patchSize</span> <span class="p">=</span> <span class="n">patchSize</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">embedDim</span> <span class="p">=</span> <span class="n">embedDim</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">projection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">patchSize</span> <span class="o">*</span> <span class="n">patchSize</span> <span class="o">*</span> <span class="n">channels</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// x shape: [batch_size, height, width, channels]</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">height</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">width</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">channels</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="c1">// Calculate number of patches</span>
+        <span class="kd">let</span> <span class="nv">numPatchesH</span> <span class="p">=</span> <span class="n">height</span> <span class="o">/</span> <span class="n">patchSize</span>
+        <span class="kd">let</span> <span class="nv">numPatchesW</span> <span class="p">=</span> <span class="n">width</span> <span class="o">/</span> <span class="n">patchSize</span>
+
+        <span class="c1">// Reshape image into patches</span>
+        <span class="c1">// [batch_size, num_patches_h, patch_size, num_patches_w, patch_size, channels]</span>
+        <span class="kd">var</span> <span class="nv">patches</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span>
+            <span class="n">batchSize</span><span class="p">,</span> <span class="n">numPatchesH</span><span class="p">,</span> <span class="n">patchSize</span><span class="p">,</span> 
+            <span class="n">numPatchesW</span><span class="p">,</span> <span class="n">patchSize</span><span class="p">,</span> <span class="n">channels</span>
+        <span class="p">])</span>
+
+        <span class="c1">// Rearrange to [batch_size, num_patches_h, num_patches_w, patch_size, patch_size, channels]</span>
+        <span class="n">patches</span> <span class="p">=</span> <span class="n">patches</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+        <span class="c1">// Flatten patches: [batch_size, num_patches, patch_size * patch_size * channels]</span>
+        <span class="kd">let</span> <span class="nv">numPatches</span> <span class="p">=</span> <span class="n">numPatchesH</span> <span class="o">*</span> <span class="n">numPatchesW</span>
+        <span class="kd">let</span> <span class="nv">patchDim</span> <span class="p">=</span> <span class="n">patchSize</span> <span class="o">*</span> <span class="n">patchSize</span> <span class="o">*</span> <span class="n">channels</span>
+        <span class="n">patches</span> <span class="p">=</span> <span class="n">patches</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">numPatches</span><span class="p">,</span> <span class="n">patchDim</span><span class="p">])</span>
+
+        <span class="c1">// Project to embedding dimension</span>
+        <span class="k">return</span> <span class="n">projection</span><span class="p">(</span><span class="n">patches</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="multi-head-self-attention">Multi-Head Self-Attention</h3>
+<p>The core attention mechanism implementation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Multi-Head Self-Attention</span>
+<span class="kd">class</span> <span class="nc">MultiHeadSelfAttention</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">numHeads</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">headDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">embedDim</span><span class="p">:</span> <span class="nb">Int</span>
+    <span class="kd">let</span> <span class="nv">scale</span><span class="p">:</span> <span class="nb">Float</span>
+
+    <span class="kd">let</span> <span class="nv">queryProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">keyProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">valueProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">outputProjection</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="n">Dropout</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropoutRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">numHeads</span> <span class="p">=</span> <span class="n">numHeads</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">embedDim</span> <span class="p">=</span> <span class="n">embedDim</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">headDim</span> <span class="p">=</span> <span class="n">embedDim</span> <span class="o">/</span> <span class="n">numHeads</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">scale</span> <span class="p">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">(</span><span class="nb">Float</span><span class="p">(</span><span class="n">headDim</span><span class="p">))</span>
+
+        <span class="kc">self</span><span class="p">.</span><span class="n">queryProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">keyProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">valueProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">outputProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">dropoutRate</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">seqLen</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">// Generate Q, K, V</span>
+        <span class="kd">let</span> <span class="nv">q</span> <span class="p">=</span> <span class="n">queryProjection</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">k</span> <span class="p">=</span> <span class="n">keyProjection</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">v</span> <span class="p">=</span> <span class="n">valueProjection</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Reshape for multi-head attention</span>
+        <span class="c1">// [batch_size, seq_len, num_heads, head_dim]</span>
+        <span class="kd">let</span> <span class="nv">qReshaped</span> <span class="p">=</span> <span class="n">q</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">kReshaped</span> <span class="p">=</span> <span class="n">k</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">vReshaped</span> <span class="p">=</span> <span class="n">v</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">,</span> <span class="n">headDim</span><span class="p">])</span>
+
+        <span class="c1">// Transpose to [batch_size, num_heads, seq_len, head_dim]</span>
+        <span class="kd">let</span> <span class="nv">qTransposed</span> <span class="p">=</span> <span class="n">qReshaped</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">kTransposed</span> <span class="p">=</span> <span class="n">kReshaped</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">vTransposed</span> <span class="p">=</span> <span class="n">vReshaped</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+        <span class="c1">// Attention computation: Q @ K^T</span>
+        <span class="kd">let</span> <span class="nv">scores</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">qTransposed</span><span class="p">,</span> <span class="n">kTransposed</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]))</span>
+        <span class="kd">let</span> <span class="nv">scaledScores</span> <span class="p">=</span> <span class="n">scores</span> <span class="o">*</span> <span class="n">scale</span>
+
+        <span class="c1">// Apply softmax</span>
+        <span class="kd">let</span> <span class="nv">attentionWeights</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">scaledScores</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">droppedWeights</span> <span class="p">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">attentionWeights</span><span class="p">)</span>
+
+        <span class="c1">// Apply attention to values</span>
+        <span class="kd">let</span> <span class="nv">attended</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">droppedWeights</span><span class="p">,</span> <span class="n">vTransposed</span><span class="p">)</span>
+
+        <span class="c1">// Transpose back and reshape</span>
+        <span class="kd">let</span> <span class="nv">output</span> <span class="p">=</span> <span class="n">attended</span><span class="p">.</span><span class="n">transposed</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+            <span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">seqLen</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">outputProjection</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="transformer-block">Transformer Block</h3>
+<p>A complete transformer block with attention and MLP:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Transformer Block</span>
+<span class="kd">class</span> <span class="nc">TransformerBlock</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">attention</span><span class="p">:</span> <span class="n">MultiHeadSelfAttention</span>
+    <span class="kd">let</span> <span class="nv">layerNorm1</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">layerNorm2</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">mlp</span><span class="p">:</span> <span class="n">MLP</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="n">Dropout</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">numHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">mlpDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropoutRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">attention</span> <span class="p">=</span> <span class="n">MultiHeadSelfAttention</span><span class="p">(</span>
+            <span class="n">embedDim</span><span class="p">:</span> <span class="n">embedDim</span><span class="p">,</span> 
+            <span class="n">numHeads</span><span class="p">:</span> <span class="n">numHeads</span><span class="p">,</span> 
+            <span class="n">dropoutRate</span><span class="p">:</span> <span class="n">dropoutRate</span>
+        <span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm1</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm2</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">mlp</span> <span class="p">=</span> <span class="n">MLP</span><span class="p">(</span><span class="n">embedDim</span><span class="p">:</span> <span class="n">embedDim</span><span class="p">,</span> <span class="n">hiddenDim</span><span class="p">:</span> <span class="n">mlpDim</span><span class="p">,</span> <span class="n">dropoutRate</span><span class="p">:</span> <span class="n">dropoutRate</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">dropoutRate</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Multi-head self-attention with residual connection</span>
+        <span class="kd">let</span> <span class="nv">attended</span> <span class="p">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">dropout</span><span class="p">(</span><span class="n">attention</span><span class="p">(</span><span class="n">layerNorm1</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+        <span class="c1">// MLP with residual connection</span>
+        <span class="kd">let</span> <span class="nv">output</span> <span class="p">=</span> <span class="n">attended</span> <span class="o">+</span> <span class="n">dropout</span><span class="p">(</span><span class="n">mlp</span><span class="p">(</span><span class="n">layerNorm2</span><span class="p">(</span><span class="n">attended</span><span class="p">)))</span>
+
+        <span class="k">return</span> <span class="n">output</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - MLP (Feed-Forward Network)</span>
+<span class="kd">class</span> <span class="nc">MLP</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">linear1</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">linear2</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="n">Dropout</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">hiddenDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">dropoutRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">linear1</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">hiddenDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">linear2</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">hiddenDim</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">dropoutRate</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">output</span> <span class="p">=</span> <span class="n">linear1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">output</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">gelu</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>  <span class="c1">// GELU activation</span>
+        <span class="n">output</span> <span class="p">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="n">output</span> <span class="p">=</span> <span class="n">linear2</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="complete-vision-transformer-model">Complete Vision Transformer Model</h3>
+<p>Now let's combine all components into the complete ViT model:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Vision Transformer</span>
+<span class="kd">class</span> <span class="nc">VisionTransformer</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">config</span><span class="p">:</span> <span class="n">ViTConfig</span>
+    <span class="kd">let</span> <span class="nv">patchEmbedding</span><span class="p">:</span> <span class="n">PatchEmbedding</span>
+    <span class="kd">let</span> <span class="nv">classToken</span><span class="p">:</span> <span class="n">MLXArray</span>
+    <span class="kd">let</span> <span class="nv">positionEmbedding</span><span class="p">:</span> <span class="n">MLXArray</span>
+    <span class="kd">let</span> <span class="nv">transformerBlocks</span><span class="p">:</span> <span class="p">[</span><span class="n">TransformerBlock</span><span class="p">]</span>
+    <span class="kd">let</span> <span class="nv">layerNorm</span><span class="p">:</span> <span class="n">LayerNorm</span>
+    <span class="kd">let</span> <span class="nv">classifier</span><span class="p">:</span> <span class="n">Linear</span>
+    <span class="kd">let</span> <span class="nv">dropout</span><span class="p">:</span> <span class="n">Dropout</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ViTConfig</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">config</span> <span class="p">=</span> <span class="n">config</span>
+
+        <span class="c1">// Patch embedding layer</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">patchEmbedding</span> <span class="p">=</span> <span class="n">PatchEmbedding</span><span class="p">(</span>
+            <span class="n">patchSize</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">patchSize</span><span class="p">,</span>
+            <span class="n">embedDim</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">embedDim</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Learnable class token</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">classToken</span> <span class="p">=</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">])</span>
+
+        <span class="c1">// Learnable position embeddings for all patches + class token</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">positionEmbedding</span> <span class="p">=</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">normal</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">numPatches</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">])</span>
+
+        <span class="c1">// Transformer blocks</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">transformerBlocks</span> <span class="p">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">config</span><span class="p">.</span><span class="n">numLayers</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="kc">_</span> <span class="k">in</span>
+            <span class="n">TransformerBlock</span><span class="p">(</span>
+                <span class="n">embedDim</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">,</span>
+                <span class="n">numHeads</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">numHeads</span><span class="p">,</span>
+                <span class="n">mlpDim</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">mlpDim</span><span class="p">,</span>
+                <span class="n">dropoutRate</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">dropoutRate</span>
+            <span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Final layer norm and classifier</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">layerNorm</span> <span class="p">=</span> <span class="n">LayerNorm</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">classifier</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">numClasses</span><span class="p">)</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">dropout</span> <span class="p">=</span> <span class="n">Dropout</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">config</span><span class="p">.</span><span class="n">dropoutRate</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1">// Extract patches and embed them</span>
+        <span class="kd">var</span> <span class="nv">embeddings</span> <span class="p">=</span> <span class="n">patchEmbedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1">// [batch_size, num_patches, embed_dim]</span>
+
+        <span class="c1">// Expand class token for the batch</span>
+        <span class="kd">let</span> <span class="nv">batchClassTokens</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">broadcast</span><span class="p">(</span><span class="n">classToken</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="p">[</span><span class="n">batchSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">embedDim</span><span class="p">])</span>
+
+        <span class="c1">// Concatenate class token with patch embeddings</span>
+        <span class="n">embeddings</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">batchClassTokens</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">],</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">// Add position embeddings</span>
+        <span class="n">embeddings</span> <span class="p">=</span> <span class="n">embeddings</span> <span class="o">+</span> <span class="n">positionEmbedding</span>
+        <span class="n">embeddings</span> <span class="p">=</span> <span class="n">dropout</span><span class="p">(</span><span class="n">embeddings</span><span class="p">)</span>
+
+        <span class="c1">// Apply transformer blocks</span>
+        <span class="kd">var</span> <span class="nv">output</span> <span class="p">=</span> <span class="n">embeddings</span>
+        <span class="k">for</span> <span class="n">block</span> <span class="k">in</span> <span class="n">transformerBlocks</span> <span class="p">{</span>
+            <span class="n">output</span> <span class="p">=</span> <span class="n">block</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Apply final layer norm</span>
+        <span class="n">output</span> <span class="p">=</span> <span class="n">layerNorm</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+
+        <span class="c1">// Extract class token (first token) for classification</span>
+        <span class="kd">let</span> <span class="nv">classOutput</span> <span class="p">=</span> <span class="n">output</span><span class="p">[..,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1">// [batch_size, embed_dim]</span>
+
+        <span class="c1">// Apply classifier</span>
+        <span class="k">return</span> <span class="n">classifier</span><span class="p">(</span><span class="n">classOutput</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="training-and-inference-pipeline">Training and Inference Pipeline</h3>
+<p>Here's how to use the model for training and inference:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Training and Inference</span>
+<span class="kd">class</span> <span class="nc">ViTImageClassifier</span> <span class="p">{</span>
+    <span class="kd">let</span> <span class="nv">model</span><span class="p">:</span> <span class="n">VisionTransformer</span>
+    <span class="kd">let</span> <span class="nv">config</span><span class="p">:</span> <span class="n">ViTConfig</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">ViTConfig</span> <span class="p">=</span> <span class="n">ViTConfig</span><span class="p">())</span> <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">config</span> <span class="p">=</span> <span class="n">config</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">model</span> <span class="p">=</span> <span class="n">VisionTransformer</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">preprocessImage</span><span class="p">(</span><span class="kc">_</span> <span class="n">image</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Normalize image to [-1, 1] range (ImageNet normalization)</span>
+        <span class="kd">let</span> <span class="nv">mean</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">([</span><span class="mf">0.485</span><span class="p">,</span> <span class="mf">0.456</span><span class="p">,</span> <span class="mf">0.406</span><span class="p">])</span>
+        <span class="kd">let</span> <span class="nv">std</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">([</span><span class="mf">0.229</span><span class="p">,</span> <span class="mf">0.224</span><span class="p">,</span> <span class="mf">0.225</span><span class="p">])</span>
+
+        <span class="kd">var</span> <span class="nv">normalized</span> <span class="p">=</span> <span class="n">image</span> <span class="o">/</span> <span class="mf">255.0</span>
+        <span class="n">normalized</span> <span class="p">=</span> <span class="p">(</span><span class="n">normalized</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span>
+
+        <span class="k">return</span> <span class="n">normalized</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">predict</span><span class="p">(</span><span class="kc">_</span> <span class="n">image</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Preprocess image</span>
+        <span class="kd">let</span> <span class="nv">preprocessed</span> <span class="p">=</span> <span class="n">preprocessImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+        <span class="c1">// Add batch dimension if needed</span>
+        <span class="kd">let</span> <span class="nv">batched</span> <span class="p">=</span> <span class="n">preprocessed</span><span class="p">.</span><span class="n">ndim</span> <span class="p">==</span> <span class="mi">3</span> <span class="p">?</span> 
+            <span class="n">preprocessed</span><span class="p">.</span><span class="n">expandedDimensions</span><span class="p">(</span><span class="n">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="p">:</span> <span class="n">preprocessed</span>
+
+        <span class="c1">// Forward pass</span>
+        <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">model</span><span class="p">(</span><span class="n">batched</span><span class="p">)</span>
+
+        <span class="c1">// Apply softmax to get probabilities</span>
+        <span class="k">return</span> <span class="n">MLX</span><span class="p">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">train</span><span class="p">(</span>
+        <span class="n">trainLoader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+        <span class="n">validLoader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">learningRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">1e-4</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">optimizer</span> <span class="p">=</span> <span class="n">AdamW</span><span class="p">(</span><span class="n">learningRate</span><span class="p">:</span> <span class="n">learningRate</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">lossFunction</span> <span class="p">=</span> <span class="n">CrossEntropyLoss</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">epoch</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">epochs</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nv">totalLoss</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.0</span>
+            <span class="kd">var</span> <span class="nv">correctPredictions</span> <span class="p">=</span> <span class="mi">0</span>
+            <span class="kd">var</span> <span class="nv">totalSamples</span> <span class="p">=</span> <span class="mi">0</span>
+
+            <span class="c1">// Training loop</span>
+            <span class="k">for</span> <span class="n">batch</span> <span class="k">in</span> <span class="n">trainLoader</span> <span class="p">{</span>
+                <span class="kd">let</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="p">=</span> <span class="n">batch</span>
+
+                <span class="c1">// Forward pass</span>
+                <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">model</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+                <span class="kd">let</span> <span class="nv">loss</span> <span class="p">=</span> <span class="n">lossFunction</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+
+                <span class="c1">// Backward pass</span>
+                <span class="kd">let</span> <span class="nv">gradients</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">grad</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span>
+                <span class="n">optimizer</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">,</span> <span class="n">gradients</span><span class="p">:</span> <span class="n">gradients</span><span class="p">)</span>
+
+                <span class="c1">// Statistics</span>
+                <span class="n">totalLoss</span> <span class="o">+=</span> <span class="n">loss</span><span class="p">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="kd">let</span> <span class="nv">predictions</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                <span class="n">correctPredictions</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predictions</span> <span class="p">==</span> <span class="n">labels</span><span class="p">).</span><span class="n">sum</span><span class="p">().</span><span class="n">item</span><span class="p">()</span>
+                <span class="n">totalSamples</span> <span class="o">+=</span> <span class="n">labels</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">}</span>
+
+            <span class="kd">let</span> <span class="nv">accuracy</span> <span class="p">=</span> <span class="nb">Float</span><span class="p">(</span><span class="n">correctPredictions</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Float</span><span class="p">(</span><span class="n">totalSamples</span><span class="p">)</span>
+            <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Epoch </span><span class="si">\(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="si">)</span><span class="s">/</span><span class="si">\(</span><span class="n">epochs</span><span class="si">)</span><span class="s"> - Loss: </span><span class="si">\(</span><span class="n">totalLoss</span><span class="si">)</span><span class="s">, Accuracy: </span><span class="si">\(</span><span class="n">accuracy</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+
+            <span class="c1">// Validation</span>
+            <span class="n">validate</span><span class="p">(</span><span class="n">validLoader</span><span class="p">:</span> <span class="n">validLoader</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">validate</span><span class="p">(</span><span class="n">validLoader</span><span class="p">:</span> <span class="n">DataLoader</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">correctPredictions</span> <span class="p">=</span> <span class="mi">0</span>
+        <span class="kd">var</span> <span class="nv">totalSamples</span> <span class="p">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">batch</span> <span class="k">in</span> <span class="n">validLoader</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span> <span class="p">=</span> <span class="n">batch</span>
+            <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">model</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">predictions</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">correctPredictions</span> <span class="o">+=</span> <span class="p">(</span><span class="n">predictions</span> <span class="p">==</span> <span class="n">labels</span><span class="p">).</span><span class="n">sum</span><span class="p">().</span><span class="n">item</span><span class="p">()</span>
+            <span class="n">totalSamples</span> <span class="o">+=</span> <span class="n">labels</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">}</span>
+
+        <span class="kd">let</span> <span class="nv">accuracy</span> <span class="p">=</span> <span class="nb">Float</span><span class="p">(</span><span class="n">correctPredictions</span><span class="p">)</span> <span class="o">/</span> <span class="nb">Float</span><span class="p">(</span><span class="n">totalSamples</span><span class="p">)</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Validation Accuracy: </span><span class="si">\(</span><span class="n">accuracy</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="usage-example">Usage Example</h3>
+<p>Here's how to use the complete implementation:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Usage Example</span>
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// Initialize the model</span>
+    <span class="kd">let</span> <span class="nv">config</span> <span class="p">=</span> <span class="n">ViTConfig</span><span class="p">()</span>
+    <span class="kd">let</span> <span class="nv">classifier</span> <span class="p">=</span> <span class="n">ViTImageClassifier</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">)</span>
+
+    <span class="c1">// Load and preprocess an image (assuming you have image loading utilities)</span>
+    <span class="k">guard</span> <span class="kd">let</span> <span class="nv">image</span> <span class="p">=</span> <span class="n">loadImage</span><span class="p">(</span><span class="s">&quot;sample_image.jpg&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Failed to load image&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Resize image to 224x224 if needed</span>
+    <span class="kd">let</span> <span class="nv">resizedImage</span> <span class="p">=</span> <span class="n">resizeImage</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">to</span><span class="p">:</span> <span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+
+    <span class="c1">// Convert to MLXArray</span>
+    <span class="kd">let</span> <span class="nv">imageArray</span> <span class="p">=</span> <span class="n">convertToMLXArray</span><span class="p">(</span><span class="n">resizedImage</span><span class="p">)</span>
+
+    <span class="c1">// Make prediction</span>
+    <span class="kd">let</span> <span class="nv">predictions</span> <span class="p">=</span> <span class="n">classifier</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">imageArray</span><span class="p">)</span>
+    <span class="kd">let</span> <span class="nv">topClass</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">predictions</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="kd">let</span> <span class="nv">confidence</span> <span class="p">=</span> <span class="n">predictions</span><span class="p">.</span><span class="bp">max</span><span class="p">(</span><span class="n">axis</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Predicted class: </span><span class="si">\(</span><span class="n">topClass</span><span class="p">.</span><span class="n">item</span><span class="si">())</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Confidence: </span><span class="si">\(</span><span class="n">confidence</span><span class="p">.</span><span class="n">item</span><span class="si">())</span><span class="s">&quot;</span><span class="p">)</span>
+
+    <span class="c1">// For training (with your data loaders)</span>
+    <span class="n">classifier</span><span class="p">.</span><span class="n">train</span><span class="p">(</span>
+        <span class="n">trainLoader</span><span class="p">:</span> <span class="n">trainDataLoader</span><span class="p">,</span>
+        <span class="n">validLoader</span><span class="p">:</span> <span class="n">validDataLoader</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="n">learningRate</span><span class="p">:</span> <span class="mf">1e-4</span>
+    <span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<h3 id="key-implementation-notes">Key Implementation Notes</h3>
+<ol>
+<li>
+<p><strong>MLX Integration</strong>: This implementation leverages MLX's efficient operations for matrix multiplication, attention computation, and gradient calculation.</p>
+</li>
+<li>
+<p><strong>Memory Efficiency</strong>: The patch-based approach reduces memory requirements compared to processing full-resolution images.</p>
+</li>
+<li>
+<p><strong>Modular Design</strong>: Each component (attention, embedding, transformer block) is implemented as a separate module for easy testing and modification.</p>
+</li>
+<li>
+<p><strong>ImageNet Compatibility</strong>: The model is configured for ImageNet classification with 1000 classes and standard image preprocessing.</p>
+</li>
+<li>
+<p><strong>Training Ready</strong>: Includes complete training loop with Adam optimizer and cross-entropy loss.</p>
+</li>
+</ol>
+<p>This implementation demonstrates how the theoretical concepts of Vision Transformers translate into practical, executable code using Apple's MLX framework, providing a foundation for both research and production applications.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "Vision Transformers Revolutionizing Computer Vision with Attention Mechanisms",
+    "headline": "Vision Transformers Revolutionizing Computer Vision with Attention Mechanisms",
+    "datePublished": "2025-06-28 02:30:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/vision-transformers-revolutionizing-computer-vision-with-attention-mechanisms.html",
+    "description": "Breakdown analysis of Vision Transformers in depth"
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

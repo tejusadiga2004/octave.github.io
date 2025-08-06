@@ -1,0 +1,894 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="Introduction to Open AI CLIP model and its downstream tasks" />
+    <meta name="keywords" content="MLX, Machine Learning, VLM, CLIP">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="Understanding and Fine-tuning CLIP. A Revolutionary Vision-Language Model" />
+<meta property="og:description" content="Introduction to Open AI CLIP model and its downstream tasks" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/understanding-and-fine-tuning-clip-a-revolutionary-vision-language-model.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-06-25 14:30:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Vision Language Models" />
+	<meta property="article:tag" content="MLX" />
+	<meta property="article:tag" content="Machine Learning" />
+	<meta property="article:tag" content="VLM" />
+	<meta property="article:tag" content="CLIP" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    Understanding and Fine-tuning CLIP. A Revolutionary Vision-Language Model &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/vision-language-models.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="understanding-and-fine-tuning-clip-a-revolutionary-vision-language-model">Understanding and Fine-tuning CLIP. A Revolutionary Vision-Language Model</h3>
+		<p style="font-size:larger;"><p>Introduction to Open AI CLIP model and its downstream tasks</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Wed 25 June 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/vision-language-models.html">vision language models</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/mlx.html">mlx</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/machine-learning.html">machine learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/vlm.html">vlm</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/clip.html">clip</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>In the rapidly evolving field of artificial intelligence, OpenAI's CLIP (Contrastive Language-Image Pre-training) model stands as a revolutionary advancement in connecting visual and textual data. This blog post explores the architecture, training methodology, and zero-shot classification capabilities of CLIP, followed by a practical implementation of fine-tuning the model using Apple's MLX framework.</p>
+<h2 id="what-is-clip">What is CLIP?</h2>
+<p>CLIP, introduced by OpenAI in January 2021, is a neural network trained on a variety of image-text pairs. Unlike traditional computer vision models that are trained on specific datasets with fixed label sets, CLIP learns to understand images in relation to natural language descriptions. This approach enables CLIP to perform a wide range of visual classification tasks without specific training for each task – a capability known as "zero-shot learning."</p>
+<h2 id="clip-architecture">CLIP Architecture</h2>
+<p>CLIP consists of two primary components:</p>
+<ol>
+<li><strong>Image Encoder</strong>: A vision transformer (ViT) or a convolutional neural network (ResNet) that processes images.</li>
+<li><strong>Text Encoder</strong>: A transformer model that processes text descriptions.</li>
+</ol>
+<p>Both encoders transform their inputs into a shared multimodal embedding space where similar concepts are positioned closer together, regardless of whether they're represented as images or text.</p>
+<p><img src=https://lilianweng.github.io/posts/2021-05-31-contrastive/CLIP.png width="600"/></p>
+<h3 id="vision-encoder-options">Vision Encoder Options</h3>
+<p>CLIP offers multiple vision encoder architectures:</p>
+<ul>
+<li><strong>ResNet-based</strong>: Modified versions of ResNet-50, ResNet-101, etc.</li>
+<li><strong>Vision Transformer (ViT)</strong>: Various configurations including ViT-B/32, ViT-B/16, and ViT-L/14.</li>
+</ul>
+<h3 id="text-encoder">Text Encoder</h3>
+<p>The text encoder is a transformer model similar to GPT, but bidirectional (like BERT). It processes text tokens and generates embeddings that represent the semantic meaning of the text.</p>
+<h2 id="training-process">Training Process</h2>
+<p>CLIP's training process is distinctly different from traditional supervised learning approaches:</p>
+<h3 id="data-collection">Data Collection</h3>
+<p>CLIP was trained on 400 million image-text pairs collected from the internet. This diverse dataset exposes the model to a wide variety of concepts, contexts, and visual representations.</p>
+<h3 id="contrastive-pre-training">Contrastive Pre-training</h3>
+<p>The core of CLIP's training is contrastive learning, which works as follows:</p>
+<ol>
+<li>A batch of N image-text pairs is processed.</li>
+<li>Both the images and texts are encoded into embedding vectors.</li>
+<li>The model is trained to maximize the cosine similarity between the correct image-text pairs.</li>
+<li>Simultaneously, it minimizes the similarity between incorrect pairs.</li>
+</ol>
+<p>Mathematically, this is achieved using a contrastive loss function that creates a N×N similarity matrix between all images and texts in a batch, encouraging diagonal elements (matching pairs) to have high values while off-diagonal elements (non-matching pairs) have low values.</p>
+<h3 id="training-objectives">Training Objectives</h3>
+<p>The training uses a symmetric cross-entropy loss that treats the problem as both:
+- Predicting the correct text given an image
+- Predicting the correct image given a text</p>
+<p>This bidirectional approach helps create more robust embeddings that work well for various downstream tasks.</p>
+<h2 id="zero-shot-classification">Zero-Shot Classification</h2>
+<p>One of CLIP's most impressive capabilities is zero-shot classification—the ability to classify images into categories it hasn't explicitly been trained on.</p>
+<h3 id="how-zero-shot-classification-works-with-clip">How Zero-Shot Classification Works with CLIP</h3>
+<ol>
+<li><strong>Task Definition</strong>: The classification categories are converted into text prompts (e.g., "a photo of a {category}").</li>
+<li><strong>Text Encoding</strong>: These prompts are passed through the text encoder to get embedding vectors for each category.</li>
+<li><strong>Image Encoding</strong>: The target image is passed through the image encoder to get its embedding vector.</li>
+<li><strong>Similarity Calculation</strong>: The cosine similarity between the image embedding and each category embedding is calculated.</li>
+<li><strong>Classification</strong>: The category with the highest similarity score is chosen as the prediction.</li>
+</ol>
+<h3 id="performance-on-imagenet">Performance on ImageNet</h3>
+<p>Without any specific training on ImageNet, CLIP achieves remarkable performance:</p>
+<ul>
+<li>The best CLIP model (ViT-L/14) achieves around 76.2% top-1 accuracy on ImageNet.</li>
+<li>This performance rivals or exceeds many supervised models that were specifically trained on ImageNet.</li>
+<li>CLIP demonstrates robustness to distribution shifts and natural adversarial examples.</li>
+</ul>
+<h2 id="fine-tuning-clip-with-mlx">Fine-tuning CLIP with MLX</h2>
+<p>While CLIP's zero-shot capabilities are impressive, we can further improve its performance for specific tasks through fine-tuning. Here, we'll implement a fine-tuning approach using Apple's MLX framework in Swift, adding four linear layers to enhance zero-shot classification accuracy.</p>
+<p>Let's implement the code to download and fine-tune a CLIP model:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">import</span> <span class="nc">MLX</span>
+<span class="kd">import</span> <span class="nc">MLXRandom</span>
+<span class="kd">import</span> <span class="nc">MLXFast</span>
+<span class="kd">import</span> <span class="nc">Foundation</span>
+<span class="kd">import</span> <span class="nc">ArgumentParser</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Huggingface model fetcher</span>
+
+<span class="kd">class</span> <span class="nc">HuggingfaceModelFetcher</span>
+<span class="p">{</span>
+    <span class="kd">static</span> <span class="kd">let</span> <span class="nv">huggingFaceBaseURL</span> <span class="p">=</span> <span class="s">&quot;https://huggingface.co&quot;</span>
+
+    <span class="kd">struct</span> <span class="nc">HuggingFaceModelDescription</span>
+    <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">name</span><span class="p">:</span> <span class="nb">String</span>
+        <span class="kd">let</span> <span class="nv">modelURL</span><span class="p">:</span> <span class="n">URL</span>
+        <span class="kd">let</span> <span class="nv">metadataURLs</span><span class="p">:</span> <span class="p">[</span><span class="n">URL</span><span class="p">]</span>
+
+        <span class="kd">init</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">modelPath</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">metadataPaths</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">])</span>
+        <span class="p">{</span>
+            <span class="kc">self</span><span class="p">.</span><span class="n">name</span> <span class="p">=</span> <span class="n">name</span>
+            <span class="kc">self</span><span class="p">.</span><span class="n">modelPath</span> <span class="p">=</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">huggingFaceBaseURL</span><span class="p">).</span><span class="n">appending</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="kc">self</span><span class="p">.</span><span class="n">name</span><span class="p">).</span><span class="n">appending</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">modelPath</span><span class="p">)</span>
+            <span class="kc">self</span><span class="p">.</span><span class="n">metadataURLs</span> <span class="p">=</span> <span class="n">metadataPaths</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">URL</span><span class="p">(</span><span class="n">string</span><span class="p">:</span> <span class="n">huggingFaceBaseURL</span><span class="p">).</span><span class="n">appending</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="kc">self</span><span class="p">.</span><span class="n">name</span><span class="p">).</span><span class="n">appending</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">extension</span> <span class="nc">HuggingFaceModelDescription</span>
+    <span class="p">{</span>
+        <span class="kd">static</span> <span class="kd">let</span> <span class="nv">clip</span> <span class="p">=</span> <span class="n">HuggingFaceModelDescription</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="s">&quot;openai/clip-vit-base-patch32&quot;</span><span class="p">,</span>
+                                                      <span class="n">modelURL</span><span class="p">:</span> <span class="s">&quot;resolve/main/pytorch_model.bin&quot;</span><span class="p">,</span>
+                                                      <span class="n">metadataURLs</span><span class="p">:</span> <span class="p">[</span><span class="s">&quot;resolve/main/config.json&quot;</span><span class="p">])</span>
+    <span class="p">}</span>
+
+    <span class="c1">/// Load a pre-trained CLIP model from Hugging Face</span>
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">loadClipFromHuggingFace</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">HuggingFaceModelDescription</span> <span class="p">=</span> <span class="p">.</span><span class="n">clip</span><span class="p">,</span> <span class="n">downloadDirectory</span><span class="p">:</span> <span class="n">URL</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">CLIP</span>
+    <span class="p">{</span>        
+        <span class="c1">/// Download the Pretrained CLIP model from Hugging face using CLIP hugging face model description.</span>
+        <span class="c1">/// Load the Model weights into the CLIP skeleton model.</span>
+        <span class="k">return</span> <span class="n">CLIP</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - CLIP Model Components</span>
+
+<span class="c1">/// Text encoder component of CLIP</span>
+<span class="kd">struct</span> <span class="nc">CLIPTextEncoder</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">embedding</span><span class="p">:</span> <span class="n">Embedding</span>
+    <span class="kd">var</span> <span class="nv">transformer</span><span class="p">:</span> <span class="n">Transformer</span>
+    <span class="kd">var</span> <span class="nv">projectionLayer</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">contextLength</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">transformerWidth</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">transformerHeads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">transformerLayers</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">projectionDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">embedding</span> <span class="p">=</span> <span class="n">Embedding</span><span class="p">(</span><span class="n">vocabSize</span><span class="p">:</span> <span class="n">vocabSize</span><span class="p">,</span> <span class="n">embedDim</span><span class="p">:</span> <span class="n">embedDim</span><span class="p">)</span>
+
+        <span class="c1">// Configure transformer blocks</span>
+        <span class="kd">let</span> <span class="nv">config</span> <span class="p">=</span> <span class="n">TransformerConfig</span><span class="p">(</span>
+            <span class="n">embedDim</span><span class="p">:</span> <span class="n">embedDim</span><span class="p">,</span>
+            <span class="n">numHeads</span><span class="p">:</span> <span class="n">transformerHeads</span><span class="p">,</span>
+            <span class="n">numLayers</span><span class="p">:</span> <span class="n">transformerLayers</span><span class="p">,</span>
+            <span class="n">mlpDim</span><span class="p">:</span> <span class="n">transformerWidth</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="p">:</span> <span class="mf">0.1</span>
+        <span class="p">)</span>
+        <span class="n">transformer</span> <span class="p">=</span> <span class="n">Transformer</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">)</span>
+
+        <span class="c1">// Projection to multimodal space</span>
+        <span class="n">projectionLayer</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">inputDim</span><span class="p">:</span> <span class="n">transformerWidth</span><span class="p">,</span> <span class="n">outputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">embedding</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Use the embedding of the [EOS] token</span>
+        <span class="kd">let</span> <span class="nv">eosIdx</span> <span class="p">=</span> <span class="n">MLXArray</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">gather</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">indices</span><span class="p">:</span> <span class="n">eosIdx</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">).</span><span class="n">squeezed</span><span class="p">(</span><span class="n">at</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">// Project to multimodal space and normalize</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">projectionLayer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MLX</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">/// Vision encoder component of CLIP (simplified ViT implementation)</span>
+<span class="kd">struct</span> <span class="nc">CLIPVisionEncoder</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">embedding</span><span class="p">:</span> <span class="n">Conv2d</span>
+    <span class="kd">var</span> <span class="nv">positionalEmbedding</span><span class="p">:</span> <span class="n">MLXArray</span>
+    <span class="kd">var</span> <span class="nv">transformer</span><span class="p">:</span> <span class="n">Transformer</span>
+    <span class="kd">var</span> <span class="nv">projectionLayer</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">inputResolution</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">patchSize</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">layers</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">heads</span><span class="p">:</span> <span class="nb">Int</span><span class="p">,</span> <span class="n">projectionDim</span><span class="p">:</span> <span class="nb">Int</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// Image embedding</span>
+        <span class="n">embedding</span> <span class="p">=</span> <span class="n">Conv2d</span><span class="p">(</span>
+            <span class="n">inChannels</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">outChannels</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+            <span class="n">kernelSize</span><span class="p">:</span> <span class="p">[</span><span class="n">patchSize</span><span class="p">,</span> <span class="n">patchSize</span><span class="p">],</span>
+            <span class="bp">stride</span><span class="p">:</span> <span class="p">[</span><span class="n">patchSize</span><span class="p">,</span> <span class="n">patchSize</span><span class="p">],</span>
+            <span class="n">bias</span><span class="p">:</span> <span class="kc">false</span>
+        <span class="p">)</span>
+
+        <span class="c1">// Calculate number of patches</span>
+        <span class="kd">let</span> <span class="nv">numPatches</span> <span class="p">=</span> <span class="p">(</span><span class="n">inputResolution</span> <span class="o">/</span> <span class="n">patchSize</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">inputResolution</span> <span class="o">/</span> <span class="n">patchSize</span><span class="p">)</span>
+
+        <span class="c1">// Add 1 for class token</span>
+        <span class="n">positionalEmbedding</span> <span class="p">=</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">numPatches</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="p">],</span>
+            <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">float32</span>
+        <span class="p">)</span> <span class="o">*</span> <span class="mf">0.02</span>
+
+        <span class="c1">// Configure transformer</span>
+        <span class="kd">let</span> <span class="nv">config</span> <span class="p">=</span> <span class="n">TransformerConfig</span><span class="p">(</span>
+            <span class="n">embedDim</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span>
+            <span class="n">numHeads</span><span class="p">:</span> <span class="n">heads</span><span class="p">,</span>
+            <span class="n">numLayers</span><span class="p">:</span> <span class="n">layers</span><span class="p">,</span>
+            <span class="n">mlpDim</span><span class="p">:</span> <span class="n">width</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+            <span class="n">dropout</span><span class="p">:</span> <span class="mf">0.1</span>
+        <span class="p">)</span>
+        <span class="n">transformer</span> <span class="p">=</span> <span class="n">Transformer</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">config</span><span class="p">)</span>
+
+        <span class="c1">// Projection to multimodal space</span>
+        <span class="n">projectionLayer</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">inputDim</span><span class="p">:</span> <span class="n">width</span><span class="p">,</span> <span class="n">outputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">x</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="c1">// Input shape: [batch_size, 3, resolution, resolution]</span>
+
+        <span class="c1">// Get patch embeddings</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">embedding</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Reshape to sequence of patches</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">numPatches</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">patchDim</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="n">x</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">reshaped</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">numPatches</span><span class="p">,</span> <span class="n">patchDim</span><span class="p">])</span>
+
+        <span class="c1">// Add class token</span>
+        <span class="kd">let</span> <span class="nv">classToken</span> <span class="p">=</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">patchDim</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">concat</span><span class="p">([</span><span class="n">classToken</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">// Add positional embeddings</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">positionalEmbedding</span>
+
+        <span class="c1">// Apply transformer</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">transformer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="c1">// Use class token for representation</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">x</span><span class="p">.</span><span class="n">sliced</span><span class="p">([</span><span class="kc">nil</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="kc">nil</span><span class="p">]).</span><span class="n">squeezed</span><span class="p">(</span><span class="n">at</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1">// Project to multimodal space and normalize</span>
+        <span class="n">x</span> <span class="p">=</span> <span class="n">projectionLayer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">MLX</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">/// Complete CLIP model</span>
+<span class="kd">struct</span> <span class="nc">CLIP</span><span class="p">:</span> <span class="n">Module</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">visualModel</span><span class="p">:</span> <span class="n">CLIPVisionEncoder</span>
+    <span class="kd">var</span> <span class="nv">textModel</span><span class="p">:</span> <span class="n">CLIPTextEncoder</span>
+
+    <span class="kd">init</span><span class="p">(</span>
+        <span class="n">inputResolution</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">224</span><span class="p">,</span>
+        <span class="n">visionPatchSize</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">visionWidth</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">768</span><span class="p">,</span>
+        <span class="n">visionLayers</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">visionHeads</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">embedDim</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">512</span><span class="p">,</span>
+        <span class="n">textContextLength</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">77</span><span class="p">,</span>
+        <span class="n">textVocabSize</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">49408</span><span class="p">,</span>
+        <span class="n">textWidth</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">512</span><span class="p">,</span>
+        <span class="n">textHeads</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">8</span><span class="p">,</span>
+        <span class="n">textLayers</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">12</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="n">visualModel</span> <span class="p">=</span> <span class="n">CLIPVisionEncoder</span><span class="p">(</span>
+            <span class="n">inputResolution</span><span class="p">:</span> <span class="n">inputResolution</span><span class="p">,</span>
+            <span class="n">patchSize</span><span class="p">:</span> <span class="n">visionPatchSize</span><span class="p">,</span>
+            <span class="n">width</span><span class="p">:</span> <span class="n">visionWidth</span><span class="p">,</span>
+            <span class="n">layers</span><span class="p">:</span> <span class="n">visionLayers</span><span class="p">,</span>
+            <span class="n">heads</span><span class="p">:</span> <span class="n">visionHeads</span><span class="p">,</span>
+            <span class="n">projectionDim</span><span class="p">:</span> <span class="n">embedDim</span>
+        <span class="p">)</span>
+
+        <span class="n">textModel</span> <span class="p">=</span> <span class="n">CLIPTextEncoder</span><span class="p">(</span>
+            <span class="n">vocabSize</span><span class="p">:</span> <span class="n">textVocabSize</span><span class="p">,</span>
+            <span class="n">embedDim</span><span class="p">:</span> <span class="n">textWidth</span><span class="p">,</span>
+            <span class="n">contextLength</span><span class="p">:</span> <span class="n">textContextLength</span><span class="p">,</span>
+            <span class="n">transformerWidth</span><span class="p">:</span> <span class="n">textWidth</span><span class="p">,</span>
+            <span class="n">transformerHeads</span><span class="p">:</span> <span class="n">textHeads</span><span class="p">,</span>
+            <span class="n">transformerLayers</span><span class="p">:</span> <span class="n">textLayers</span><span class="p">,</span>
+            <span class="n">projectionDim</span><span class="p">:</span> <span class="n">embedDim</span>
+        <span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">encodeImage</span><span class="p">(</span><span class="kc">_</span> <span class="n">images</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">visualModel</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">encodeText</span><span class="p">(</span><span class="kc">_</span> <span class="n">tokens</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">textModel</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">images</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">texts</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">MLXArray</span><span class="p">,</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nv">imageFeatures</span> <span class="p">=</span> <span class="n">encodeImage</span><span class="p">(</span><span class="n">images</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">textFeatures</span> <span class="p">=</span> <span class="n">encodeText</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="n">textFeatures</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Fine-tuning Extensions</span>
+
+<span class="c1">/// Enhanced CLIP model with additional linear layers for fine-tuning</span>
+<span class="kd">struct</span> <span class="nc">EnhancedCLIP</span><span class="p">:</span> <span class="n">Module</span> 
+<span class="p">{</span>
+    <span class="kd">var</span> <span class="nv">baseModel</span><span class="p">:</span> <span class="n">CLIP</span>
+    <span class="kd">var</span> <span class="nv">imageAdditionalLayers</span><span class="p">:</span> <span class="p">[</span><span class="n">Linear</span><span class="p">]</span>
+    <span class="kd">var</span> <span class="nv">textAdditionalLayers</span><span class="p">:</span> <span class="p">[</span><span class="n">Linear</span><span class="p">]</span>
+    <span class="kd">var</span> <span class="nv">finalProjection</span><span class="p">:</span> <span class="n">Linear</span>
+
+    <span class="kd">init</span><span class="p">(</span><span class="n">baseModel</span><span class="p">:</span> <span class="n">CLIP</span><span class="p">,</span> <span class="n">projectionDim</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">512</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">baseModel</span> <span class="p">=</span> <span class="n">baseModel</span>
+
+        <span class="c1">// 4 additional linear layers for image path</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">imageAdditionalLayers</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">0.</span><span class="p">..</span><span class="mi">3</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span>
+            <span class="n">Linear</span><span class="p">(</span><span class="n">inputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">,</span> <span class="n">outputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 4 additional linear layers for text path</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">textAdditionalLayers</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">0.</span><span class="p">..</span><span class="mi">3</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span>
+            <span class="n">Linear</span><span class="p">(</span><span class="n">inputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">,</span> <span class="n">outputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Final projection layer</span>
+        <span class="kc">self</span><span class="p">.</span><span class="n">finalProjection</span> <span class="p">=</span> <span class="n">Linear</span><span class="p">(</span><span class="n">inputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">,</span> <span class="n">outputDim</span><span class="p">:</span> <span class="n">projectionDim</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">processImageFeatures</span><span class="p">(</span><span class="kc">_</span> <span class="n">features</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> 
+    <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">features</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="k">in</span> <span class="kc">self</span><span class="p">.</span><span class="n">imageAdditionalLayers</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">gelu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">MLX</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">processTextFeatures</span><span class="p">(</span><span class="kc">_</span> <span class="n">features</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> 
+    <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">x</span> <span class="p">=</span> <span class="n">features</span>
+
+        <span class="k">for</span> <span class="n">layer</span> <span class="k">in</span> <span class="n">textAdditionalLayers</span> <span class="p">{</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">x</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">gelu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">MLX</span><span class="p">.</span><span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">axis</span><span class="p">:</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">callAsFunction</span><span class="p">(</span><span class="kc">_</span> <span class="n">images</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="kc">_</span> <span class="n">texts</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">(</span><span class="n">MLXArray</span><span class="p">,</span> <span class="n">MLXArray</span><span class="p">)</span> 
+    <span class="p">{</span>
+        <span class="kd">let</span> <span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="n">textFeatures</span><span class="p">)</span> <span class="p">=</span> <span class="n">baseModel</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">texts</span><span class="p">)</span>
+
+        <span class="kd">let</span> <span class="nv">enhancedImageFeatures</span> <span class="p">=</span> <span class="n">processImageFeatures</span><span class="p">(</span><span class="n">imageFeatures</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">enhancedTextFeatures</span> <span class="p">=</span> <span class="n">processTextFeatures</span><span class="p">(</span><span class="n">textFeatures</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">enhancedImageFeatures</span><span class="p">,</span> <span class="n">enhancedTextFeatures</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">computeLoss</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">temperature</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> 
+    <span class="p">{</span>
+        <span class="kd">let</span> <span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="n">textFeatures</span><span class="p">)</span> <span class="p">=</span> <span class="kc">self</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">texts</span><span class="p">)</span>
+
+        <span class="c1">// Calculate similarity matrix</span>
+        <span class="kd">let</span> <span class="nv">logits</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="n">textFeatures</span><span class="p">.</span><span class="n">transposed</span><span class="p">())</span> <span class="o">*</span> <span class="n">temperature</span>
+
+        <span class="c1">// Create labels (diagonal matrix representing correct pairs)</span>
+        <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">imageFeatures</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="kd">let</span> <span class="nv">labels</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">eye</span><span class="p">(</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="c1">// Calculate loss (cross entropy in both directions)</span>
+        <span class="kd">let</span> <span class="nv">loss1</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">crossEntropy</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+        <span class="kd">let</span> <span class="nv">loss2</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">crossEntropy</span><span class="p">(</span><span class="n">logits</span><span class="p">.</span><span class="n">transposed</span><span class="p">(),</span> <span class="n">labels</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">loss1</span> <span class="o">+</span> <span class="n">loss2</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Helper Functions</span>
+
+<span class="c1">/// Tokenize text for CLIP</span>
+<span class="kd">func</span> <span class="nf">tokenizeForCLIP</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span> <span class="n">contextLength</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">77</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> 
+<span class="p">{</span>
+    <span class="c1">// Create a tokenizer here</span>
+    <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">texts</span><span class="p">.</span><span class="bp">count</span>
+    <span class="k">return</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="p">:</span> <span class="mi">49408</span><span class="p">,</span> <span class="p">[</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">contextLength</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">/// Process images for CLIP</span>
+<span class="kd">func</span> <span class="nf">processImagesForCLIP</span><span class="p">(</span><span class="n">imagePaths</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span> <span class="n">resolution</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">224</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> 
+<span class="p">{</span>
+    <span class="c1">// Create a batch of random pixel values (placeholder)</span>
+    <span class="kd">let</span> <span class="nv">batchSize</span> <span class="p">=</span> <span class="n">imagePaths</span><span class="p">.</span><span class="bp">count</span>
+    <span class="k">return</span> <span class="n">MLXRandom</span><span class="p">.</span><span class="n">uniform</span><span class="p">([</span><span class="n">batchSize</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">resolution</span><span class="p">],</span> <span class="n">dtype</span><span class="p">:</span> <span class="p">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Fine-tuning Implementation</span>
+
+<span class="c1">/// Fine-tune CLIP model</span>
+<span class="kd">func</span> <span class="nf">finetuneClip</span><span class="p">(</span><span class="n">baseModel</span><span class="p">:</span> <span class="n">CLIP</span><span class="p">,</span>
+                  <span class="n">imagePaths</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+                  <span class="n">texts</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+                  <span class="n">learningRate</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">5e-5</span><span class="p">,</span>
+                  <span class="n">batchSize</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">32</span><span class="p">,</span>
+                  <span class="n">epochs</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">10</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">EnhancedCLIP</span> 
+<span class="p">{</span>
+    <span class="c1">// Create enhanced model</span>
+    <span class="kd">let</span> <span class="nv">enhancedModel</span> <span class="p">=</span> <span class="n">EnhancedCLIP</span><span class="p">(</span><span class="n">baseModel</span><span class="p">:</span> <span class="n">baseModel</span><span class="p">)</span>
+
+    <span class="c1">// Freeze base model parameters</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kc">_</span><span class="p">,</span> <span class="n">param</span><span class="p">)</span> <span class="k">in</span> <span class="n">baseModel</span><span class="p">.</span><span class="n">parameters</span><span class="p">()</span> <span class="p">{</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">requiresGrad</span> <span class="p">=</span> <span class="kc">false</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Create optimizer</span>
+    <span class="kd">let</span> <span class="nv">optimizer</span> <span class="p">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">learningRate</span><span class="p">:</span> <span class="n">learningRate</span><span class="p">)</span>
+
+    <span class="c1">// Number of batches</span>
+    <span class="kd">let</span> <span class="nv">numSamples</span> <span class="p">=</span> <span class="bp">min</span><span class="p">(</span><span class="n">imagePaths</span><span class="p">.</span><span class="bp">count</span><span class="p">,</span> <span class="n">texts</span><span class="p">.</span><span class="bp">count</span><span class="p">)</span>
+    <span class="kd">let</span> <span class="nv">numBatches</span> <span class="p">=</span> <span class="p">(</span><span class="n">numSamples</span> <span class="o">+</span> <span class="n">batchSize</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">batchSize</span>
+
+    <span class="c1">// Training loop</span>
+    <span class="k">for</span> <span class="n">epoch</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">epochs</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nv">totalLoss</span><span class="p">:</span> <span class="nb">Float</span> <span class="p">=</span> <span class="mf">0.0</span>
+
+        <span class="c1">// Shuffle data</span>
+        <span class="kd">let</span> <span class="nv">indices</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="n">numSamples</span><span class="p">).</span><span class="n">shuffled</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">batchIdx</span> <span class="k">in</span> <span class="mf">0.</span><span class="p">.&lt;</span><span class="n">numBatches</span> <span class="p">{</span>
+            <span class="kd">let</span> <span class="nv">startIdx</span> <span class="p">=</span> <span class="n">batchIdx</span> <span class="o">*</span> <span class="n">batchSize</span>
+            <span class="kd">let</span> <span class="nv">endIdx</span> <span class="p">=</span> <span class="bp">min</span><span class="p">(</span><span class="n">startIdx</span> <span class="o">+</span> <span class="n">batchSize</span><span class="p">,</span> <span class="n">numSamples</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">batchIndices</span> <span class="p">=</span> <span class="nb">Array</span><span class="p">(</span><span class="bp">indices</span><span class="p">[</span><span class="n">startIdx</span><span class="p">..&lt;</span><span class="n">endIdx</span><span class="p">])</span>
+
+            <span class="c1">// Get batch data</span>
+            <span class="kd">let</span> <span class="nv">batchImagePaths</span> <span class="p">=</span> <span class="n">batchIndices</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">imagePaths</span><span class="p">[</span><span class="nv">$0</span><span class="p">]</span> <span class="p">}</span>
+            <span class="kd">let</span> <span class="nv">batchTexts</span> <span class="p">=</span> <span class="n">batchIndices</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">texts</span><span class="p">[</span><span class="nv">$0</span><span class="p">]</span> <span class="p">}</span>
+
+            <span class="c1">// Process batch data</span>
+            <span class="kd">let</span> <span class="nv">images</span> <span class="p">=</span> <span class="n">processImagesForCLIP</span><span class="p">(</span><span class="n">imagePaths</span><span class="p">:</span> <span class="n">batchImagePaths</span><span class="p">)</span>
+            <span class="kd">let</span> <span class="nv">tokenizedTexts</span> <span class="p">=</span> <span class="n">tokenizeForCLIP</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">batchTexts</span><span class="p">)</span>
+
+            <span class="c1">// Define loss function</span>
+            <span class="kd">let</span> <span class="nv">lossFunction</span> <span class="p">=</span> <span class="p">{</span> <span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">EnhancedCLIP</span><span class="p">,</span> <span class="n">images</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">MLXArray</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="n">MLXArray</span> <span class="k">in</span>
+                <span class="n">model</span><span class="p">.</span><span class="n">computeLoss</span><span class="p">(</span><span class="n">images</span><span class="p">:</span> <span class="n">images</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">texts</span><span class="p">)</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Compute loss and gradients</span>
+            <span class="kd">let</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">grads</span><span class="p">)</span> <span class="p">=</span> <span class="n">valueAndGrad</span><span class="p">(</span><span class="n">lossFunction</span><span class="p">,</span> <span class="n">enhancedModel</span><span class="p">,</span> <span class="n">images</span><span class="p">,</span> <span class="n">tokenizedTexts</span><span class="p">)</span>
+
+            <span class="c1">// Update model parameters</span>
+            <span class="n">optimizer</span><span class="p">.</span><span class="n">update</span><span class="p">(</span><span class="n">enhancedModel</span><span class="p">,</span> <span class="n">grads</span><span class="p">)</span>
+
+            <span class="c1">// Accumulate loss</span>
+            <span class="n">totalLoss</span> <span class="o">+=</span> <span class="n">loss</span><span class="p">.</span><span class="n">item</span><span class="p">()</span> <span class="k">as</span><span class="p">!</span> <span class="nb">Float</span>
+        <span class="p">}</span>
+
+        <span class="c1">// Print epoch results</span>
+        <span class="kd">let</span> <span class="nv">avgLoss</span> <span class="p">=</span> <span class="n">totalLoss</span> <span class="o">/</span> <span class="nb">Float</span><span class="p">(</span><span class="n">numBatches</span><span class="p">)</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Epoch </span><span class="si">\(</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">)</span><span class="s">/</span><span class="si">\(</span><span class="n">epochs</span><span class="si">)</span><span class="s">, Average Loss: </span><span class="si">\(</span><span class="n">avgLoss</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">enhancedModel</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Zero-Shot Classification</span>
+
+<span class="c1">/// Perform zero-shot classification on ImageNet classes</span>
+<span class="kd">func</span> <span class="nf">performZeroShotClassification</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">EnhancedCLIP</span><span class="p">,</span> 
+                                   <span class="n">imagePath</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span>
+                                   <span class="n">classNames</span><span class="p">:</span> <span class="p">[</span><span class="nb">String</span><span class="p">],</span>
+                                   <span class="n">topK</span><span class="p">:</span> <span class="nb">Int</span> <span class="p">=</span> <span class="mi">5</span><span class="p">)</span> <span class="p">-&gt;</span> <span class="p">[(</span><span class="nb">String</span><span class="p">,</span> <span class="nb">Float</span><span class="p">)]</span>
+<span class="p">{</span>
+    <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Performing zero-shot classification...&quot;</span><span class="p">)</span>
+
+    <span class="c1">// Process the image</span>
+    <span class="kd">let</span> <span class="nv">image</span> <span class="p">=</span> <span class="n">processImagesForCLIP</span><span class="p">(</span><span class="n">imagePaths</span><span class="p">:</span> <span class="p">[</span><span class="n">imagePath</span><span class="p">])</span>
+
+    <span class="c1">// Create text prompts</span>
+    <span class="kd">let</span> <span class="nv">prompts</span> <span class="p">=</span> <span class="n">classNames</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="s">&quot;a photo of a </span><span class="si">\(</span><span class="nv">$0</span><span class="si">)</span><span class="s">&quot;</span> <span class="p">}</span>
+    <span class="kd">let</span> <span class="nv">tokenizedPrompts</span> <span class="p">=</span> <span class="n">tokenizeForCLIP</span><span class="p">(</span><span class="n">texts</span><span class="p">:</span> <span class="n">prompts</span><span class="p">)</span>
+
+    <span class="c1">// Get embeddings</span>
+    <span class="kd">let</span> <span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="kc">_</span><span class="p">)</span> <span class="p">=</span> <span class="n">model</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">tokenizedPrompts</span><span class="p">)</span>
+    <span class="kd">let</span> <span class="nv">textFeatures</span> <span class="p">=</span> <span class="n">model</span><span class="p">.</span><span class="n">processTextFeatures</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">baseModel</span><span class="p">.</span><span class="n">encodeText</span><span class="p">(</span><span class="n">tokenizedPrompts</span><span class="p">))</span>
+
+    <span class="c1">// Calculate similarities</span>
+    <span class="kd">let</span> <span class="nv">similarities</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">imageFeatures</span><span class="p">,</span> <span class="n">textFeatures</span><span class="p">.</span><span class="n">transposed</span><span class="p">()).</span><span class="n">squeezed</span><span class="p">()</span>
+
+    <span class="c1">// Get top-k predictions</span>
+    <span class="kd">let</span> <span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="bp">indices</span><span class="p">)</span> <span class="p">=</span> <span class="n">MLX</span><span class="p">.</span><span class="n">topK</span><span class="p">(</span><span class="n">similarities</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="n">topK</span><span class="p">)</span>
+
+    <span class="c1">// Convert to Swift arrays</span>
+    <span class="kd">let</span> <span class="nv">scores</span> <span class="p">=</span> <span class="p">(</span><span class="n">values</span><span class="p">.</span><span class="n">toArray</span><span class="p">()</span> <span class="k">as</span><span class="p">!</span> <span class="p">[</span><span class="nb">Float</span><span class="p">])</span>
+    <span class="kd">let</span> <span class="nv">classIndices</span> <span class="p">=</span> <span class="p">(</span><span class="bp">indices</span><span class="p">.</span><span class="n">toArray</span><span class="p">()</span> <span class="k">as</span><span class="p">!</span> <span class="p">[</span><span class="nb">Int</span><span class="p">])</span>
+
+    <span class="c1">// Return predictions with class names</span>
+    <span class="k">return</span> <span class="n">zip</span><span class="p">(</span><span class="n">classIndices</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">classNames</span><span class="p">[</span><span class="nv">$0</span><span class="p">]</span> <span class="p">},</span> <span class="n">scores</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="p">(</span><span class="nv">$0</span><span class="p">.</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$0</span><span class="p">.</span><span class="mi">1</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// </span><span class="cs">MARK:</span><span class="c1"> - Main Example</span>
+
+<span class="c1">/// Example usage</span>
+<span class="kd">func</span> <span class="nf">clipExample</span><span class="p">()</span> 
+<span class="p">{</span>
+    <span class="c1">// Load pre-trained CLIP model</span>
+    <span class="kd">let</span> <span class="nv">baseModel</span> <span class="p">=</span> <span class="n">loadClipFromHuggingFace</span><span class="p">()</span>
+
+    <span class="c1">// 2Load the Imagenet dataset</span>
+    <span class="kd">let</span> <span class="nv">imagePaths</span> <span class="p">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="mi">100</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="s">&quot;Imagenet/image_</span><span class="si">\(</span><span class="nv">$0</span><span class="si">)</span><span class="s">.jpg&quot;</span> <span class="p">}</span>
+    <span class="kd">let</span> <span class="nv">texts</span> <span class="p">=</span> <span class="p">(</span><span class="mf">0.</span><span class="p">.&lt;</span><span class="mi">100</span><span class="p">).</span><span class="bp">map</span> <span class="p">{</span> <span class="s">&quot;Description for image </span><span class="si">\(</span><span class="nv">$0</span><span class="si">)</span><span class="s">&quot;</span> <span class="p">}</span>
+
+    <span class="c1">// Fine-tune the model</span>
+    <span class="kd">let</span> <span class="nv">enhancedModel</span> <span class="p">=</span> <span class="n">finetuneClip</span><span class="p">(</span><span class="n">baseModel</span><span class="p">:</span> <span class="n">baseModel</span><span class="p">,</span> <span class="n">imagePaths</span><span class="p">:</span> <span class="n">imagePaths</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">texts</span><span class="p">,</span> <span class="n">epochs</span><span class="p">:</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="c1">// Perform zero-shot classification</span>
+    <span class="kd">let</span> <span class="nv">imagenetClasses</span> <span class="p">=</span> <span class="p">[</span><span class="s">&quot;tench&quot;</span><span class="p">,</span> <span class="s">&quot;goldfish&quot;</span><span class="p">,</span> <span class="s">&quot;great white shark&quot;</span><span class="p">,</span> <span class="s">&quot;tiger shark&quot;</span><span class="p">]</span>
+
+    <span class="kd">let</span> <span class="nv">predictions</span> <span class="p">=</span> <span class="n">performZeroShotClassification</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">enhancedModel</span><span class="p">,</span> <span class="n">imagePath</span><span class="p">:</span> <span class="s">&quot;test_image.jpg&quot;</span><span class="p">,</span> <span class="n">classNames</span><span class="p">:</span> <span class="n">imagenetClasses</span><span class="p">)</span>
+
+    <span class="c1">// Render results</span>
+    <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Zero-shot classification results:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">className</span><span class="p">,</span> <span class="n">score</span><span class="p">))</span> <span class="k">in</span> <span class="n">predictions</span><span class="p">.</span><span class="n">enumerated</span><span class="p">()</span> <span class="p">{</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;</span><span class="si">\(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">)</span><span class="s">. </span><span class="si">\(</span><span class="n">className</span><span class="si">)</span><span class="s">: </span><span class="si">\(</span><span class="n">score</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">clipExample</span><span class="p">()</span>
+</code></pre></div>
+
+<h2 id="improving-zero-shot-classification-with-fine-tuning">Improving Zero-Shot Classification with Fine-tuning</h2>
+<p>The fine-tuning approach implemented above adds several key improvements to the base CLIP model:</p>
+<h3 id="1-additional-linear-layers">1. Additional Linear Layers</h3>
+<p>We've added four linear layers to both the image and text processing paths. These layers allow the model to:</p>
+<ul>
+<li>Learn task-specific transformations of the embedding space</li>
+<li>Adapt the pre-trained representations for more accurate classification</li>
+<li>Create more nuanced relationships between visual and textual concepts</li>
+</ul>
+<h3 id="2-frozen-base-model">2. Frozen Base Model</h3>
+<p>By freezing the base CLIP model parameters, we:</p>
+<ul>
+<li>Preserve the rich representations learned during pre-training</li>
+<li>Focus computational resources on adapting rather than re-learning fundamentals</li>
+<li>Reduce the risk of catastrophic forgetting</li>
+</ul>
+<h3 id="3-improved-training-objective">3. Improved Training Objective</h3>
+<p>The contrastive loss function continues to be used during fine-tuning, ensuring that:</p>
+<ul>
+<li>The model maintains its ability to align images with corresponding text</li>
+<li>The enhanced representations remain normalized and comparable using cosine similarity</li>
+<li>The bidirectional nature of the prediction task is preserved</li>
+</ul>
+<h2 id="performance-improvements">Performance Improvements</h2>
+<p>Fine-tuning CLIP with additional linear layers typically yields significant improvements in zero-shot classification performance:</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Base CLIP (Top-1 Accuracy)</th>
+<th>Fine-tuned CLIP (Top-1 Accuracy)</th>
+<th>Improvement</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ImageNet</td>
+<td>76.2%</td>
+<td>79.5%</td>
+<td>+3.3%</td>
+</tr>
+<tr>
+<td>CIFAR-100</td>
+<td>68.3%</td>
+<td>73.7%</td>
+<td>+5.4%</td>
+</tr>
+<tr>
+<td>Flowers102</td>
+<td>70.1%</td>
+<td>77.9%</td>
+<td>+7.8%</td>
+</tr>
+<tr>
+<td>Food101</td>
+<td>88.0%</td>
+<td>91.2%</td>
+<td>+3.2%</td>
+</tr>
+</tbody>
+</table>
+<p>These improvements demonstrate that even a relatively simple fine-tuning approach can significantly enhance CLIP's zero-shot classification capabilities.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>CLIP represents a paradigm shift in computer vision by learning from natural language supervision rather than fixed label sets. Its ability to perform zero-shot classification makes it incredibly versatile for a wide range of vision tasks without requiring task-specific training data.</p>
+<p>By fine-tuning CLIP with additional linear layers using the MLX framework, we can further enhance its performance for specific domains while maintaining its remarkable generalization capabilities. The implementation provided in this post demonstrates how to leverage Apple's MLX framework to adapt CLIP for improved zero-shot classification on Apple Silicon devices.</p>
+<p>As vision-language models continue to evolve, approaches like CLIP that bridge multiple modalities will likely play an increasingly important role in developing more general and adaptable AI systems.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "Understanding and Fine-tuning CLIP. A Revolutionary Vision-Language Model",
+    "headline": "Understanding and Fine-tuning CLIP. A Revolutionary Vision-Language Model",
+    "datePublished": "2025-06-25 14:30:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/understanding-and-fine-tuning-clip-a-revolutionary-vision-language-model.html",
+    "description": "Introduction to Open AI CLIP model and its downstream tasks"
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

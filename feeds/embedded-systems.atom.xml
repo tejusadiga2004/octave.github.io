@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Entropy Pages - Embedded Systems</title><link href="https://blogs.entropypages.in/" rel="alternate"/><link href="https://blogs.entropypages.in/feeds/embedded-systems.atom.xml" rel="self"/><id>https://blogs.entropypages.in/</id><updated>2025-07-17T00:00:00+05:30</updated><entry><title>Swift for Embedded Programming: Bringing Swift to Microcontrollers</title><link href="https://blogs.entropypages.in/swift-for-embedded-programming.html" rel="alternate"/><published>2025-07-17T00:00:00+05:30</published><updated>2025-07-17T00:00:00+05:30</updated><author><name>Tejus Adiga M</name></author><id>tag:blogs.entropypages.in,2025-07-17:/swift-for-embedded-programming.html</id><summary type="html">&lt;p&gt;Explore how Swift can be applied to embedded programming, its advantages, current limitations, and practical code examples for microcontroller tasks.&lt;/p&gt;</summary><content type="html">&lt;h2 id="introduction"&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Swift has become a popular language for application development on Apple platforms, offering safety, expressiveness, and performance. Recently, the Swift ecosystem has expanded to support embedded programming on microcontrollers and IoT devices. This blog explores the core concepts of using Swift in embedded contexts: the features that make it appealing, the current gaps in embedded support, and concrete examples of low-level programs written in Swift.&lt;/p&gt;
+&lt;h2 id="why-use-swift-on-embedded-platforms"&gt;Why Use Swift on Embedded Platforms?&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Safety and Reliability&lt;/strong&gt;: Swift’s strong type system, optionals, and memory-safety guarantees reduce runtime errors common in C/C++.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Expressiveness&lt;/strong&gt;: Modern language features—such as generics, closures, and protocol-oriented programming—allow concise and maintainable embedded code.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Performance&lt;/strong&gt;: Swift compiles to optimized machine code, closing the gap with C-level performance on many microcontrollers.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Unified Development&lt;/strong&gt;: Developers familiar with Swift on iOS or macOS can leverage the same language and toolchain for embedded targets.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="key-swift-features-available-in-embedded-programming"&gt;Key Swift Features Available in Embedded Programming&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Strong Typing &amp;amp; Optionals&lt;/strong&gt;: Prevent null-pointer exceptions by making optional values explicit and handling missing data safely.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Value Types &amp;amp; Structs&lt;/strong&gt;: Stack-allocated structures and enums allow predictable memory layouts critical for hardware registers.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Protocol-Oriented Design&lt;/strong&gt;: Define generic interfaces (e.g., &lt;code&gt;SerialPort&lt;/code&gt;, &lt;code&gt;I2CDevice&lt;/code&gt;) with default implementations, promoting code reuse across platforms.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Closures &amp;amp; Higher-Order Functions&lt;/strong&gt;: Enable clean callback patterns for interrupt handlers or event-driven I/O.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Swift Concurrency (Async/Await)&lt;/strong&gt;: Emerging support for asynchronous tasks can simplify sensor polling or network communication loops.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="limitations-and-missing-features-in-swift-embedded"&gt;Limitations and Missing Features in Swift Embedded&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Standard Library Footprint&lt;/strong&gt;: Full Swift standard library may be too large for constrained flash/ROM. Embedded toolchains often provide a minimal subset.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Garbage Collection&lt;/strong&gt;: No built-in GC; memory management relies on ARC, which may not be fully available on bare-metal targets.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Inline Assembly &amp;amp; Direct Register Access&lt;/strong&gt;: Swift does not support inline assembly out of the box; low-level register manipulation requires C bridging or assembly stubs.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Toolchain Maturity&lt;/strong&gt;: Official Swift support for microcontrollers (ARM Cortex-M, RISCV) is still experimental; build scripts and debuggers may require manual setup.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="getting-started-toolchains-and-setup"&gt;Getting Started: Toolchains and Setup&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Install an embedded Swift toolchain (e.g., Swift4Embedded or custom ARM build).  &lt;/li&gt;
+&lt;li&gt;Configure your microcontroller architecture (e.g., &lt;code&gt;arm-none-eabi-gcc&lt;/code&gt; cross-compiler) and linker scripts.  &lt;/li&gt;
+&lt;li&gt;Write Swift code targeting &lt;code&gt;@targetEnvironment(embedded)&lt;/code&gt; and import a minimal &lt;code&gt;SwiftEmbedded&lt;/code&gt; runtime providing core I/O APIs.&lt;/li&gt;
+&lt;li&gt;Build and flash your firmware using standard &lt;code&gt;swiftc&lt;/code&gt; invocation with cross-compile flags.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id="ides-and-code-editors"&gt;IDEs and Code Editors&lt;/h2&gt;
+&lt;p&gt;Swift Embedded development can be done with a variety of editors and IDEs:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Xcode&lt;/strong&gt;: Native Swift IDE with full language support, syntax highlighting, and debugging (requires custom toolchain integration).&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Visual Studio Code&lt;/strong&gt;: Lightweight editor with Swift extensions (e.g., Swift Language support via [sourcekit-lsp]) and remote build/flash integrations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;CLion&lt;/strong&gt;: JetBrains IDE with CMake support; configure toolchain and CMake targets for Swift Embedded.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Vim/Neovim&lt;/strong&gt;: Configurable via LSP for Swift; use sourcekit-lsp for code completion and diagnostics.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Emacs&lt;/strong&gt;: With &lt;code&gt;lsp-mode&lt;/code&gt; and &lt;code&gt;flycheck&lt;/code&gt; configured for Swift development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Other Editors&lt;/strong&gt;: Any editor supporting LSP and custom build tasks can be configured for Swift Embedded workflows.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="example-programs"&gt;Example Programs&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;All examples below are demonstrated on the STM32F411RE Nucleo-64 board (ARM Cortex-M4 @ 100 MHz).&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="blinking-an-led"&gt;Blinking an LED&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;SwiftEmbedded&lt;/span&gt;
+
+&lt;span class="kd"&gt;struct&lt;/span&gt; &lt;span class="nc"&gt;GPIO&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;pin13&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;register&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;at&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x48000014&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;
+&lt;span class="kd"&gt;struct&lt;/span&gt; &lt;span class="nc"&gt;Blink&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="kd"&gt;static&lt;/span&gt; &lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;GPIO&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pin13&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;mode&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;
+        &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="n"&gt;GPIO&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pin13&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;toggle&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+            &lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;milliseconds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;500&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="uart-serial-communication"&gt;UART Serial Communication&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;SwiftEmbedded&lt;/span&gt;
+
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;uart&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;UART&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;port&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;usart1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;baudRate&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;115_200&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;uart&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Hello from Swift Embedded!&lt;/span&gt;&lt;span class="se"&gt;\r\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;byte&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;uart&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;timeout&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="c1"&gt;// Echo received byte&lt;/span&gt;
+        &lt;span class="n"&gt;uart&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;write&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;byte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h3 id="i2c-sensor-reading"&gt;I2C Sensor Reading&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;SwiftEmbedded&lt;/span&gt;
+
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;i2c&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;I2C&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;bus&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;i2c1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;tempSensor&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;I2CTemperatureSensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;address&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mh"&gt;0x48&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;bus&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;i2c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;i2c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;configure&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;clockSpeed&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;khz100&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;temp&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tempSensor&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;readTemperatureCelsius&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="bp"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Temperature: &lt;/span&gt;&lt;span class="si"&gt;\(&lt;/span&gt;&lt;span class="n"&gt;temp&lt;/span&gt;&lt;span class="si"&gt;)&lt;/span&gt;&lt;span class="s"&gt; °C&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;milliseconds&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id="swift-embedded-for-tinyml"&gt;Swift Embedded for TinyML&lt;/h2&gt;
+&lt;p&gt;&lt;em&gt;This TinyML example is demonstrated on the STM32F769I-Discovery board (ARM Cortex-M7 @ 216 MHz, 512 KB SRAM, 2 MB Flash).&lt;/em&gt;&lt;br&gt;
+TinyML enables on-device machine learning inference on microcontrollers with constrained memory and compute. Swift Embedded can interoperate with lightweight inference engines (e.g., TensorFlow Lite for Microcontrollers) through C bridging, allowing Swift code to load and execute pre-trained models.&lt;/p&gt;
+&lt;h3 id="deploying-models-in-swift"&gt;Deploying Models in Swift&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;Convert your TensorFlow or Core ML model to a flat buffer (.tflite) and generate a C byte array header (e.g., using &lt;code&gt;xxd -i model.tflite &amp;gt; model_data.h&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;Include the generated header in your SwiftEmbedded runtime by bridging it via a C module (e.g., &lt;code&gt;module.modulemap&lt;/code&gt; and Swift Package Manager settings).&lt;/li&gt;
+&lt;li&gt;Link the TensorFlow Lite Micro interpreter library compiled for your target architecture.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="swift-tinyml-inference-example"&gt;Swift TinyML Inference Example&lt;/h3&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;SwiftEmbedded&lt;/span&gt;
+&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;TensorFlowLiteC&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Model data array generated from model.tflite&lt;/span&gt;
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;modelData&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;UnsafePointer&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;UInt8&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;model_data&lt;/span&gt;
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;modelSize&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="nb"&gt;Int&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;Int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;model_data_len&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="p"&gt;@&lt;/span&gt;&lt;span class="n"&gt;main&lt;/span&gt;
+&lt;span class="kd"&gt;func&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Initialize TFLite Micro interpreter&lt;/span&gt;
+    &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;errorReporter&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;TFLMErrorReporter&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;guard&lt;/span&gt; &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;model&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tflite_model_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;modelData&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;modelSize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;errorReporter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;report&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Failed to load model.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nv"&gt;resolver&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;MicroMutableOpResolver&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;addBuiltinOps&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;to&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;resolver&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;guard&lt;/span&gt; &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;interpreter&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tflite_interpreter_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;model&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;resolver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;errorReporter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="n"&gt;errorReporter&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;report&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Failed to create interpreter.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// Allocate tensors and run inference&lt;/span&gt;
+    &lt;span class="n"&gt;tflite_interpreter_allocate_tensors&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="c1"&gt;// Fill input tensor&lt;/span&gt;
+    &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;inputTensor&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tflite_interpreter_input_tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;fillInputTensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;inputTensor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;with&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;sampleInputData&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;tflite_interpreter_invoke&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c1"&gt;// Read output&lt;/span&gt;
+    &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;outputTensor&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;tflite_interpreter_output_tensor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;interpreter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;result&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="n"&gt;readOutputData&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;outputTensor&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="bp"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Inference result: &lt;/span&gt;&lt;span class="si"&gt;\(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="si"&gt;)&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This example demonstrates how Swift code can directly drive TinyML inference pipelines on-device, combining Swift’s safety and readability with efficient C-based runtimes.&lt;/p&gt;
+&lt;h2 id="raw-buffer-manipulation"&gt;Raw Buffer Manipulation&lt;/h2&gt;
+&lt;p&gt;Swift Embedded provides APIs to manipulate raw memory buffers using Swift's Unsafe* pointer types. This is useful for DMA transfers, custom protocols, or binary data parsing.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;code&gt;&lt;span class="kd"&gt;import&lt;/span&gt; &lt;span class="nc"&gt;SwiftEmbedded&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Allocate a raw byte buffer&lt;/span&gt;
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;bufferSize&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;128&lt;/span&gt;
+&lt;span class="kd"&gt;let&lt;/span&gt; &lt;span class="nv"&gt;rawBuffer&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;UnsafeMutableBufferPointer&lt;/span&gt;&lt;span class="p"&gt;&amp;lt;&lt;/span&gt;&lt;span class="nb"&gt;UInt8&lt;/span&gt;&lt;span class="p"&gt;&amp;gt;.&lt;/span&gt;&lt;span class="n"&gt;allocate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;capacity&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;bufferSize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;defer&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="n"&gt;rawBuffer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deallocate&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Initialize buffer with sequential data&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="mf"&gt;0.&lt;/span&gt;&lt;span class="p"&gt;.&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;bufferSize&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;rawBuffer&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;UInt8&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="mh"&gt;0xFF&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Example: trigger a DMA transfer using the raw buffer&lt;/span&gt;
+&lt;span class="n"&gt;DMAController&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;shared&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;transfer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;rawBuffer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;baseAddress&lt;/span&gt;&lt;span class="p"&gt;!,&lt;/span&gt; &lt;span class="n"&gt;length&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;bufferSize&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="c1"&gt;// Process received data in place&lt;/span&gt;
+&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;byte&lt;/span&gt; &lt;span class="k"&gt;in&lt;/span&gt; &lt;span class="n"&gt;rawBuffer&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="bp"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;byte&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id="best-practices"&gt;Best Practices&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Limit use of dynamic memory and complex library features to reduce flash usage.  &lt;/li&gt;
+&lt;li&gt;Use value types and stack allocation wherever possible for predictable behavior.  &lt;/li&gt;
+&lt;li&gt;Profile ISR execution time and avoid heavy Swift runtime calls in interrupt contexts.  &lt;/li&gt;
+&lt;li&gt;Keep runtime footprint minimal by pruning unused standard library components.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Swift brings modern language ergonomics and safety to embedded programming, making firmware development more accessible to high-level developers. As toolchains mature and runtimes shrink, Swift is poised to become a first-class citizen in the microcontroller space. Whether you’re prototyping on a development board or building IoT applications at scale, Swift’s combination of performance and expressiveness offers a compelling path forward for embedded systems.&lt;/p&gt;
+&lt;h2 id="references"&gt;References&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.tinyml.org"&gt;TinyML Foundation&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.tensorflow.org/lite/microcontrollers"&gt;TensorFlow Lite for Microcontrollers&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/SwiftEmbedded/SwiftEmbedded"&gt;Swift Embedded Runtime (GitHub)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://github.com/swift4embedded/swift-embedded"&gt;Swift for Embedded Toolchain&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.swift.org/blog/embedded-swift-examples/"&gt;Embedded Swift Examples&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><category term="Embedded Systems"/><category term="Swift"/><category term="Embedded Programming"/><category term="IoT"/><category term="Microcontroller"/><category term="Fluency"/></entry></feed>
