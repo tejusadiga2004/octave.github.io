@@ -1,0 +1,557 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="A deep dive into OpenAI&#39;s GPT-OSS models—GPT-OSS-120B and GPT-OSS-20B—covering architecture, pretraining, performance, and agentic capabilities." />
+    <meta name="keywords" content="GPT-OSS, OpenAI, LLM, Mixture-of-Experts, Transformer, AI">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="GPT-OSS: OpenAI’s Frontier-Grade Open-Weight Models" />
+<meta property="og:description" content="A deep dive into OpenAI&#39;s GPT-OSS models—GPT-OSS-120B and GPT-OSS-20B—covering architecture, pretraining, performance, and agentic capabilities." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/gpt-oss-openai-models.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-27 00:00:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Deep Learning" />
+	<meta property="article:tag" content="GPT-OSS" />
+	<meta property="article:tag" content="OpenAI" />
+	<meta property="article:tag" content="LLM" />
+	<meta property="article:tag" content="Mixture-of-Experts" />
+	<meta property="article:tag" content="Transformer" />
+	<meta property="article:tag" content="AI" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    GPT-OSS: OpenAI’s Frontier-Grade Open-Weight Models &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/deep-learning.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="gpt-oss-openai-models">GPT-OSS: OpenAI’s Frontier-Grade Open-Weight Models</h3>
+		<p style="font-size:larger;"><p>A deep dive into OpenAI's GPT-OSS models—GPT-OSS-120B and GPT-OSS-20B—covering architecture, pretraining, performance, and agentic capabilities.</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Wed 27 August 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/deep-learning.html">deep learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/gpt-oss.html">gpt-oss</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/openai.html">openai</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/llm.html">llm</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/mixture-of-experts.html">mixture-of-experts</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/transformer.html">transformer</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/ai.html">ai</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <h2 id="introduction">Introduction</h2>
+<p>Yesterday, August 5, 2025 Open AI droped its opensource open weight GPT model gpt-oss to the world. It comes with two configurations. GPT-OSS-120B targetted for server run large scale reasoning and GPT-OSS-20B targetted for ondevice reasoning and generation.
+These models are designed to deliver high-performance reasoning, agentic capabilities, and real-world usability—all while being fully customizable and deployable on consumer-grade hardware. These models are licenced under Apache 2.0 license. OpenAI claims these models outperforms similarly sized open modoels on reasoning capabilities and toolchain use capabilities.</p>
+<h2 id="pretraining-methodology">Pretraining Methodology</h2>
+<p>The GPT-OSS models were trained using a mix of reinforcement learning and techniques informed by OpenAI’s most advanced internal models, including o3 and other frontier systems. Training techniques focused perticularly on reasoning, efficiency and real world usability.</p>
+<p>The models were trained on NVIDIA H100 GPUs using PyTorch with optimized Triton kernels.</p>
+<h3 id="dataset-composition">Dataset Composition</h3>
+<ul>
+<li>Language: Primarily English</li>
+<li>Content Focus: STEM, coding, general knowledge</li>
+<li>Tokenization: Superset tokenizer <code>o200k_harmony</code>, derived from GPT-4o and o4-mini</li>
+</ul>
+<h3 id="architecture">Architecture</h3>
+<p>Both models use Mixture-of-Experts (MoE) Transformer architecture. They use [Flash Attention algorithm(https://arxiv.org/pdf/2205.14135) to reduce the memory requirements and accelarate training. Reference of Flash Attention can be found here. <a href="https://github.com/Dao-AILab/flash-attention">Flash attention</a>.</p>
+<p><strong>Mixture-of-Experts</strong>: Each MoE block consists of a fixed number of experts (128 for gpt-oss 120b and 32 for gpt-oss-20b), as well as a standard linear router projection which maps residual activations to scores for each expert. For both models, we select the top-4 experts for each token
+given by the router, and weight the output of each expert by the softmax of the router projection over only the selected experts. The MoE blocks use the gated <a href="https://arxiv.org/pdf/2002.05202">SwiGLU activation</a> function.</p>
+<p><strong>Attention</strong>: Following GPT-3, attention blocks alternate between banded window and fullydense patterns, where the bandwidth is 128 tokens. Each layer has 64 query heads of dimension 64, and uses [Grouped Query Attention(https://arxiv.org/pdf/2305.13245) with 8 key-value heads. The embeddings used is <a href="https://arxiv.org/pdf/2104.09864">rotary position embeddings</a> and extend the context length of dense layers to 131,072
+tokens using <a href="YaRN: Efficient context window extension of large language models">YaRN</a>. Each attention head has a learned bias in the denominator of the softmax, similar to off-by-one attention and attention sinks, which enables the attention
+mechanism to pay no attention to any tokens.</p>
+<p><strong>Tokenizer</strong>: Across all stages o200k_harmony tokenizer is used from <a href="https://github.com/openai/tiktoken">TikToken</a> library. It is a Byte Pair Encoding (BPE) and has total of 201,088 tokens.</p>
+<p><strong>Normalization method</strong>: Both models have a residual stream dimension of 2880, applying <a href="https://arxiv.org/pdf/1910.07467">root mean square normalization</a> on the activations before each attention and MoE block. Similar to GPT-2 we use Pre-LN placement.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Layers</th>
+<th>Total Params</th>
+<th>Active Params/Token</th>
+<th>Experts/Layer</th>
+<th>Active Experts</th>
+<th>Context Length</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPT-OSS-120B</td>
+<td>36</td>
+<td>117B</td>
+<td>5.1B</td>
+<td>128</td>
+<td>4</td>
+<td>128k tokens</td>
+</tr>
+<tr>
+<td>GPT-OSS-20B</td>
+<td>24</td>
+<td>21B</td>
+<td>3.6B</td>
+<td>32</td>
+<td>4</td>
+<td>128k tokens</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Quantization:</strong>: In the post training stage models are quantized to <a href="https://www.opencompute.org/documents/ocp-microscaling-formats-mx-v1-0-spec-final-pdf">MXFP4 format</a> where MoE weights are optimized to 4.25 bits per parameter. This enables the 120b model varient to fit into 80GB GPU while 20b model varient can fit into 16GB GPU memory.</p>
+<p><strong>Additional features:</strong></p>
+<ul>
+<li>Rotary Positional Embeddings (RoPE)</li>
+<li>Grouped Multi-Query Attention (GQA) with group size 8</li>
+<li>Alternating dense and locally banded sparse attention</li>
+<li>Gated SwiGLU activations</li>
+<li>MXFP4 quantization for efficient inference</li>
+</ul>
+<p>The model card can be viewed here. <a href="https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf">Model card</a></p>
+<h3 id="post-training">Post-Training</h3>
+<ul>
+<li>Supervised fine-tuning aligned with OpenAI’s Model Spec</li>
+<li>High-compute Reinforcement Learning (RL) for Chain-of-Thought reasoning, tool use, and structured outputs</li>
+<li>No direct supervision on CoT reasoning</li>
+</ul>
+<h2 id="performance-highlights">Performance Highlights</h2>
+<h3 id="gpt-oss-120b">GPT-OSS-120B</h3>
+<ul>
+<li>Matches or exceeds GPT-4o-mini on AIME, MMLU, HealthBench</li>
+<li>Efficient long-context reasoning</li>
+<li>Tool use and structured output capabilities</li>
+</ul>
+<h3 id="gpt-oss-20b">GPT-OSS-20B</h3>
+<ul>
+<li>Comparable to GPT-3.5-class models</li>
+<li>Edge-device friendly</li>
+<li>Strong performance on math and health tasks</li>
+</ul>
+<h2 id="hallucinations-and-limitations">Hallucinations and Limitations</h2>
+<p>Despite their impressive capabilities, GPT-OSS models exhibit hallucination patterns typical of large language models, with some notable characteristics:</p>
+<h3 id="common-hallucination-types">Common Hallucination Types</h3>
+<p><strong>Factual Inaccuracies</strong>: Both models can generate plausible-sounding but incorrect information, particularly when asked about:</p>
+<ul>
+<li>Recent events (post-training cutoff)</li>
+<li>Obscure historical facts or technical details</li>
+<li>Specific statistics without proper sourcing</li>
+</ul>
+<p><strong>Mathematical Reasoning Errors</strong>: While generally strong at math, the models can:</p>
+<ul>
+<li>Make computational errors in multi-step problems</li>
+<li>Misapply formulas or theorems</li>
+<li>Generate incorrect proofs that appear logically structured</li>
+</ul>
+<p><strong>Code Generation Issues</strong>: In programming tasks, hallucinations manifest as:</p>
+<ul>
+<li>Non-existent library functions or methods</li>
+<li>Incorrect API usage patterns</li>
+<li>Syntactically correct but functionally flawed code</li>
+</ul>
+<h3 id="mitigation-strategies">Mitigation Strategies</h3>
+<p><strong>Chain-of-Thought Reasoning</strong>: The RL training for CoT helps reduce hallucinations by:</p>
+<ul>
+<li>Encouraging step-by-step verification</li>
+<li>Making reasoning processes more transparent</li>
+<li>Allowing users to identify potential errors in logic</li>
+</ul>
+<p><strong>Tool Integration</strong>: The models' tool-use capabilities help mitigate hallucinations through:</p>
+<ul>
+<li>Real-time web search for current information</li>
+<li>Code execution environments for verification</li>
+<li>Structured output formats that enforce consistency</li>
+</ul>
+<p><strong>Model Size Impact</strong>: GPT-OSS-120B generally exhibits fewer hallucinations than GPT-OSS-20B due to:</p>
+<ul>
+<li>Larger parameter count enabling better factual recall</li>
+<li>More sophisticated reasoning patterns from increased model capacity</li>
+<li>Better calibration of uncertainty in responses</li>
+</ul>
+<h3 id="best-practices-for-users">Best Practices for Users</h3>
+<ul>
+<li><strong>Verify Critical Information</strong>: Always cross-check important facts, especially for high-stakes decisions</li>
+<li><strong>Use Tool Integration</strong>: Leverage the models' ability to search and execute code for verification</li>
+<li><strong>Request Step-by-Step Reasoning</strong>: Ask for detailed explanations to identify potential logical errors</li>
+<li><strong>Provide Context</strong>: Give relevant background information to reduce ambiguity</li>
+<li><strong>Set Appropriate Expectations</strong>: Understand that these models are probabilistic and can make mistakes</li>
+</ul>
+<p>OpenAI acknowledges these limitations and continues research into hallucination reduction techniques, including improved training methodologies and better uncertainty quantification.</p>
+<h2 id="agentic-capabilities">Agentic Capabilities</h2>
+<ul>
+<li>Tool use: Python execution, web browsing</li>
+<li>Structured outputs: JSON, function calls</li>
+<li>Harmony response format</li>
+<li>Reasoning effort configuration</li>
+</ul>
+<h2 id="running-this-on-device-and-expected-performance">Running This On Device and Expected Performance</h2>
+<p>GPT-OSS models are designed for flexible deployment across a range of hardware, from consumer laptops to enterprise servers and edge devices. Here’s what to expect:</p>
+<h3 id="gpt-oss-120b-serverworkstation">GPT-OSS-120B (Server/Workstation)</h3>
+<ul>
+<li><strong>Minimum Hardware</strong>: 80GB GPU (NVIDIA A100/H100) or 160GB system RAM</li>
+<li><strong>Performance</strong>: Real-time inference for most tasks on high-end GPUs; batch processing recommended for large workloads</li>
+<li><strong>Latency</strong>: ~1-2 seconds per response for typical prompts; can be reduced with quantization and model sharding</li>
+<li><strong>Throughput</strong>: Hundreds of requests per minute with multi-GPU setups</li>
+</ul>
+<h3 id="gpt-oss-20b-edgeconsumer">GPT-OSS-20B (Edge/Consumer)</h3>
+<ul>
+<li><strong>Minimum Hardware</strong>: 16GB GPU or 32GB system RAM</li>
+<li><strong>Performance</strong>: Near real-time responses on consumer GPUs (RTX 4080/4090, Apple M2/M3 Ultra)</li>
+<li><strong>Latency</strong>: ~1 second per response for most prompts</li>
+<li><strong>Mobile/Edge</strong>: Deployable on iOS (Core ML), Android (ONNX/TFLite), and edge TPUs</li>
+</ul>
+<h2 id="running-on-macos-hardware">Running on macOS Hardware</h2>
+<p>Apple Silicon (M1/M2/M3) offers a robust platform for running GPT-OSS-20B and smaller models:</p>
+<ul>
+<li><strong>Unified Memory</strong>: Efficient sharing between CPU/GPU/ANE</li>
+<li><strong>Performance</strong>: GPT-OSS-20B runs at near real-time speeds on M2/M3 Ultra (16-32GB RAM); M1 can handle smaller models or quantized variants</li>
+<li><strong>Acceleration</strong>: Metal Performance Shaders and MLX library provide hardware-optimized tensor operations</li>
+<li><strong>Deployment</strong>: Use Core ML conversion for best results; ONNX Runtime also supported</li>
+<li><strong>Energy Efficiency</strong>: Apple Silicon delivers high performance per watt, making it ideal for continuous inference workloads</li>
+</ul>
+<h3 id="example-running-gpt-oss-20b-on-macbook-pro-m2-ultra">Example: Running GPT-OSS-20B on MacBook Pro (M2 Ultra)</h3>
+<ol>
+<li>Convert model to Core ML format using <code>coremltools</code> or MLX</li>
+<li>Load model in a Swift or Python app using Core ML APIs</li>
+<li>Expect response times of ~1 second for typical prompts</li>
+<li>For best results, use quantized weights and batch requests</li>
+</ol>
+<h4 id="python-example-inference-on-macos-apple-silicon">Python Example: Inference on macOS (Apple Silicon)</h4>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">mlx.core</span> <span class="k">as</span> <span class="nn">mx</span>
+<span class="kn">from</span> <span class="nn">transformers</span> <span class="kn">import</span> <span class="n">AutoTokenizer</span><span class="p">,</span> <span class="n">AutoModelForCausalLM</span>
+
+<span class="c1"># Load tokenizer and model (ensure model is quantized and compatible with MLX)</span>
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&quot;openai/gpt-oss-20b&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+    <span class="s2">&quot;openai/gpt-oss-20b&quot;</span><span class="p">,</span>
+    <span class="n">device_map</span><span class="o">=</span><span class="s2">&quot;mps&quot;</span><span class="p">,</span>  <span class="c1"># Use Apple Silicon GPU</span>
+    <span class="n">torch_dtype</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Example prompt</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Explain the Mixture-of-Experts architecture in GPT-OSS.&quot;</span>
+<span class="n">inputs</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">return_tensors</span><span class="o">=</span><span class="s2">&quot;pt&quot;</span><span class="p">)</span>
+
+<span class="c1"># Run inference</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="o">**</span><span class="n">inputs</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">skip_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="mlx-example-inference-on-macos-apple-silicon">MLX Example: Inference on macOS (Apple Silicon)</h4>
+<p>MLX is Apple's open-source machine learning framework optimized for Apple Silicon. Here's a minimal example for running inference with MLX:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">mlx.core</span> <span class="k">as</span> <span class="nn">mx</span>
+<span class="kn">import</span> <span class="nn">mlx.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="c1"># Load a quantized GPT-OSS-20B model in MLX format (assume weights are converted)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">GPT2</span><span class="p">(</span><span class="s2">&quot;path/to/gpt-oss-20b-mlx-weights&quot;</span><span class="p">)</span>
+
+<span class="c1"># Tokenize input (use compatible tokenizer)</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;Explain the Mixture-of-Experts architecture in GPT-OSS.&quot;</span>
+<span class="n">input_ids</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span>
+
+<span class="c1"># Run inference</span>
+<span class="n">output_ids</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">input_ids</span><span class="p">,</span> <span class="n">max_new_tokens</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">output_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</code></pre></div>
+
+<p>This example uses the <code>mps</code> device for Apple Silicon GPU acceleration. For Core ML, you can convert the model using <code>coremltools</code> and run inference in Swift or Python using Core ML APIs. MLX also provides native support for Apple hardware and efficient tensor operations.</p>
+<h3 id="notes">Notes</h3>
+<ul>
+<li>For larger models (120B), use cloud or workstation with multi-GPU setup</li>
+<li>macOS supports both CPU and GPU inference; GPU is recommended for speed</li>
+</ul>
+<p>These capabilities make macOS hardware a strong choice for local AI development, prototyping, and even production workloads for small to medium models.</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p>GPT-OSS is a landmark release that redefines what open-weight models can achieve. With transparent architecture, powerful reasoning, and flexible deployment, these models are poised to accelerate innovation across academia, industry, and government.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "GPT-OSS: OpenAI’s Frontier-Grade Open-Weight Models",
+    "headline": "GPT-OSS: OpenAI’s Frontier-Grade Open-Weight Models",
+    "datePublished": "2025-08-27 00:00:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/gpt-oss-openai-models.html",
+    "description": "A deep dive into OpenAI's GPT-OSS models—GPT-OSS-120B and GPT-OSS-20B—covering architecture, pretraining, performance, and agentic capabilities."
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

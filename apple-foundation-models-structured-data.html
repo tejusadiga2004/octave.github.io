@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="An expert&#39;s guide to Apple&#39;s foundation models, focusing on the importance of structured input/output, comparing on-device and server models, and providing a Swift example." />
+    <meta name="keywords" content="machine-learning, apple, on-device-ml, foundation-models">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="Apple Foundation Models: The Power of Structured Data" />
+<meta property="og:description" content="An expert&#39;s guide to Apple&#39;s foundation models, focusing on the importance of structured input/output, comparing on-device and server models, and providing a Swift example." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/apple-foundation-models-structured-data.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-08-02 13:24:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Technology" />
+	<meta property="article:tag" content="machine-learning" />
+	<meta property="article:tag" content="apple" />
+	<meta property="article:tag" content="on-device-ml" />
+	<meta property="article:tag" content="foundation-models" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    Apple Foundation Models: The Power of Structured Data &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/technology.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="apple-foundation-models-structured-data">Apple Foundation Models: The Power of Structured Data</h3>
+		<p style="font-size:larger;"><p>An expert's guide to Apple's foundation models, focusing on the importance of structured input/output, comparing on-device and server models, and providing a Swift example.</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Sat 02 August 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/technology.html">technology</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/machine-learning.html">machine-learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/apple.html">apple</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/on-device-ml.html">on-device-ml</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/foundation-models.html">foundation-models</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <h1 id="apple-foundation-models-the-power-of-structured-data">Apple Foundation Models: The Power of Structured Data</h1>
+<p>Apple's foray into foundation models marks an exciting development, bringing sophisticated machine learning capabilities closer to the user than ever before. A key aspect of these models is their emphasis on <strong>structured input and output</strong>. This blog post will delve into why this structured approach is crucial, how it can be implemented in various programming languages, compare on-device and server-grade model capabilities, and explore the practical applications of on-device models on Apple platforms with a Swift example.</p>
+<hr>
+<h3 id="the-necessity-of-structured-input-and-output">The Necessity of Structured Input and Output</h3>
+<p>In the realm of machine learning, the way data is fed into a model and how the results are presented significantly impacts the model's performance, interpretability, and usability. For foundation models, which are designed to be versatile and adaptable to a wide range of tasks, structured input and output are particularly vital for several reasons:</p>
+<ol>
+<li>
+<p><strong>Clarity and Consistency:</strong> Structured formats like JSON, Protocol Buffers, or even well-defined data classes provide a clear and consistent way to represent information. This eliminates ambiguity and ensures that the model and the applications interacting with it understand the data in the same way.</p>
+</li>
+<li>
+<p><strong>Facilitating Downstream Tasks:</strong> When a model outputs structured data, it becomes significantly easier for other parts of an application or other models to consume and process this information. For instance, if an on-device model identifies objects in an image and outputs the results as a JSON array with bounding boxes and labels, a subsequent module can directly use this structured data to display annotations on the image or perform further analysis.</p>
+</li>
+<li>
+<p><strong>Improved Model Training and Fine-tuning:</strong> Training data that is consistently structured helps the model learn patterns and relationships more effectively. Similarly, when fine-tuning a pre-trained foundation model for a specific task, providing structured input and defining the expected structured output allows for more targeted learning.</p>
+</li>
+<li>
+<p><strong>Interoperability:</strong> Structured data formats are often language-agnostic, making it easier to integrate models and applications written in different programming languages.</p>
+</li>
+</ol>
+<hr>
+<h3 id="designing-structured-input-and-output-in-other-languages">Designing Structured Input and Output in Other Languages</h3>
+<p>The principles of structured input and output are not unique to Apple's ecosystem and can be implemented effectively in various programming languages. The key is to choose appropriate data structures and serialization/deserialization methods.</p>
+<ul>
+<li>
+<p><strong>Python:</strong> Python, with its rich ecosystem, offers several ways to handle structured data. Dictionaries and lists can be naturally used to represent structured information. Libraries like <code>json</code> for JSON serialization, <code>pickle</code> for Python-specific serialization, and <code>protobuf</code> for Protocol Buffers provide robust mechanisms for encoding and decoding structured data. Data classes (introduced in Python 3.7) offer a concise way to define classes that primarily store data, making them ideal for representing structured inputs and outputs.</p>
+</li>
+<li>
+<p><strong>Java:</strong> Java, being a strongly-typed language, encourages the creation of classes to represent data structures. Libraries like <code>Gson</code> and <code>Jackson</code> are widely used for JSON serialization and deserialization. Protocol Buffers also have excellent support in Java.</p>
+</li>
+<li>
+<p><strong>JavaScript:</strong> JavaScript, being the language of the web, naturally works well with JSON. Objects and arrays are fundamental data structures for representing structured information.</p>
+</li>
+</ul>
+<p>In essence, regardless of the programming language, the process involves:</p>
+<ol>
+<li><strong>Defining a Schema:</strong> Clearly define the structure of the input and output data, including the data types and relationships between different fields.</li>
+<li><strong>Using Data Structures:</strong> Utilize the language's built-in or library-provided data structures (like dictionaries, lists, objects, classes) to represent the structured data according to the defined schema.</li>
+<li><strong>Serialization and Deserialization:</strong> Employ appropriate libraries or built-in functions to convert between the in-memory data structures and a standardized format (like JSON or Protocol Buffers) for inputting to and outputting from the model.</li>
+</ol>
+<hr>
+<h3 id="on-device-vs-server-grade-models-capabilities-and-applications">On-Device vs. Server-Grade Models: Capabilities and Applications</h3>
+<p>Apple's focus on on-device foundation models presents a compelling alternative to relying solely on server-based models. Both approaches have their own strengths and are suitable for different applications.</p>
+<p><strong>Server-Grade Models:</strong></p>
+<ul>
+<li><strong>Capabilities:</strong> Server-grade models, benefiting from vast computational resources and massive datasets, typically boast higher accuracy and the ability to handle more complex tasks. They can power sophisticated natural language processing, large-scale image and video analysis, and intricate predictive analytics.</li>
+<li><strong>Applications:</strong> These models are well-suited for tasks that require high precision, complex reasoning, and access to extensive knowledge, such as:<ul>
+<li>Cloud-based search engines</li>
+<li>Large language model powered chatbots</li>
+<li>Complex video editing and analysis platforms</li>
+<li>Training and fine-tuning of large foundation models</li>
+</ul>
+</li>
+</ul>
+<p><strong>On-Device Models:</strong></p>
+<ul>
+<li><strong>Capabilities:</strong> On-device models are designed to be efficient and performant on resource-constrained devices like iPhones, iPads, and Macs. While they might have lower overall capacity compared to their server counterparts, they offer several key advantages:<ul>
+<li><strong>Privacy:</strong> Data processed by on-device models stays on the user's device, enhancing privacy and security.</li>
+<li><strong>Latency:</strong> Eliminating the need for network communication results in significantly lower latency, leading to a more responsive user experience.</li>
+<li><strong>Connectivity Independence:</strong> On-device models can function even without an internet connection.</li>
+<li><strong>Cost Efficiency:</strong> Offloading computation to the device reduces the processing load and associated costs on remote servers.</li>
+</ul>
+</li>
+<li><strong>Applications:</strong> On-device foundation models are ideal for tasks that benefit from privacy, low latency, and offline functionality, such as:<ul>
+<li><strong>Real-time language translation:</strong> Translating spoken or written text instantly.</li>
+<li><strong>Image and object recognition:</strong> Identifying objects and scenes in photos and videos locally.</li>
+<li><strong>Personalized recommendations:</strong> Providing tailored suggestions based on user behavior without sending data to a server.</li>
+<li><strong>Enhanced accessibility features:</strong> Enabling real-time transcription or object detection for visually impaired users.</li>
+<li><strong>Context-aware suggestions:</strong> Providing relevant suggestions based on the current on-device context.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="tasks-achievable-with-on-device-models-on-apple-platforms-a-swift-example">Tasks Achievable with On-Device Models on Apple Platforms: A Swift Example</h3>
+<p>Apple's Core ML framework provides the infrastructure to integrate machine learning models, including foundation models, seamlessly into iOS, iPadOS, and macOS applications. Here's a simplified example in Swift demonstrating how an on-device model could perform object recognition and output structured data:</p>
+<p>First, assume you have a Core ML model (<code>ObjectDetector.mlmodel</code>) that takes an image as input and outputs a dictionary containing an array of detected objects. Each object in the array is another dictionary with keys like <code>"label"</code> (String) and <code>"boundingBox"</code> (VNRectangle).</p>
+<p>Here's how you might use this model in Swift:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">import</span> <span class="nc">CoreML</span>
+<span class="kd">import</span> <span class="nc">Vision</span>
+
+<span class="kd">func</span> <span class="nf">detectObjects</span><span class="p">(</span><span class="k">in</span> <span class="n">image</span><span class="p">:</span> <span class="bp">CIImage</span><span class="p">,</span> <span class="n">completion</span><span class="p">:</span> <span class="p">@</span><span class="n">escaping</span> <span class="p">([(</span><span class="n">label</span><span class="p">:</span> <span class="nb">String</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">:</span> <span class="n">CGRect</span><span class="p">)]?)</span> <span class="p">-&gt;</span> <span class="nb">Void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">guard</span> <span class="kd">let</span> <span class="nv">model</span> <span class="p">=</span> <span class="k">try</span><span class="p">?</span> <span class="bp">VNCoreMLModel</span><span class="p">(</span><span class="k">for</span><span class="p">:</span> <span class="n">ObjectDetector</span><span class="p">().</span><span class="n">model</span><span class="p">)</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Failed to load Core ML model.&quot;</span><span class="p">)</span>
+        <span class="n">completion</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+        <span class="k">return</span>
+    <span class="p">}</span>
+
+    <span class="kd">let</span> <span class="nv">request</span> <span class="p">=</span> <span class="bp">VNCoreMLRequest</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">model</span><span class="p">)</span> <span class="p">{</span> <span class="n">request</span><span class="p">,</span> <span class="n">error</span> <span class="k">in</span>
+        <span class="k">guard</span> <span class="kd">let</span> <span class="nv">results</span> <span class="p">=</span> <span class="n">request</span><span class="p">.</span><span class="n">results</span> <span class="k">as</span><span class="p">?</span> <span class="p">[</span><span class="bp">VNRecognizedObjectObservation</span><span class="p">],</span> <span class="n">error</span> <span class="p">==</span> <span class="kc">nil</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Object detection error: </span><span class="si">\(</span><span class="n">error</span><span class="p">?.</span><span class="n">localizedDescription</span> <span class="p">??</span> <span class="s">&quot;Unknown error&quot;</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+            <span class="n">completion</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="p">}</span>
+
+        <span class="kd">let</span> <span class="nv">detectedObjects</span> <span class="p">=</span> <span class="n">results</span><span class="p">.</span><span class="bp">map</span> <span class="p">{</span> <span class="n">observation</span> <span class="k">in</span>
+            <span class="kd">let</span> <span class="nv">label</span> <span class="p">=</span> <span class="n">observation</span><span class="p">.</span><span class="n">labels</span><span class="p">.</span><span class="bp">first</span><span class="p">?.</span><span class="n">identifier</span> <span class="p">??</span> <span class="s">&quot;Unknown&quot;</span>
+            <span class="kd">let</span> <span class="nv">boundingBox</span> <span class="p">=</span> <span class="n">observation</span><span class="p">.</span><span class="n">boundingBox</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">label</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span> <span class="n">boundingBox</span><span class="p">:</span> <span class="n">boundingBox</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">completion</span><span class="p">(</span><span class="n">detectedObjects</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="kd">let</span> <span class="nv">handler</span> <span class="p">=</span> <span class="bp">VNImageRequestHandler</span><span class="p">(</span><span class="n">ciImage</span><span class="p">:</span> <span class="n">image</span><span class="p">)</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">try</span> <span class="n">handler</span><span class="p">.</span><span class="n">perform</span><span class="p">([</span><span class="n">request</span><span class="p">])</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">{</span>
+        <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Error performing image request: </span><span class="si">\(</span><span class="n">error</span><span class="p">.</span><span class="n">localizedDescription</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+        <span class="n">completion</span><span class="p">(</span><span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Example usage:</span>
+<span class="k">if</span> <span class="kd">let</span> <span class="nv">image</span> <span class="p">=</span> <span class="bp">CIImage</span><span class="p">(</span><span class="n">contentsOf</span><span class="p">:</span> <span class="n">URL</span><span class="p">(</span><span class="n">fileURLWithPath</span><span class="p">:</span> <span class="s">&quot;path/to/your/image.jpg&quot;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">detectObjects</span><span class="p">(</span><span class="k">in</span><span class="p">:</span> <span class="n">image</span><span class="p">)</span> <span class="p">{</span> <span class="n">detectedObjects</span> <span class="k">in</span>
+        <span class="k">if</span> <span class="kd">let</span> <span class="nv">objects</span> <span class="p">=</span> <span class="n">detectedObjects</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="n">object</span> <span class="k">in</span> <span class="n">objects</span> <span class="p">{</span>
+                <span class="bp">print</span><span class="p">(</span><span class="s">&quot;Detected: </span><span class="si">\(</span><span class="n">object</span><span class="p">.</span><span class="n">label</span><span class="si">)</span><span class="s"> at </span><span class="si">\(</span><span class="n">object</span><span class="p">.</span><span class="n">boundingBox</span><span class="si">)</span><span class="s">&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+            <span class="c1">// Further processing of the structured output (e.g., displaying on screen)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="bp">print</span><span class="p">(</span><span class="s">&quot;No objects detected or an error occurred.&quot;</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>In this example, the detectObjects function takes a CIImage as input and uses a Core ML model to perform object detection. The completion handler receives an optional array of tuples, where each tuple represents a detected object and contains its label (String) and bounding box (CGRect) – a structured output. This structured data can then be easily used by other parts of the application to draw bounding boxes on the image, display labels, or trigger other actions based on the detected objects.
+Conclusion
+Structured input and output are fundamental to the effective use of foundation models, especially in resource-constrained environments like on-device applications. By adhering to well-defined data formats, developers can build robust, interoperable, and efficient applications that leverage the power of machine learning while prioritizing user privacy and experience. Apple's commitment to on-device models, coupled with the capabilities of Core ML, opens up a world of possibilities for innovative and intelligent features directly on Apple platforms.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "Apple Foundation Models: The Power of Structured Data",
+    "headline": "Apple Foundation Models: The Power of Structured Data",
+    "datePublished": "2025-08-02 13:24:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/apple-foundation-models-structured-data.html",
+    "description": "An expert's guide to Apple's foundation models, focusing on the importance of structured input/output, comparing on-device and server models, and providing a Swift example."
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>

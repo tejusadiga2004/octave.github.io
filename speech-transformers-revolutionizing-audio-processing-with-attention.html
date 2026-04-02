@@ -1,0 +1,740 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head -->
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-26R9CS17CT"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-26R9CS17CT');
+    </script>
+
+
+        <!-- Required metadata tags -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="HandheldFriendly" content="True" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+        <!-- Default metadata -->
+    <meta name="author" content="Tejus Adiga M" />
+    <meta name="description" content="A deep dive into Speech Transformers, exploring how raw audio is converted to MEL coefficients and how attention mechanisms process speech signals for various applications." />
+    <meta name="keywords" content="transformer, speech, audio, attention, mel-spectrogram">
+<meta property="og:site_name" content="Entropy Pages" />
+<meta property="og:title" content="Speech Transformers: Revolutionizing Audio Processing with Attention" />
+<meta property="og:description" content="A deep dive into Speech Transformers, exploring how raw audio is converted to MEL coefficients and how attention mechanisms process speech signals for various applications." />
+<meta property="og:locale" content="en_US" />
+<meta property="og:url" content="https://blogs.entropypages.in/speech-transformers-revolutionizing-audio-processing-with-attention.html" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-07-08 00:00:00+05:30" />
+<meta property="article:modified_time" content="" />
+<meta property="article:author" content="https://blogs.entropypages.in/author/tejus-adiga-m.html">
+<meta property="article:section" content="Machine Learning" />
+	<meta property="article:tag" content="transformer" />
+	<meta property="article:tag" content="speech" />
+	<meta property="article:tag" content="audio" />
+	<meta property="article:tag" content="attention" />
+	<meta property="article:tag" content="mel-spectrogram" />
+	<meta property="og:image" content="https://blogs.entropypages.in/images/SiteImage.png">
+
+        <!-- Site Claim -->
+
+
+        <!-- Title -->
+        <title>
+    Speech Transformers: Revolutionizing Audio Processing with Attention &ndash; Entropy Pages
+        </title>
+        
+        <!-- Icon -->
+        <link rel="shortcut icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="https://blogs.entropypages.in/favicon.ico" type="image/x-icon">
+
+        <!-- Search engine -->
+            <meta name="robots" content="" />
+
+        <!-- Feeds -->
+            <link href="https://blogs.entropypages.in/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Full Atom Feed" />
+
+
+
+
+            <link href="https://blogs.entropypages.in/feeds/machine-learning.atom.xml" type="application/atom+xml" rel="alternate" title="Entropy Pages Categories Atom Feed" />
+
+
+
+
+        <!-- Styles -->
+        <!--
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/css/bootstrap.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.css">
+        <!--
+        <link rel="stylesheet" href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/pygment/friendly.css">
+        <!--
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/extra/admonition.min.css">
+        -->
+        <link rel="stylesheet" href="https://blogs.entropypages.in/theme/style.css">
+        
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Sankofa+Display:wght@400&display=swap" rel="stylesheet">
+
+        <!-- Google Analytics -->
+
+        <!-- Google Global Site Tag -->
+
+        <!-- Google Tag Manager -->
+
+        <!-- Google Adsense -->
+
+        <!-- Heap Analytic -->
+
+        <!-- Piwik Tracking -->
+
+        <!-- Matomo Tracking -->
+
+        <!-- MathJax Support -->
+        <script type="text/javascript">
+            window.MathJax = {
+                tex: {
+                    inlineMath: [['$', '$'], ['\\(', '\\)']],
+                    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                    processEscapes: true,
+                    processEnvironments: true,
+                    packages: {'[+]': ['ams', 'newcommand', 'configmacros']},
+                    macros: {
+                        land: "\\wedge",
+                        lor: "\\vee", 
+                        lnot: "\\neg"
+                    }
+                },
+                options: {
+                    ignoreHtmlClass: 'tex2jax_ignore',
+                    processHtmlClass: 'tex2jax_process'
+                }
+            };
+        </script>
+        <script type="text/javascript" async
+            src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js">
+        </script>
+
+</head>
+
+<!-- Body -->
+<body class="d-flex flex-column" data-spy="scroll" data-target="#toc" data-offset="0" style="position: relative;">
+    <!-- Top anchor -->
+    <a href="#" id="backToTop" style="display: none; z-index: 1;" title="Back to top"><span></span></a>
+
+    <!-- Google tag manager -->
+
+    <!-- Navigation -->
+    <nav class="flex-shrink-0 navbar navbar-expand-md navbar-expand-lg navbar-dark bg-dark text-light shadow-sm">
+        <!-- Logo -->
+        <a class="navbar-brand site-name" href="https://blogs.entropypages.in/">Entropy Pages</a>
+
+        <!-- Desktop divider -->
+        <div class="navbar-divider d-none d-md-block"></div>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon small"></span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarMenu">
+
+            <!-- i18n subsites -->
+
+            <!-- Page links -->
+            <ul class="navbar-nav mr-auto text-center">
+                <li class="nav-item ">                           
+                    <a class="nav-link" href="https://blogs.entropypages.in">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" fill="currentColor"></path>
+                        </svg>
+                        Home <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/categories.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M16 6h-8v-6h8v6zm-8 12h-8v6h8v-6zm16 0h-8v6h8v-6zm-11-7v-3h-2v3h-8v5h2v-3h14v3h2v-5h-8z" fill="currentColor"></path>
+                        </svg>
+                        Categories
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/archives.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M1.8 9l-.8-4h22l-.8 4h-2.029l.39-2h-17.122l.414 2h-2.053zm18.575-6l.604-2h-17.979l.688 2h16.687zm3.625 8l-2 13h-20l-2-13h24zm-8 4c0-.552-.447-1-1-1h-6c-.553 0-1 .448-1 1s.447 1 1 1h6c.553 0 1-.448 1-1z" fill="currentColor"></path>
+                        </svg>
+                        Archives
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link" href="https://blogs.entropypages.in/pages/about.html">
+                        <svg class="nav-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24">
+                            <path d="M20.822 18.096c-3.439-.794-6.64-1.49-5.09-4.418 4.72-8.912 1.251-13.678-3.732-13.678-5.082 0-8.464 4.949-3.732 13.678 1.597 2.945-1.725 3.641-5.09 4.418-3.073.71-3.188 2.236-3.178 4.904l.004 1h23.99l.004-.969c.012-2.688-.092-4.222-3.176-4.935z" fill="currentColor"></path>
+                        </svg>
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Search form -->
+            <form class="form-inline text-center" action="https://blogs.entropypages.in/pages/search.html">
+                <input class="form-control w-100 bg-dark text-light text-center border-0 p-2" type="text" name="q" pattern=".{3,}" title="At least 3 characters" required="" placeholder="Type here to search" aria-label="Search">
+            </form>
+
+            <!-- Social links -->
+            <ul class="navbar-nav text-center">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Facebook</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm3 8h-1.35c-.538 0-.65.221-.65.778v1.222h2l-.209 2h-1.791v7h-3v-7h-2v-2h2v-2.308c0-1.769.931-2.692 3.029-2.692h1.971v3z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://github.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Github</title>
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://www.linkedin.com/in/tejusadigam/">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Linkedin</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-2 16h-2v-6h2v6zm-1-6.891c-.607 0-1.1-.496-1.1-1.109 0-.612.492-1.109 1.1-1.109s1.1.497 1.1 1.109c0 .613-.493 1.109-1.1 1.109zm8 6.891h-1.998v-2.861c0-1.881-2.002-1.722-2.002 0v2.861h-2v-6h2v1.093c.872-1.616 4-1.736 4 1.548v3.359z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://x.com/tejusadiga2004">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <title>Twitter</title>
+                            <path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6.066 9.645c.183 4.04-2.83 8.544-8.164 8.544-1.622 0-3.131-.476-4.402-1.291 1.524.18 3.045-.244 4.252-1.189-1.256-.023-2.317-.854-2.684-1.995.451.086.895.061 1.298-.049-1.381-.278-2.335-1.522-2.304-2.853.388.215.83.344 1.301.359-1.279-.855-1.641-2.544-.889-3.835 1.416 1.738 3.533 2.881 5.92 3.001-.419-1.796.944-3.527 2.799-3.527.825 0 1.572.349 2.096.907.654-.128 1.27-.368 1.824-.697-.215.671-.67 1.233-1.263 1.589.581-.07 1.135-.224 1.649-.453-.384.578-.87 1.084-1.433 1.489z" fill="currentColor"></path>
+                        </svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Full page -->
+    <div class="flex-shrink-0 flex-grow-1">
+
+        <!-- Header -->
+        <header class="bg-dark text-light shadow-sm pt-3 pb-2">
+	<div class="container">
+		<h3 id="speech-transformers-revolutionizing-audio-processing-with-attention">Speech Transformers: Revolutionizing Audio Processing with Attention</h3>
+		<p style="font-size:larger;"><p>A deep dive into Speech Transformers, exploring how raw audio is converted to MEL coefficients and how attention mechanisms process speech signals for various applications.</p></p>
+        <div class="row mx-auto mt-3">
+            <div class="col-xs-12 col-sm-12 col-md-6 text-left" style="padding: 0">
+                <a href="https://blogs.entropypages.in/author/tejus-adiga-m.html" class="card-link">Tejus Adiga M</a>
+                <span class="card-link text-success">
+                    <span class="post-date" title="Post date">Tue 08 July 2025</span>
+                </span>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-6 text-right" style="padding: 0">
+                <a class="badge badge-success" href="https://blogs.entropypages.in/category/machine-learning.html">machine learning</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/transformer.html">transformer</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/speech.html">speech</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/audio.html">audio</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/attention.html">attention</a>
+                    <a class="badge badge-info" href="https://blogs.entropypages.in/tag/mel-spectrogram.html">mel-spectrogram</a>
+            </div>
+        </div>
+	</div>
+        </header>
+
+        <!-- Main -->
+        <main class="py-3">
+                <div class="container">
+                    <!-- Sharing -->
+
+                    <!-- Content -->
+    <!-- 2 columns layout -->
+    <!-- single column layout -->
+        <!-- Sharing -->
+
+        <!-- Share post -->
+
+        <!-- Article -->
+        <div>
+            <p>The Transformer architecture, originally designed for natural language processing, has found remarkable success in the audio domain. Speech Transformers have revolutionized automatic speech recognition (ASR), text-to-speech (TTS), and audio understanding tasks. In this post, we'll explore how speech signals are transformed into MEL coefficients, how Transformers process audio data, and how attention mechanisms work specifically for speech signals.</p>
+<h2 id="from-sound-waves-to-mel-coefficients">From Sound Waves to MEL Coefficients</h2>
+<h3 id="understanding-raw-audio">Understanding Raw Audio</h3>
+<p>Speech signals are continuous analog waveforms that represent variations in air pressure over time. When digitized, these become sequences of amplitude values sampled at regular intervals (typically 16kHz or 22kHz for speech applications).</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">librosa</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Load audio file</span>
+<span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;speech.wav&#39;</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="mi">16000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Audio shape: </span><span class="si">{</span><span class="n">audio</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, Sample rate: </span><span class="si">{</span><span class="n">sample_rate</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="the-mel-scale-transformation">The MEL Scale Transformation</h3>
+<p>The MEL (Melody) scale is a perceptual scale of pitches that more closely matches human auditory perception than linear frequency scales. The transformation from raw audio to MEL coefficients involves several key steps:</p>
+<h4 id="step-1-short-time-fourier-transform-stft">Step 1: Short-Time Fourier Transform (STFT)</h4>
+<p>Raw audio is first converted to the frequency domain using STFT, which applies a sliding window to capture frequency content over time:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Compute STFT</span>
+<span class="n">stft</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">stft</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">hop_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">win_length</span><span class="o">=</span><span class="mi">2048</span><span class="p">)</span>
+<span class="n">magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">stft</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="step-2-mel-filter-bank">Step 2: MEL Filter Bank</h4>
+<p>A set of triangular filters spaced according to the MEL scale is applied to the magnitude spectrogram. The MEL filter bank is the heart of the transformation and deserves deeper explanation:</p>
+<h5 id="understanding-the-mel-scale">Understanding the MEL Scale</h5>
+<p>The MEL scale is defined by the formula:</p>
+<div class="highlight"><pre><span></span><code><span class="n">mel</span> <span class="o">=</span> <span class="mi">2595</span> <span class="o">*</span> <span class="n">log10</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">f</span><span class="o">/</span><span class="mi">700</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Where <code>f</code> is the frequency in Hz. This scale is approximately linear below 1000 Hz and logarithmic above, matching human auditory perception.</p>
+<p><img alt="MEL Filter Bank" src="https://blogs.entropypages.in/images/MELFilterBank.png">
+<em>Figure: MEL Filter Bank showing triangular filters spaced according to the MEL scale</em></p>
+<p><img alt="MFCC Coefficients" src="https://blogs.entropypages.in/images/MFCCCoef.png">
+<em>Figure: MFCC Coefficients showing the transformation from MEL spectrogram to compact feature representation</em></p>
+<h5 id="filter-bank-construction">Filter Bank Construction</h5>
+<p>The MEL filter bank consists of overlapping triangular filters:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">create_mel_filter_bank</span><span class="p">(</span><span class="n">sr</span><span class="p">,</span> <span class="n">n_fft</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">fmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fmax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create MEL filter bank with detailed explanation&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">fmax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">fmax</span> <span class="o">=</span> <span class="n">sr</span> <span class="o">//</span> <span class="mi">2</span>
+
+    <span class="c1"># Convert frequency limits to MEL scale</span>
+    <span class="n">mel_min</span> <span class="o">=</span> <span class="n">hz_to_mel</span><span class="p">(</span><span class="n">fmin</span><span class="p">)</span>
+    <span class="n">mel_max</span> <span class="o">=</span> <span class="n">hz_to_mel</span><span class="p">(</span><span class="n">fmax</span><span class="p">)</span>
+
+    <span class="c1"># Create equally spaced points in MEL scale</span>
+    <span class="n">mel_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mel_min</span><span class="p">,</span> <span class="n">mel_max</span><span class="p">,</span> <span class="n">n_mels</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># Convert back to Hz</span>
+    <span class="n">hz_points</span> <span class="o">=</span> <span class="n">mel_to_hz</span><span class="p">(</span><span class="n">mel_points</span><span class="p">)</span>
+
+    <span class="c1"># Convert to FFT bin indices</span>
+    <span class="n">bin_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">n_fft</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">hz_points</span> <span class="o">/</span> <span class="n">sr</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1"># Create filter bank</span>
+    <span class="n">filter_bank</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_mels</span><span class="p">,</span> <span class="n">n_fft</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_mels</span><span class="p">):</span>
+        <span class="n">left</span> <span class="o">=</span> <span class="n">bin_points</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">bin_points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">right</span> <span class="o">=</span> <span class="n">bin_points</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span>
+
+        <span class="c1"># Rising slope</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">center</span><span class="p">):</span>
+            <span class="n">filter_bank</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">center</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span>
+
+        <span class="c1"># Falling slope</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+            <span class="n">filter_bank</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">center</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">filter_bank</span>
+
+<span class="c1"># Create MEL filter bank</span>
+<span class="n">mel_filters</span> <span class="o">=</span> <span class="n">create_mel_filter_bank</span><span class="p">(</span><span class="n">sr</span><span class="o">=</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">2048</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
+
+<span class="c1"># Apply MEL filters</span>
+<span class="n">mel_spectrogram</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">mel_filters</span><span class="p">,</span> <span class="n">magnitude</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="step-3-logarithmic-compression">Step 3: Logarithmic Compression</h4>
+<p>The MEL spectrogram is converted to the log domain to compress the dynamic range:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Convert to log MEL spectrogram</span>
+<span class="n">log_mel</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">mel_spectrogram</span> <span class="o">+</span> <span class="mf">1e-8</span><span class="p">)</span>
+</code></pre></div>
+
+<h4 id="step-4-mel-frequency-cepstral-coefficients-mfccs">Step 4: MEL Frequency Cepstral Coefficients (MFCCs)</h4>
+<p>While modern speech Transformers often use the full log MEL spectrogram (80 dimensions), traditional speech processing relies on <strong>MEL Frequency Cepstral Coefficients (MFCCs)</strong>, typically using only the first 13 coefficients. Let's understand why:</p>
+<h5 id="what-are-mfccs">What are MFCCs?</h5>
+<p>MFCCs are derived by applying the <strong>Discrete Cosine Transform (DCT)</strong> to the log MEL spectrogram:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">compute_mfcc</span><span class="p">(</span><span class="n">log_mel_spectrogram</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">13</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compute MFCCs from log MEL spectrogram&quot;&quot;&quot;</span>
+    <span class="c1"># Apply DCT to decorrelate the features</span>
+    <span class="n">mfcc</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">fftpack</span><span class="o">.</span><span class="n">dct</span><span class="p">(</span><span class="n">log_mel_spectrogram</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">&#39;ortho&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Keep only the first n_mfcc coefficients</span>
+    <span class="k">return</span> <span class="n">mfcc</span><span class="p">[:</span><span class="n">n_mfcc</span><span class="p">]</span>
+
+<span class="c1"># Example usage</span>
+<span class="kn">import</span> <span class="nn">scipy.fftpack</span>
+<span class="n">mfcc_features</span> <span class="o">=</span> <span class="n">compute_mfcc</span><span class="p">(</span><span class="n">log_mel</span><span class="p">,</span> <span class="n">n_mfcc</span><span class="o">=</span><span class="mi">13</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;MFCC shape: </span><span class="si">{</span><span class="n">mfcc_features</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># (13, time_steps)</span>
+</code></pre></div>
+
+<p>The Discrete Cosine Transform (DCT) is used in the MFCC pipeline to decorrelate the MEL spectral features and compact most of the signal's energy into the first few coefficients. This is important because adjacent MEL bins are highly correlated due to the overlapping nature of the filter bank. By applying the DCT, we transform the MEL spectrum into a set of coefficients where the lower-order terms capture the broad spectral shape (envelope) and the higher-order terms capture finer details and noise. This makes the representation more efficient for pattern recognition tasks, as it reduces redundancy and allows us to retain only the most informative coefficients (typically the first 13) for speech processing.</p>
+<h5 id="why-only-13-mfcc-coefficients">Why Only 13 MFCC Coefficients?</h5>
+<p>Although the DCT produces as many coefficients as there are MEL bins (typically 80), only the first 13 are usually kept. This is because the lower-order coefficients capture the broad spectral envelope of speech, which contains most of the information relevant for distinguishing phonemes and speaker characteristics. Higher-order coefficients represent finer spectral details, which are often less useful for speech recognition and more susceptible to noise. Empirical studies have shown that using 13 coefficients strikes a good balance between information retention and noise robustness, making it a standard choice in traditional speech processing pipelines.</p>
+<h6 id="1-spectral-envelope-representation">1. <strong>Spectral Envelope Representation</strong></h6>
+<p>The first few DCT coefficients capture the <strong>spectral envelope</strong> (the overall shape of the frequency spectrum), which contains most of the phonetic information:</p>
+<h6 id="2-information-content-distribution">2. <strong>Information Content Distribution</strong></h6>
+<p>The DCT concentrates most of the signal energy in the first few coefficients</p>
+<h6 id="3-coefficient-specific-meanings">3. <strong>Coefficient-Specific Meanings</strong></h6>
+<p>Each MFCC coefficient captures different aspects of the speech signal:</p>
+<div class="highlight"><pre><span></span><code>    <span class="n">interpretations</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="s2">&quot;C0 (DC component): Overall energy/loudness of the frame&quot;</span><span class="p">,</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="s2">&quot;C1: Spectral slope - distinguishes voiced/unvoiced sounds&quot;</span><span class="p">,</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="s2">&quot;C2: Spectral curvature - formant structure information&quot;</span><span class="p">,</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="s2">&quot;C3-C4: First formant information (vowel identity)&quot;</span><span class="p">,</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="s2">&quot;C5-C8: Second formant information (vowel quality)&quot;</span><span class="p">,</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="s2">&quot;C9-C12: Higher formant and consonant information&quot;</span><span class="p">,</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="s2">&quot;C13+: Fine spectral details (often noisy, less reliable)&quot;</span>
+    <span class="p">}</span>
+</code></pre></div>
+
+<h5 id="modern-transformers-vs-traditional-mfccs">Modern Transformers vs Traditional MFCCs</h5>
+<p>While traditional ASR used 13 MFCCs, modern Transformers often use the full log MEL spectrogram:</p>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>Dimensions</th>
+<th>Advantages</th>
+<th>Disadvantages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>13 MFCCs</strong></td>
+<td>13 (or 39 with deltas)</td>
+<td>Compact, decorrelated, proven</td>
+<td>Information loss, hand-crafted</td>
+</tr>
+<tr>
+<td><strong>80 MEL bins</strong></td>
+<td>80</td>
+<td>Preserves more information</td>
+<td>Higher dimensional, redundant</td>
+</tr>
+<tr>
+<td><strong>Raw Audio</strong></td>
+<td>16,000 per second</td>
+<td>No information loss</td>
+<td>Extremely high dimensional</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-mel-coefficients-and-mfccs">Why MEL Coefficients and MFCCs?</h3>
+<p>The transformation from raw audio to MEL coefficients (and further to MFCCs) offers several advantages for speech processing:</p>
+<h4 id="mel-spectrogram-advantages">MEL Spectrogram Advantages</h4>
+<ol>
+<li><strong>Perceptual Relevance</strong>: The MEL scale aligns with human auditory perception, making it more suitable for speech tasks</li>
+<li><strong>Dimensionality Reduction</strong>: Reduces thousands of frequency bins to ~80 MEL bins while preserving important information</li>
+<li><strong>Noise Robustness</strong>: Logarithmic compression reduces sensitivity to amplitude variations</li>
+<li><strong>Computational Efficiency</strong>: Fewer dimensions mean faster processing and fewer parameters</li>
+</ol>
+<h4 id="mfcc-advantages-13-coefficients">MFCC Advantages (13 coefficients)</h4>
+<ol>
+<li><strong>Decorrelation</strong>: DCT removes redundancy between adjacent MEL bins</li>
+<li><strong>Compact Representation</strong>: 13 coefficients capture 85-90% of speech information</li>
+<li><strong>Spectral Envelope Focus</strong>: Emphasizes formant structure over fine spectral details</li>
+<li><strong>Proven Effectiveness</strong>: Decades of successful use in speech recognition systems</li>
+<li><strong>Noise Resilience</strong>: Higher-order coefficients (beyond 13) often contain more noise than signal</li>
+</ol>
+<h4 id="when-to-use-each">When to Use Each</h4>
+<ul>
+<li><strong>Traditional ASR</strong>: 13 MFCCs (+ deltas) for compact, efficient processing</li>
+<li><strong>Modern Transformers</strong>: Full 80-dimensional MEL spectrograms for maximum information retention</li>
+<li><strong>Hybrid Approaches</strong>: Learnable front-ends that start with MEL features but adapt during training</li>
+</ul>
+<h2 id="speech-processing-in-transformers">Speech Processing in Transformers</h2>
+<h3 id="input-representation">Input Representation</h3>
+<p>Speech Transformers typically work with MEL spectrograms as input, treating them as sequences of feature vectors</p>
+<h3 id="architecture-adaptations">Architecture Adaptations</h3>
+<p>Speech Transformers make several key adaptations from the original text Transformer:</p>
+<h4 id="1-convolutional-front-end">1. Convolutional Front-End</h4>
+<p>Many speech models use convolutional layers before the Transformer to capture local acoustic patterns:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ConvolutionalFrontEnd</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">hidden_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Conv1d</span><span class="p">(</span><span class="n">hidden_dim</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">()</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># x shape: (batch, time, features)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># (batch, features, time)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv_layers</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># (batch, time, hidden_dim)</span>
+</code></pre></div>
+
+<h4 id="2-downsampling-strategies">2. Downsampling Strategies</h4>
+<p>Speech sequences are much longer than typical text sequences. Downsampling techniques are used to reduce computational complexity:</p>
+<ul>
+<li><strong>Stride Convolutions</strong>: Reduce temporal resolution</li>
+<li><strong>Pooling Layers</strong>: Average or max pooling over time</li>
+<li><strong>Hierarchical Processing</strong>: Multiple levels of temporal abstraction</li>
+</ul>
+<h3 id="speech-specific-transformer-models">Speech-Specific Transformer Models</h3>
+<h4 id="wav2vec-20">Wav2Vec 2.0</h4>
+<p>Wav2Vec 2.0 learns speech representations directly from raw audio:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">Wav2Vec2Encoder</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Convolutional feature extractor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span> <span class="o">=</span> <span class="n">ConvFeatureExtractor</span><span class="p">()</span>
+        <span class="c1"># Transformer encoder</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="n">num_layers</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_audio</span><span class="p">):</span>
+        <span class="c1"># Extract features from raw audio</span>
+        <span class="n">features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_extractor</span><span class="p">(</span><span class="n">raw_audio</span><span class="p">)</span>
+        <span class="c1"># Process with transformer</span>
+        <span class="n">contextualized_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transformer</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">contextualized_features</span>
+</code></pre></div>
+
+<h4 id="speech-transformer-for-asr">Speech Transformer for ASR</h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SpeechTransformerASR</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">d_model</span><span class="o">=</span><span class="mi">512</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">TransformerDecoder</span><span class="p">(</span><span class="n">d_model</span><span class="o">=</span><span class="n">d_model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_projection</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mel_features</span><span class="p">,</span> <span class="n">text_tokens</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># Encode speech features</span>
+        <span class="n">encoded_speech</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">mel_features</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">text_tokens</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># Training mode</span>
+            <span class="c1"># Decode with teacher forcing</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">text_tokens</span><span class="p">,</span> <span class="n">encoded_speech</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_projection</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Inference mode</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">encoded_speech</span><span class="p">)</span>
+</code></pre></div>
+
+<h2 id="attention-mechanisms-for-speech-signals">Attention Mechanisms for Speech Signals</h2>
+<h3 id="temporal-attention-in-speech">Temporal Attention in Speech</h3>
+<p>Speech signals have unique temporal characteristics that attention mechanisms must handle:</p>
+<h4 id="1-long-range-dependencies">1. Long-Range Dependencies</h4>
+<p>Speech understanding often requires modeling dependencies across long time spans:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">TemporalAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speech_features</span><span class="p">):</span>
+        <span class="c1"># Self-attention over time dimension</span>
+        <span class="n">attended_features</span><span class="p">,</span> <span class="n">attention_weights</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">speech_features</span><span class="p">,</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">speech_features</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">speech_features</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">attended_features</span><span class="p">,</span> <span class="n">attention_weights</span>
+</code></pre></div>
+
+<h4 id="2-causal-vs-non-causal-attention">2. Causal vs. Non-Causal Attention</h4>
+<ul>
+<li><strong>Causal Attention</strong>: For streaming applications (real-time ASR)</li>
+<li><strong>Non-Causal Attention</strong>: For offline processing (can look ahead)</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">create_causal_mask</span><span class="p">(</span><span class="n">seq_len</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create lower triangular mask for causal attention&quot;&quot;&quot;</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tril</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">seq_len</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">mask</span><span class="o">.</span><span class="n">bool</span><span class="p">()</span>
+
+<span class="k">class</span> <span class="nc">CausalSpeechAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">seq_len</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">create_causal_mask</span><span class="p">(</span><span class="n">seq_len</span><span class="p">)</span>
+        <span class="n">attention_output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">attn_mask</span><span class="o">=</span><span class="n">mask</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">attention_output</span>
+</code></pre></div>
+
+<h3 id="multi-scale-attention">Multi-Scale Attention</h3>
+<p>Speech contains information at multiple time scales - phonemes, words, phrases. Multi-scale attention captures these hierarchies:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">MultiScaleAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">global_attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># Local attention with limited window</span>
+        <span class="n">local_attended</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_attention</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+        <span class="c1"># Global attention with downsampling</span>
+        <span class="n">downsampled_x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">avg_pool1d</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">global_attended</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">global_attention</span><span class="p">(</span><span class="n">downsampled_x</span><span class="p">,</span> <span class="n">downsampled_x</span><span class="p">,</span> <span class="n">downsampled_x</span><span class="p">)</span>
+        <span class="n">global_upsampled</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">global_attended</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> 
+                                       <span class="n">scale_factor</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">local_attended</span> <span class="o">+</span> <span class="n">global_upsampled</span>
+</code></pre></div>
+
+<h3 id="cross-modal-attention">Cross-Modal Attention</h3>
+<p>In speech-to-text tasks, cross-modal attention aligns speech features with text tokens:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CrossModalAttention</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">d_model</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cross_attention</span> <span class="o">=</span> <span class="n">MultiHeadAttention</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">num_heads</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text_embeddings</span><span class="p">,</span> <span class="n">speech_features</span><span class="p">):</span>
+        <span class="c1"># Text attends to speech</span>
+        <span class="n">aligned_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cross_attention</span><span class="p">(</span>
+            <span class="n">query</span><span class="o">=</span><span class="n">text_embeddings</span><span class="p">,</span>      <span class="c1"># What we want to generate</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">speech_features</span><span class="p">,</span>        <span class="c1"># What we have as input</span>
+            <span class="n">value</span><span class="o">=</span><span class="n">speech_features</span>       <span class="c1"># Information to extract</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">aligned_features</span>
+</code></pre></div>
+
+<h2 id="applications-and-real-world-impact">Applications and Real-World Impact</h2>
+<h3 id="automatic-speech-recognition-asr">Automatic Speech Recognition (ASR)</h3>
+<p>Modern ASR systems like Whisper use Transformer architectures:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">WhisperLikeASR</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="c1"># Encoder: MEL → Hidden representations</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">SpeechTransformerEncoder</span><span class="p">()</span>
+        <span class="c1"># Decoder: Hidden → Text tokens</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">TextTransformerDecoder</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">transcribe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">audio</span><span class="p">):</span>
+        <span class="n">mel_features</span> <span class="o">=</span> <span class="n">audio_to_mel</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+        <span class="n">encoded_speech</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">mel_features</span><span class="p">)</span>
+        <span class="n">text_tokens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">encoded_speech</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">tokens_to_text</span><span class="p">(</span><span class="n">text_tokens</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="text-to-speech-tts">Text-to-Speech (TTS)</h3>
+<p>TTS models like Tacotron 2 and FastSpeech use attention to align text with speech:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">AttentionBasedTTS</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_encoder</span> <span class="o">=</span> <span class="n">TextEncoder</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attention</span> <span class="o">=</span> <span class="n">LocationSensitiveAttention</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">MelDecoder</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+        <span class="n">text_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_encoder</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+        <span class="n">mel_output</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">attention_context</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_mel_length</span><span class="p">):</span>
+            <span class="n">attention_context</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">attention</span><span class="p">(</span><span class="n">text_features</span><span class="p">,</span> <span class="n">attention_context</span><span class="p">)</span>
+            <span class="n">mel_frame</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">attention_context</span><span class="p">)</span>
+            <span class="n">mel_output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mel_frame</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">mel_output</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<h3 id="speech-enhancement">Speech Enhancement</h3>
+<p>Transformers can separate speech from noise using attention mechanisms:</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">SpeechEnhancementTransformer</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">TransformerEncoder</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mask_predictor</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">d_model</span><span class="p">,</span> <span class="n">n_freq_bins</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">noisy_mel</span><span class="p">):</span>
+        <span class="n">encoded_features</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">noisy_mel</span><span class="p">)</span>
+        <span class="c1"># Predict mask for clean speech</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mask_predictor</span><span class="p">(</span><span class="n">encoded_features</span><span class="p">))</span>
+        <span class="n">enhanced_mel</span> <span class="o">=</span> <span class="n">noisy_mel</span> <span class="o">*</span> <span class="n">mask</span>
+        <span class="k">return</span> <span class="n">enhanced_mel</span>
+</code></pre></div>
+
+<h2 id="challenges-and-future-directions">Challenges and Future Directions</h2>
+<h3 id="current-challenges">Current Challenges</h3>
+<ol>
+<li><strong>Computational Complexity</strong>: Speech sequences are very long</li>
+<li><strong>Real-time Processing</strong>: Latency requirements for streaming applications</li>
+<li><strong>Robustness</strong>: Handling noise, accents, and domain variations</li>
+<li><strong>Data Efficiency</strong>: Reducing supervision requirements</li>
+</ol>
+<h3 id="emerging-solutions">Emerging Solutions</h3>
+<ol>
+<li><strong>Efficient Attention</strong>: Linear attention, sparse attention patterns</li>
+<li><strong>Self-Supervised Learning</strong>: Models like Wav2Vec 2.0, HuBERT</li>
+<li><strong>Multimodal Integration</strong>: Combining audio with visual information</li>
+<li><strong>Continual Learning</strong>: Adapting to new speakers and domains</li>
+</ol>
+<h2 id="conclusion">Conclusion</h2>
+<p>Speech Transformers represent a paradigm shift in audio processing, leveraging the power of attention mechanisms to understand and generate speech. The journey from raw audio waveforms to MEL coefficients provides a perceptually relevant representation that Transformers can effectively process.</p>
+<p>Key takeaways:</p>
+<ol>
+<li><strong>MEL coefficients</strong> bridge the gap between raw audio and neural networks by providing perceptually relevant features</li>
+<li><strong>Transformer adaptations</strong> for speech include convolutional front-ends, downsampling strategies, and temporal modeling</li>
+<li><strong>Attention mechanisms</strong> in speech processing handle long-range dependencies, multi-scale patterns, and cross-modal alignment</li>
+<li><strong>Real-world applications</strong> span ASR, TTS, speech enhancement, and beyond</li>
+</ol>
+<p>As the field continues to evolve, we can expect even more sophisticated attention mechanisms, improved efficiency for real-time applications, and better integration with other modalities. The future of speech technology is being shaped by these powerful attention-based architectures.</p>
+<p>The marriage of signal processing wisdom (MEL coefficients) with modern deep learning (Transformers) exemplifies how domain knowledge and architectural innovation can create breakthrough technologies that enhance how we interact with machines through speech.</p>
+        </div>
+
+        <!-- Neighbors -->
+
+        <!-- Google Adsense -->
+
+    <!-- Releated posts -->
+
+    <!-- Comments -->
+                </div>
+        </main>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="flex-shrink-0 bg-dark text-light small py-1">
+        <div class="container text-center">
+            &copy;  <a href="https://blogs.entropypages.in">Entropy Pages</a> by <a href="https://blogs.entropypages.in/pages/about.html">Tejus Adiga M</a>. Powered by <a href="http://getpelican.com">Pelican</a>, <a href="http://python.org">Python</a>, <a href="https://getbootstrap.com">Bootstrap 4</a><br>
+            <!-- Do not remove below license sentence -->
+            License: <a href="https://spdx.org/licenses/CC-BY-4.0.html">CC-BY-4.0</a>, based on <a href="https://github.com/vuquangtrong/simplify-theme">Simplify Bootstrap Theme</a>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/jquery/jquery-3.4.1.min.js"></script>
+    <!--
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/4.3.1/bootstrap.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/bootstrap/bootstrap.min.js"></script>
+    <!--
+    <script src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+    -->
+    <script type="text/javascript" src="https://blogs.entropypages.in/theme/style.js"></script>
+
+    <!-- Sharing -->
+
+    <!-- JSON LD -->
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "name": "Speech Transformers: Revolutionizing Audio Processing with Attention",
+    "headline": "Speech Transformers: Revolutionizing Audio Processing with Attention",
+    "datePublished": "2025-07-08 00:00:00+05:30",
+    "dateModified": "",
+    "author": {
+        "@type": "Person",
+        "name": "Tejus Adiga M",
+        "url": "https://blogs.entropypages.in/author/tejus-adiga-m.html"
+    },
+    "image": "https://blogs.entropypages.in/images/SiteImage.png",
+    "url": "https://blogs.entropypages.in/speech-transformers-revolutionizing-audio-processing-with-attention.html",
+    "description": "A deep dive into Speech Transformers, exploring how raw audio is converted to MEL coefficients and how attention mechanisms process speech signals for various applications."
+}
+</script>
+    <!-- Disqus count -->
+</body>
+
+</html>
